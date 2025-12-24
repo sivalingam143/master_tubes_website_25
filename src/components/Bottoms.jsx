@@ -74,10 +74,10 @@ function Bottoms() {
               </div>
             </Col>
             <Col lg="6" className="py-4 text-lg-end text-left">
-              <div className="upi">
+              {/* <div className="upi">
                 {" "}
                 <img src={UPI} alt="Logo" className="img-fluid logo" />
-              </div>
+              </div> */}
             </Col>
           </Row>
         </Container>

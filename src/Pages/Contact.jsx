@@ -15,28 +15,40 @@ const Contact = () => {
             <Col lg="4" className="py-3">
               <div className="body-font text-center">
                 <div className="py-3">
-                  <MdOutlineLocalPhone  size={25}/>
+                  <MdOutlineLocalPhone size={25} />
                 </div>
-                <div>+91 6379 28 0069</div>
-                <div className="title-font">Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</div>
+                <div>+91 93608 26673</div>
+                <div className="title-font">
+                  Contact us for details about our piggy bank collections,
+                  pricing, bulk orders, and customization options. Our team is
+                  always ready to assist you with quick and reliable support.
+                </div>
               </div>
             </Col>
             <Col lg="4" className="py-3">
               <div className="body-font text-center">
                 <div className="py-3">
-                  <IoHomeOutline   size={25}/>
+                  <IoHomeOutline size={25} />
                 </div>
-                <div>14/496/3, Selvavinayagar Agencies, Anuppankulam, Sivakasi - 626 189</div>
-                <div className="title-font">Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</div>
+                <div>Master Tubes,Madurai 625005,Tamilnadu ,India</div>
+                <div className="title-font">
+                  Our piggy banks are carefully manufactured with quality
+                  materials and thoughtful designs. We ensure reliable service
+                  for both retail and wholesale orders from our facility.
+                </div>
               </div>
             </Col>
             <Col lg="4" className="py-3">
               <div className="body-font text-center">
                 <div className="py-3">
-                  <FaRegEnvelopeOpen   size={25}/>
+                  <FaRegEnvelopeOpen size={25} />
                 </div>
-                <div>sales@bigfestival.in</div>
-                <div className="title-font">Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</div>
+                <div>saipackagingproducts@gmail.com</div>
+                <div className="title-font">
+                  Email us for piggy bank orders, custom design requests, or
+                  business enquiries. We aim to respond promptly and provide the
+                  best customer experience.
+                </div>
               </div>
             </Col>
           </Row>

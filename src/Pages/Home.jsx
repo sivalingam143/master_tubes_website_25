@@ -4,7 +4,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import HeroCarousel from "../components/CategroySlider";
 import ProductGrid from "../components/ProductGrid";
 import CenterBanner from "../assets/images/home/centerbanner.webp";
-import ReferBanner from "../assets/images/home/spyder.webp";
+import ReferBanner from "../assets/images/category/money.webp";
 import Occasion from "../components/Occasion";
 import TopSell from "../assets/images/category/fancy.webp";
 import Selling from "../assets/images/home/EarlyCrackers.webp";
@@ -69,12 +69,12 @@ const Home = () => {
             <Col lg="6" className="p-5 align-content-center">
               <div>
                 <h2 className="body-font">
-                  Refer bigfestival.in to your friends
+                  Refer mastertubes to your friends
                 </h2>
                 <p className="title-font">
-                  Refer bigfestival.in to your friends get Rs.100 added to your
-                  wallet on their first purchase and Rs.50 will be added in
-                  their account too.
+                 Refer Piggy Bank to your friends and family,
+turn small savings into
+memorable special moments!
                 </p>
                 <div>
                   {" "}

@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react";
-
+import banner1 from "../assets/images/category/banner_1.jpeg"
+import banner2 from "../assets/images/category/banner_2.jpeg"
 const banners = [
   {
     id: 1,
-    image: "https://picsum.photos/id/1018/1200/500",
-    title: "Welcome to Our Website",
-    subtitle: "Build modern apps with React",
+    image:banner1,
+    // title: "Welcome to Our Website",
+    // subtitle: "Build modern apps with React",
   },
   {
     id: 2,
-    image: "https://picsum.photos/id/1015/1200/500",
-    title: "Fast & Responsive",
-    subtitle: "Optimized for all devices",
+    image: banner2,
+    // title: "Fast & Responsive",
+    // subtitle: "Optimized for all devices",
   },
   {
     id: 3,
     image: "https://picsum.photos/id/1019/1200/500",
-    title: "Clean UI",
-    subtitle: "Simple & powerful design",
+    // title: "Clean UI",
+    // subtitle: "Simple & powerful design",
   },
 ];
 

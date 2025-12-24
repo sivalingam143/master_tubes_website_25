@@ -7,9 +7,10 @@ import CenterBanner from "../assets/images/home/centerbanner.webp";
 import ReferBanner from "../assets/images/category/money.webp";
 import Occasion from "../components/Occasion";
 import TopSell from "../assets/images/category/fancy.webp";
-import Selling from '../assets/images/home/EarlyCrackers.webp';
-import Rectangle from '../assets/images/home/Rectangle.webp';
-import { FaRegMap,FaTags  } from "react-icons/fa";
+import Selling from "../assets/images/home/EarlyCrackers.webp";
+import Rectangle2 from "../assets/images/home/piggybank_img_01.jpg";
+import Rectangle from "../assets/images/home/Rectangle.webp";
+import { FaRegMap, FaTags } from "react-icons/fa";
 import { VscWorkspaceTrusted } from "react-icons/vsc";
 import { TbCirclePercentage } from "react-icons/tb";
 import { MdAddShoppingCart } from "react-icons/md";
@@ -110,7 +111,15 @@ memorable special moments!
                 <span className="old-price">Rs. 300.00</span>{" "}
                 <span className="new-price">Rs. 64.00</span>
               </p>
-              <p className="title-font">Start the New Year with smart savings and positive habits! This elegant royal red metal piggy bank is perfect for setting new goals and building better money habits. Strong, stylish, and inspiring, it’s a beautiful reminder that every coin saved brings you closer to your dreams. A perfect New Year gift for kids, adults, and loved ones—because great beginnings start with small steps.</p>
+              <p className="title-font">
+                Start the New Year with smart savings and positive habits! This
+                elegant royal red metal piggy bank is perfect for setting new
+                goals and building better money habits. Strong, stylish, and
+                inspiring, it’s a beautiful reminder that every coin saved
+                brings you closer to your dreams. A perfect New Year gift for
+                kids, adults, and loved ones—because great beginnings start with
+                small steps.
+              </p>
               <button className="shop_now">Add to Cart</button>
             </Col>
           </Row>
@@ -119,7 +128,7 @@ memorable special moments!
       <section className="py-5">
         <Container fluid className="px-0">
           <Row>
-            <Col lg='12'>
+            <Col lg="12">
               <img src={Selling} className="img-fluid w-100" />
             </Col>
           </Row>
@@ -128,76 +137,109 @@ memorable special moments!
       <section>
         <Container>
           <Row>
-            <Col lg='4' className="align-content-center py-5 text-lg-end text-left">
-               <div className="why-we ">
-                    <div className="icon"><FaRegMap/></div>
-                    <div >
-                      <h4 className="body-font">Pan India Delivery</h4>
-                      <p className="title-font">Short supporting line goes here.</p>
-                    </div>
-               </div>
-               <div className="why-we">
-                    <div className="icon"><VscWorkspaceTrusted/></div>
-                    <div >
-                      <h4 className="body-font">Secure Payment</h4>
-                      <p className="title-font">Short supporting line goes here</p>
-                    </div>
-               </div>
-               <div className="why-we">
-                    <div className="icon"><FaTags/></div>
-                    <div >
-                      <h4 className="body-font">Sign Up Offer</h4>
-                      <p className="title-font">Short supporting line goes here.</p>
-                    </div>
-               </div>
+            <Col
+              lg="4"
+              className="align-content-center py-5 text-lg-end text-left"
+            >
+              <div className="why-we ">
+                <div className="icon">
+                  <FaRegMap />
+                </div>
+                <div>
+                  <h4 className="body-font">Pan India Delivery</h4>
+                  <p className="title-font">
+                    We deliver our products safely and quickly across all major
+                    cities and towns in India.
+                  </p>
+                </div>
+              </div>
+              <div className="why-we">
+                <div className="icon">
+                  <VscWorkspaceTrusted />
+                </div>
+                <div>
+                  <h4 className="body-font">Secure Payment</h4>
+                  <p className="title-font">
+                    Enjoy safe and secure payments with trusted payment gateways
+                    and multiple payment options.
+                  </p>
+                </div>
+              </div>
+              <div className="why-we">
+                <div className="icon">
+                  <FaTags />
+                </div>
+                <div>
+                  <h4 className="body-font">Sign Up Offer</h4>
+                  <p className="title-font">
+                    Sign up today and get exclusive offers, discounts, and early
+                    access to new products.
+                  </p>
+                </div>
+              </div>
             </Col>
-            <Col lg='4'>
-                <img src={Rectangle} className="img-fluid w-100" />
+            <Col lg="4">
+              <img src={Rectangle2} className="img-fluid w-100" />
             </Col>
-            <Col lg='4' className="align-content-center py-5 ">
-               <div className="why-we ">
-                    <div className="icon"><TbCirclePercentage/></div>
-                    <div >
-                      <h4 className="body-font">Top Brands</h4>
-                      <p className="title-font">Short supporting line goes here.</p>
-                    </div>
-               </div>
-               <div className="why-we">
-                    <div className="icon"><MdAddShoppingCart/></div>
-                    <div >
-                      <h4 className="body-font">Shop with Confidence</h4>
-                      <p className="title-font">Short supporting line goes here.</p>
-                    </div>
-               </div>
-               <div className="why-we">
-                    <div className="icon"><BiSupport/></div>
-                    <div >
-                      <h4 className="body-font">Customer Help Desk</h4>
-                      <p className="title-font">Short supporting line goes here.</p>
-                    </div>
-               </div>
+            <Col lg="4" className="align-content-center py-5 ">
+              <div className="why-we ">
+                <div className="icon">
+                  <TbCirclePercentage />
+                </div>
+                <div>
+                  <h4 className="body-font">Top Brands</h4>
+                  <p className="title-font">
+                    We work with trusted and quality brands to bring you durable
+                    and reliable products.
+                  </p>
+                </div>
+              </div>
+              <div className="why-we">
+                <div className="icon">
+                  <MdAddShoppingCart />
+                </div>
+                <div>
+                  <h4 className="body-font">Shop with Confidence</h4>
+                  <p className="title-font">
+                    Shop confidently with quality assurance, easy ordering, and
+                    secure checkout experience.
+                  </p>
+                </div>
+              </div>
+              <div className="why-we">
+                <div className="icon">
+                  <BiSupport />
+                </div>
+                <div>
+                  <h4 className="body-font">Customer Help Desk</h4>
+                  <p className="title-font">
+                    Our support team is always available to help you with
+                    orders, enquiries, and after-sales support.
+                  </p>
+                </div>
+              </div>
             </Col>
           </Row>
         </Container>
       </section>
       <section className="feed-back">
-          <Container>
-            <Row>
-              <Col lg='12' className="align-content-center">
-                <Testimonial/>
-              </Col>
-            </Row>
-          </Container>
+        <Container>
+          <Row>
+            <Col lg="12" className="align-content-center">
+              <Testimonial />
+            </Col>
+          </Row>
+        </Container>
       </section>
-      <section className="py-5">
-          <Container>
-            <Row>
-              <Col lg='12' className="align-content-center">
-                <Brands/>
-              </Col>
-            </Row>
-          </Container>
-      </section>
+      {/* <section className="py-5">
+        <Container>
+          <Row>
+            <Col lg="12" className="align-content-center">
+              <Brands />
+            </Col>
+          </Row>
+        </Container>
+      </section> */}
     </>
   );
 };

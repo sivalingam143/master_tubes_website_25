@@ -1,16 +1,16 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
 
-import image1 from "../assets/images/category/copier.png"
-import image2 from "../assets/images/category/custom.webp"
-import image3 from "../assets/images/category/gift.webp"
-import image4 from "../assets/images/category/paper.webp"
+import image1 from "../assets/images/category/copier.png";
+import image2 from "../assets/images/category/custom.webp";
+import image3 from "../assets/images/category/gift.webp";
+import image4 from "../assets/images/category/paper.webp";
 const slides = [
   {
     id: 1,
     name: " Copier Box",
     image: image1,
-    radius: "60% 40% 70% 30% / 40% 60% 30% 70%",
+    // radius: "60% 40% 70% 30% / 40% 60% 30% 70%",
     bgColor: "linear-gradient(135deg, #FF9A9E 0%, #FAD0C4 100%)",
     textColor: "#000",
   },
@@ -18,7 +18,7 @@ const slides = [
     id: 2,
     name: "Custom Box",
     image: image2,
-    radius: "20px 80px 40px 100px",
+    // radius: "20px 80px 40px 100px",
     bgColor: "linear-gradient(135deg, #00C6FF 0%, #0072FF 100%)",
     textColor: "#fff",
   },
@@ -26,7 +26,7 @@ const slides = [
     id: 3,
     name: "Gift Box",
     image: image3,
-    radius: "100px 30px 120px 50px",
+    // radius: "100px 30px 120px 50px",
     bgColor: "linear-gradient(135deg, #F7971E 0%, #FFD200 100%)",
     textColor: "#000",
   },
@@ -34,7 +34,7 @@ const slides = [
     id: 4,
     name: "PaperBox",
     image: image4,
-    radius: "50% 50% 30% 70% / 60% 40% 70% 30%",
+    // radius: "50% 50% 30% 70% / 60% 40% 70% 30%",
     bgColor: "linear-gradient(135deg, #11998E 0%, #38EF7D 100%)",
     textColor: "#000",
   },
@@ -91,12 +91,13 @@ export default function HeroSlider() {
         >
           {sliderItems.map((item, i) => (
             <div key={i} className="slider-slide">
-              <img
-                src={item.image}
-                alt={item.name}
-                className="slider-image"
-                style={{ borderRadius: item.radius }}
-              />
+              <div className="slider-image-wrapper">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="slider-image"
+                />
+              </div>
 
               <p
                 className="slider-name"

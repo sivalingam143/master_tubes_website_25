@@ -231,7 +231,7 @@ const Home = () => {
           </Row>
         </Container>
       </section>
-      <section className="py-5">
+      {/* <section className="py-5">
         <Container>
           <Row>
             <Col lg="12" className="align-content-center">
@@ -239,7 +239,7 @@ const Home = () => {
             </Col>
           </Row>
         </Container>
-      </section>
+      </section> */}
     </>
   );
 };

@@ -20,12 +20,22 @@ import { BiSupport } from "react-icons/bi";
 import Testimonial from "../components/Testimonial";
 import Brands from "../components/Brands";
 const Home = () => {
- useEffect(() => {
-    AOS.init({
-      duration: 1000, // Animation speed
-      once: true,     // Animation happens only once while scrolling down
-    });
-  }, []);
+useEffect(() => {
+  AOS.init({
+    duration: 1000,
+    once: true,
+    // Higher offset means you have to scroll deeper into the section to trigger it
+    offset: 400, 
+    // This is the most important setting for your issue:
+    anchorPlacement: 'top-bottom', 
+    easing: 'ease-in-out',
+  });
+  
+  // Refresh to make sure AOS knows the correct positions after the page renders
+  setTimeout(() => {
+    AOS.refresh();
+  }, 100);
+}, []);
   return (
     <>
     
@@ -123,13 +133,15 @@ const Home = () => {
      
 
 {/* Section 2: Top Selling Products */}
-<section className="py-5 top_sell overflow-hidden">
+<section id="top-selling-section" className="py-5 top_sell overflow-hidden">
   <Container>
     <Row>
       <Col 
         lg="6" 
         className="text-center" 
         data-aos="zoom-in"
+        // This tells AOS: Don't start until the #top-selling-section is well into view
+        data-aos-anchor="#top-selling-section" 
       >
         <img src={TopSell} className="img-fluid w-75" alt="Top Selling Product" />
       </Col>
@@ -137,7 +149,8 @@ const Home = () => {
         lg="6" 
         className="align-content-center body-font" 
         data-aos="fade-up"
-        data-aos-delay="200"
+        data-aos-delay="400"
+        data-aos-anchor="#top-selling-section"
       >
         <h2>TOP SELLING PRODUCTS</h2>
         <h4>Royal Red Piggy Bank</h4>
@@ -168,14 +181,14 @@ const Home = () => {
           </Row>
         </Container>
       </section> */}
-     <section className="overflow-hidden"> {/* overflow-hidden prevents horizontal scrollbars during animation */}
+    <section id="why-we-section" className="overflow-hidden py-5">{/* overflow-hidden prevents horizontal scrollbars during animation */}
   <Container>
     <Row>
       {/* LEFT CONTENT - Slides in from the left */}
       <Col
         lg="4"
-        className="align-content-center py-5 text-lg-end text-left"
         data-aos="fade-right"
+        data-aos-anchor="#why-we-section" // Trigger only when the whole section is reached
       >
         <div className="why-we" data-aos="fade-right" data-aos-delay="100">
           <div className="icon">
@@ -223,8 +236,8 @@ const Home = () => {
       {/* RIGHT CONTENT - Slides in from the right */}
       <Col 
         lg="4" 
-        className="align-content-center py-5"
         data-aos="fade-left"
+        data-aos-anchor="#why-we-section"
       >
         <div className="why-we" data-aos="fade-left" data-aos-delay="100">
           <div className="icon">

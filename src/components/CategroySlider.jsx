@@ -1,6 +1,12 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { EffectCoverflow, Pagination, Autoplay } from 'swiper/modules';
 
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/pagination';
 import image1 from "../assets/images/category/copier.png";
 import image2 from "../assets/images/category/custom.webp";
 import image3 from "../assets/images/category/gift.webp";
@@ -15,7 +21,7 @@ const slides = [
     name: " Copier Box",
     image: image1,
     // radius: "60% 40% 70% 30% / 40% 60% 30% 70%",
-   bgColor:" linear-gradient(135deg, #ff3452ff 0%, #f88594ff 30%, #eea1a8ff 70%, #ff2d3fff 100%)",
+   bgColor:" red",
     textColor: "#fff",
   },
   {
@@ -23,7 +29,8 @@ const slides = [
     name: "Custom Box",
     image: image2,
     // radius: "20px 80px 40px 100px",
-   bgColor:"#cc333f",
+   bgColor:"red",
+   
     textColor: "#fff",
   },
   {
@@ -31,7 +38,7 @@ const slides = [
     name: "Gift Box",
     image: image3,
     // radius: "100px 30px 120px 50px",
-bgColor:"#cc333f",
+bgColor:"red",
     textColor: "#fff",
   },
   {
@@ -39,7 +46,7 @@ bgColor:"#cc333f",
     name: "PaperBox",
     image: image4,
     // radius: "50% 50% 30% 70% / 60% 40% 70% 30%",
-   bgColor:"#cc333f",
+   bgColor:"red",
     textColor: "#fff",
   },
   {
@@ -47,7 +54,7 @@ bgColor:"#cc333f",
     name: "PaperBox",
     image: image5,
     // radius: "50% 50% 30% 70% / 60% 40% 70% 30%",
- bgColor:"#cc333f",
+ bgColor:"#red",
     textColor: "#fff",
   },
   {
@@ -55,7 +62,7 @@ bgColor:"#cc333f",
     name: "PaperBox",
     image: image6,
     // radius: "50% 50% 30% 70% / 60% 40% 70% 30%",
-bgColor:"#cc333f",
+bgColor:"red",
     textColor: "#fff",
   },
     {
@@ -63,7 +70,7 @@ bgColor:"#cc333f",
     name: "PaperBox",
     image: image7,
     // radius: "50% 50% 30% 70% / 60% 40% 70% 30%",
-  bgColor:"#cc333f",
+  bgColor:"red",
     textColor: "#fff",
   },
   {
@@ -71,79 +78,47 @@ bgColor:"#cc333f",
     name: "PaperBox",
     image: image8,
     // radius: "50% 50% 30% 70% / 60% 40% 70% 30%",
-   bgColor:"#cc333f",
+   bgColor:"red",
     textColor: "#fff",
   },
 ];
 
 export default function HeroSlider() {
-  const [index, setIndex] = useState(0);
-  const [itemsPerView, setItemsPerView] = useState(1);
-  const [enableTransition, setEnableTransition] = useState(true);
-
-  /* Responsive: Updated for 5 items */
-  useEffect(() => {
-    const handleResize = () => {
-     setItemsPerView(window.innerWidth >= 992 ? 5 : 1);
-      setIndex(0);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  /* Auto play */
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((prev) => prev + 1);
-    }, 3500);
-    return () => clearInterval(timer);
-  }, []);
-
-  /* Infinite loop handler */
-  useEffect(() => {
-    if (index === slides.length) {
-      setTimeout(() => {
-        setEnableTransition(false);
-        setIndex(0);
-      }, 600); 
-    } else {
-      setEnableTransition(true);
-    }
-  }, [index, slides.length]);
-
-  /* Clone slides based on itemsPerView */
-  const sliderItems = [...slides, ...slides.slice(0, itemsPerView)];
-
   return (
     <section className="slider-wrapper1">
-      <div className="slider-container1">
-        <div
-          className="slider-track1"
-          style={{
-            // Math: Track width is (total items / visible items) * 100
-            width: `${(sliderItems.length / itemsPerView) * 100}%`,
-            // Math: Move by exactly one item width per index
-            transform: `translateX(-${(30 / sliderItems.length) * index}%)`,
-            transition: enableTransition ? "transform 0.6s ease" : "none",
-          }}
-        >
-          {sliderItems.map((item, i) => (
-            <div 
-              key={i} 
-              className="slider-slide1"
-              style={{ width: `${30 / sliderItems.length}%` }}
-            >
-              <div className="slider-image-wrapper1">
-                <img src={item.image} alt={item.name} className="slider-image" />
-              </div>
-              <p className="slider-name1" style={{ background: item.bgColor, color: item.textColor }}>
-                {item.name}
-              </p>
+      <Swiper
+        effect={'coverflow'}
+        grabCursor={true}
+        centeredSlides={true}
+        loop={true}
+        slidesPerView={'auto'} // Allows the slides to take the width defined in CSS
+        coverflowEffect={{
+          rotate: 50,    // Tilt of the side slides
+          stretch: 0,   // Space between slides
+          depth: 100,   // Depth offset (3D look)
+          modifier: 1,  // Effect multiplier
+          slideShadows: true, // Adds shadows to side slides
+        }}
+        autoplay={{
+          delay: 3500,
+          disableOnInteraction: false,
+        }}
+        pagination={{ clickable: true }}
+        modules={[EffectCoverflow, Pagination, Autoplay]}
+        className="mySwiper"
+      >
+        {slides.map((item) => (
+          <SwiperSlide key={item.id} className="custom-swiper-slide">
+            <div className="slider-image-wrapper1">
+              <img src={item.image} alt={item.name} className="slider-image" />
             </div>
-          ))}
-        </div>
-      </div>
+            <p className="slider-name1" style={{ background: item.bgColor, color: item.textColor }}>
+              {item.name}
+            </p>
+          
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </section>
   );
 }

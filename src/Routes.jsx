@@ -15,7 +15,7 @@ const Routes = [
   { path: "/profile", element: <h1>Profile</h1> },
   { path: "/wishlist", element: <WishList/> },
   { path: "/cart", element: <h1>Cart</h1> },
-  { path: "/prdt", element: <ProductDetails/>},
+  { path: "/prdt/:productId", element: <ProductDetails/>},
   { path: "/login", element: <Login/>},
 ];
 export default Routes

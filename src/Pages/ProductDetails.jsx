@@ -48,14 +48,34 @@ const ProductDetails = () => {
             <img src={product.product_img_url} className="img-fluid rounded" alt={product.product_name} />
           </Col>
           <Col lg="6">
+          <Row>
             <div className="product-content my-5">
               <h2 className="body-font py-3">{product.product_name}</h2>
               <div className="price-content title-font d-flex align-items-center">
                 <div className="text-muted text-decoration-line-through me-3">RS. {product.product_price}</div>
                 <div className="text-danger fw-bold h4 m-0">RS. {product.product_with_discount_price}</div>
               </div>
+
+              
+
+              {/* Existing DoButton (kept as-is) */}
               <div className="pt-3"><DoButton /></div>
             </div>
+             </Row>
+<div className="product-action-container">
+  {/* Add to Cart - Full Width */}
+  <button className="btn btn-add-cart w-100 fw-bold mb-3">
+    ADD TO CART
+  </button>
+
+  {/* Wishlist Wrapper - Full Width */}
+  <div className="wishlist-wrapper d-flex w-100 mb-3">
+    <button className="btn btn-wishlist flex-grow-1 fw-bold">
+      ADD TO WISHLIST
+    </button>
+    
+  </div>
+</div>
             <Accordion defaultActiveKey="0">
               <Accordion.Item eventKey="0">
                 <Accordion.Header className="body-font">Description</Accordion.Header>
@@ -69,6 +89,8 @@ const ProductDetails = () => {
             </Accordion>
           </Col>
         </Row>
+
+        
       </Container>
     </section>
   );

@@ -14,7 +14,7 @@ const ProductDetails = () => {
   const { addToCart } = useCart();
 
   const API_BASE = "http://localhost/master_tubes_website_api/api";
-
+  const COMPANY_ID = "COMP-000001";
 
   const handleAddToCart = () => {
     addToCart(product, quantity);
@@ -28,17 +28,10 @@ const ProductDetails = () => {
         // 1. Fetch Main Product Details
         const response = await fetch(`${API_BASE}/product.php`, {
           method: "POST",
-<<<<<<< HEAD
-          body: JSON.stringify({ 
-         
-            product_id: productId, 
-            fetch_all: false 
-=======
           body: JSON.stringify({
             company_id: COMPANY_ID,
             product_id: productId,
             fetch_all: false,
->>>>>>> afd3a981e927402aa43a0901cd17cf3caceca771
           }),
         });
         const data = await response.json();
@@ -50,15 +43,9 @@ const ProductDetails = () => {
           // 2. Fetch Related Products from the same category
           const relatedRes = await fetch(`${API_BASE}/product.php`, {
             method: "POST",
-<<<<<<< HEAD
-            body: JSON.stringify({ 
-             
-              fetch_all: true 
-=======
             body: JSON.stringify({
               company_id: COMPANY_ID,
               fetch_all: true,
->>>>>>> afd3a981e927402aa43a0901cd17cf3caceca771
             }),
           });
           const relatedData = await relatedRes.json();

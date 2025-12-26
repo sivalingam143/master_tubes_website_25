@@ -123,6 +123,7 @@ const Login = () => {
       edit_customer_id: customer.customer_id,
     });
     if (result.head.code === 200) {
+      localStorage.setItem("customer", JSON.stringify(result.body.customer));
       alert("Profile updated successfully! You are now signed in.");
       navigate("/home");
       // Redirect or handle login success, e.g., navigate to dashboard
@@ -139,7 +140,6 @@ const Login = () => {
             <Col lg="4" md="8">
               <div className="text-center p-4">
                 {currentStep === 1 ? (
-                  /* --- SCREEN 1: EMAIL INPUT --- */
                   <>
                     <h3 className="body-font fw-bold mb-2">Login With OTP</h3>
                     <p className="title-font text-muted mb-4">
@@ -154,7 +154,6 @@ const Login = () => {
                         onChange={(e) => setEmail(e.target.value)}
                       />
                     </div>
-
                     <div className="d-flex align-items-start mb-4 text-start justify-content-center">
                       <input
                         type="checkbox"

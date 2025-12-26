@@ -10,12 +10,15 @@ import Contact from "./Pages/Contact";
 import ProfileLayout from "./Pages/ProfileLayout";
 import ProfileForm from "./Pages/Profile";
 import DeliveryAddress from "./Pages/DeliveryAddress";
-
+import { Navigate } from "react-router-dom";  
 //Bottom Section
 import Account from "./Pages/Account";
 
 const Routes = [
-  { path: "/home", element: <Home /> },
+  { 
+    path: "/home", 
+    element: localStorage.getItem("customer") ? <Home /> : <Navigate to="/login" /> 
+  },
   { path: "/shop", element: <Shop /> },
   { path: "/about", element: <About /> },
   { path: "/contact", element: <Contact /> },
@@ -23,17 +26,22 @@ const Routes = [
   { path: "/account", element: <Account /> },
   { path: "/cart", element: <h1>Cart</h1> },
   { path: "/prdt/:productId", element: <ProductDetails /> },
-  { path: "/login", element: <Login /> },
-
-  // Update this section for Nested Routing
+  { 
+    path: "/login", 
+    element: !localStorage.getItem("customer") ? <Login /> : <Navigate to="/home" /> 
+  },
   {
     path: "/profile",
-    element: <ProfileLayout />, // This contains the Red Sidebar
+    element: localStorage.getItem("customer") ? <ProfileLayout /> : <Navigate to="/login" />, 
     children: [
-      { path: "", element: <ProfileForm /> }, // URL: /profile (The Form)
-      { path: "address", element: <DeliveryAddress /> }, // URL: /profile/address
+      { path: "", element: <ProfileForm /> }, 
+      { path: "address", element: <DeliveryAddress /> }, 
     ],
   },
+  { 
+    path: "/", 
+    element: <Navigate to="/home" /> 
+  }
 ];
 
 export default Routes;

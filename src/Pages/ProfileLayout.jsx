@@ -1,10 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { FaUser, FaMapMarkerAlt, FaHistory, FaHeart, FaSignOutAlt } from "react-icons/fa";
 
 const ProfileLayout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState(null);
+
+  // Fetch customer details from local storage on component mount
+  useEffect(() => {
+    const storedCustomer = localStorage.getItem("customer");
+    if (storedCustomer) {
+      setUserData(JSON.parse(storedCustomer));
+    }
+  }, []);
+
+  // Logout function to clear storage and redirect
+  const handleLogout = () => {
+    localStorage.removeItem("customer");
+    navigate("/login");
+  };
+
+  // Helper to generate initials (e.g., "John Doe" -> "JD")
+  const getInitials = () => {
+    if (!userData?.first_name) return "U";
+    const first = userData.first_name.charAt(0).toUpperCase();
+    const last = userData.last_name ? userData.last_name.charAt(0).toUpperCase() : "";
+    return first + last;
+  };
 
   const navItems = [
     { name: "My profile", path: "/profile", icon: <FaUser /> },
@@ -19,10 +43,15 @@ const ProfileLayout = () => {
         <Col lg={4} md={5}>
           <div className="profile-sidebar bg-danger text-white p-4 rounded-4">
             <div className="d-flex align-items-center mb-4">
-              <div className="bg-dark rounded-circle d-flex align-items-center justify-content-center fw-bold" style={{ width: '50px', height: '50px' }}>SP</div>
+              <div className="bg-dark rounded-circle d-flex align-items-center justify-content-center fw-bold" style={{ width: '50px', height: '50px' }}>
+                {getInitials()} 
+              </div>
               <div className="ms-3">
-                <h5 className="mb-0">sathiya priya</h5>
-                <small className="opacity-75">10:41:33 AM</small>
+                <h5 className="mb-0 text-capitalize">
+                  {/* Dynamic Name from Local Storage */}
+                  {userData ? `${userData.first_name} ${userData.last_name}` : "Loading..."}
+                </h5>
+                <small className="opacity-75">{userData?.phone_number || "No phone linked"}</small>
               </div>
             </div>
 
@@ -38,7 +67,11 @@ const ProfileLayout = () => {
                 </Link>
               ))}
               <hr />
-              <div className="nav-item d-flex align-items-center py-2 opacity-75 cursor-pointer">
+              <div 
+                className="nav-item d-flex align-items-center py-2 opacity-75 cursor-pointer" 
+                onClick={handleLogout}
+                style={{ cursor: 'pointer' }}
+              >
                 <FaSignOutAlt className="me-2"/> Log out
               </div>
             </nav>
@@ -46,7 +79,6 @@ const ProfileLayout = () => {
         </Col>
         
         <Col lg={8} md={7}>
-          {/* This renders either ProfileForm or DeliveryAddress based on URL */}
           <Outlet />
         </Col>
       </Row>
@@ -55,7 +87,3 @@ const ProfileLayout = () => {
 };
 
 export default ProfileLayout;
-
-
-
-

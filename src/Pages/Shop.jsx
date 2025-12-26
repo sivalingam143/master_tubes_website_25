@@ -188,28 +188,7 @@ const Shop = () => {
         </Container>
       </section>
 
-      {/* Cart Offcanvas */}
-      <Offcanvas
-        show={showFilter}
-        onHide={() => setShowFilter(false)}
-        placement="end"
-      >
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Your Cart</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <Table responsive>
-            <thead>
-              <tr>
-                <td>Product</td>
-                <td>Price</td>
-                <td>Action</td>
-              </tr>
-            </thead>
-            <tbody>{/* Cart items will go here */}</tbody>
-          </Table>
-        </Offcanvas.Body>
-      </Offcanvas>
+      
     </>
   );
 };

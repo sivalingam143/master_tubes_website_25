@@ -5,7 +5,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { NavLink } from "react-router-dom";
 import StoreLogo from "../assets/images/category/Logo2.png";
-import Forms from "./Forms";
+import SearchForms from "./SearchForms";
 import { Table } from "react-bootstrap";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { useCart } from "./CartContext";
@@ -126,8 +126,8 @@ function AppBar() {
           </Navbar.Brand>
 
           <div className="mx-auto w-50">
-            <Forms PlaceHolder="Search Products" />
-          </div>
+  <SearchForms placeholder="Search Products" />
+</div>
 
           <Nav className="ms-auto align-items-center gap-3">
             {iconLinks.map((item, i) => (

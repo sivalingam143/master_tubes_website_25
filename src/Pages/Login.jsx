@@ -22,7 +22,7 @@ const Login = () => {
   // EmailJS config
   const SERVICE_ID = "service_plt00vs";
   const TEMPLATE_ID = "template_e203ddi";
-  const PUBLIC_KEY = "alvSp_LtsfbTjDz8P";
+  const PUBLIC_KEY = "XMBcEaK3-GB8fCTy2";
 
   // Initialize EmailJS (do this once, e.g., in useEffect)
   React.useEffect(() => {

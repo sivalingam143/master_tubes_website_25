@@ -18,8 +18,7 @@ const ProductDetails = () => {
 
   const handleAddToCart = () => {
     addToCart(product, quantity);
-    // Optional: open the cart sidebar automatically
-    // This depends on if you pass the setShowCart state via context too
+    setQuantity(1);
   };
 useEffect(() => {
     const fetchDetails = async () => {

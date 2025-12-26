@@ -5,6 +5,7 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { Buttons, DoButton } from "../components/Button";
 import Forms from "../components/Forms";
+import { useCart } from "../components/CartContext";
 
 const Shop = () => {
   const [categories, setCategories] = useState([]);
@@ -12,8 +13,8 @@ const Shop = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
- const [quantities, setQuantities] = useState({});
-  
+  const [quantities, setQuantities] = useState({});
+  const { addToCart } = useCart();
   const navigate = useNavigate();
 
   const API_BASE = "http://localhost/master_tubes_website_api/api";
@@ -45,16 +46,19 @@ const Shop = () => {
       console.error("Error loading shop data:", error);
     }
   };
-const handleIncrease = (productId) => {
-  setQuantities(prev => ({ ...prev, [productId]: (prev[productId] || 1) + 1 }));
-};
+  const handleIncrease = (productId) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [productId]: (prev[productId] || 1) + 1,
+    }));
+  };
 
-const handleDecrease = (productId) => {
-  setQuantities(prev => ({
-    ...prev,
-    [productId]: prev[productId] > 1 ? prev[productId] - 1 : 1
-  }));
-};
+  const handleDecrease = (productId) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [productId]: prev[productId] > 1 ? prev[productId] - 1 : 1,
+    }));
+  };
   return (
     <>
       <section className="py-5">
@@ -66,15 +70,18 @@ const handleDecrease = (productId) => {
                 type="select"
                 options={[
                   { label: "All Categories", value: "all" },
-                  ...categories.map(c => ({ label: c.category_name, value: c.category_id }))
+                  ...categories.map((c) => ({
+                    label: c.category_name,
+                    value: c.category_id,
+                  })),
                 ]}
                 onChange={(e) => setSelectedCategory(e.target.value)}
               />
             </Col>
 
             <Col lg="4" md="4" className="py-2">
-              <Forms 
-                PlaceHolder="Search Products..." 
+              <Forms
+                PlaceHolder="Search Products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -82,7 +89,11 @@ const handleDecrease = (productId) => {
 
             <Col lg="2" md="2" className="py-4 mb-1">
               <Buttons
-                label={<><IoFilter className="me-2" /> View Cart</>}
+                label={
+                  <>
+                    <IoFilter className="me-2" /> View Cart
+                  </>
+                }
                 onClick={() => setShowFilter(true)}
                 className="w-100"
               />
@@ -90,7 +101,11 @@ const handleDecrease = (productId) => {
           </Row>
 
           {categories
-            .filter((cat) => selectedCategory === "all" || String(cat.category_id) === String(selectedCategory))
+            .filter(
+              (cat) =>
+                selectedCategory === "all" ||
+                String(cat.category_id) === String(selectedCategory)
+            )
             .map((cat) => {
               let categoryProducts = products.filter(
                 (p) => String(p.category_id) === String(cat.category_id)
@@ -98,7 +113,9 @@ const handleDecrease = (productId) => {
 
               if (searchTerm.trim()) {
                 categoryProducts = categoryProducts.filter((p) =>
-                  p.product_name.toLowerCase().includes(searchTerm.toLowerCase())
+                  p.product_name
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase())
                 );
               }
 
@@ -114,19 +131,35 @@ const handleDecrease = (productId) => {
 
                   <Row>
                     {categoryProducts.map((item) => (
-                      <Col lg="3" md="4" sm="6" key={item.product_id} className="mb-4">
-                        <div className="product-box border rounded p-2 h-100" >
+                      <Col
+                        lg="3"
+                        md="4"
+                        sm="6"
+                        key={item.product_id}
+                        className="mb-4"
+                      >
+                        <div className="product-box border rounded p-2 h-100">
                           <div className="img-content text-center">
-                            <img 
-                              src={item.product_img_url || "https://via.placeholder.com/150"} 
-                              alt={item.product_name} 
+                            <img
+                              src={
+                                item.product_img_url ||
+                                "https://via.placeholder.com/150"
+                              }
+                              alt={item.product_name}
                               className="img-fluid"
-                              style={{ maxHeight: '180px', objectFit: 'contain' }}
-                              onClick={() => navigate(`/prdt/${item.product_id}`)}
+                              style={{
+                                maxHeight: "180px",
+                                objectFit: "contain",
+                              }}
+                              onClick={() =>
+                                navigate(`/prdt/${item.product_id}`)
+                              }
                             />
                           </div>
                           <div className="product-content mt-2">
-                            <div className="body-font fw-bold">{item.product_name}</div>
+                            <div className="body-font fw-bold">
+                              {item.product_name}
+                            </div>
                             <div className="price-content d-flex align-items-center mt-1">
                               <span className="text-muted text-decoration-line-through small">
                                 RS. {item.product_price}
@@ -136,11 +169,13 @@ const handleDecrease = (productId) => {
                               </span>
                             </div>
                             <div className="pt-2">
-                             <DoButton 
-  value={quantities[item.product_id] || 1}
-  onAdd={() => handleIncrease(item.product_id)}
-  onSubtract={() => handleDecrease(item.product_id)}
-/>
+                              <DoButton
+                                value={quantities[item.product_id] || 1}
+                                onAdd={() => handleIncrease(item.product_id)}
+                                onSubtract={() =>
+                                  handleDecrease(item.product_id)
+                                }
+                              />
                             </div>
                           </div>
                         </div>
@@ -154,7 +189,11 @@ const handleDecrease = (productId) => {
       </section>
 
       {/* Cart Offcanvas */}
-      <Offcanvas show={showFilter} onHide={() => setShowFilter(false)} placement="end">
+      <Offcanvas
+        show={showFilter}
+        onHide={() => setShowFilter(false)}
+        placement="end"
+      >
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Your Cart</Offcanvas.Title>
         </Offcanvas.Header>
@@ -167,9 +206,7 @@ const handleDecrease = (productId) => {
                 <td>Action</td>
               </tr>
             </thead>
-            <tbody>
-              {/* Cart items will go here */}
-            </tbody>
+            <tbody>{/* Cart items will go here */}</tbody>
           </Table>
         </Offcanvas.Body>
       </Offcanvas>

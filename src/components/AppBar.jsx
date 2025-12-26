@@ -33,29 +33,20 @@ const iconLinks = [
 ];
 
 function AppBar() {
-  const [showCart, setShowCart] = useState(false);
+  const { cartItems, showCart, setShowCart } = useCart();
   const [show, setShow] = useState(false);
   const cartContext = useCart();
-  const cartItems = cartContext ? cartContext.cartItems : [];
   const removeFromCart = cartContext ? cartContext.removeFromCart : () => {};
-
-  // Calculate total count for the red badge
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-
-  // Calculate raw total price without discounts
   const totalOriginalPrice = cartItems.reduce(
     (acc, item) => acc + Number(item.product_price) * item.quantity,
     0
   );
-
-  // Calculate total with discounts (this matches what they actually pay)
   const totalDiscountedPrice = cartItems.reduce(
     (acc, item) =>
       acc + Number(item.product_with_discount_price) * item.quantity,
     0
   );
-
-  // Calculate total savings
   const totalSavings = totalOriginalPrice - totalDiscountedPrice;
 
   return (

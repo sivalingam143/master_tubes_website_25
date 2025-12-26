@@ -583,3 +583,19 @@
 width:60%;
 height:90%;
 }
+
+.search-modal-dropdown {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.search-item-hover:hover {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+/* Ensure the input looks like the screenshot */
+.form-control.rounded-pill {
+  padding-left: 20px;
+  border: 1px solid #ddd !important;
+}

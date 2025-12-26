@@ -10,10 +10,12 @@ const Shop = () => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
+  
   const navigate = useNavigate();
 
   const API_BASE = "http://localhost/master_tubes_website_api/api";
   const COMPANY_ID = "COMP-000001"; // Match your DB company_id
+
 
   useEffect(() => {
     fetchData();
@@ -47,23 +49,30 @@ const Shop = () => {
       <section className="py-5">
         <Container>
           {/* Top Controls */}
-          <Row className="mb-4">
-            <Col lg="6" className="py-2">
-              <Forms
-                type="select"
-                options={categories.map(c => ({ label: c.category_name, value: c.category_id }))}
-              />
-            </Col>
-            <Col lg="6" className="py-2">
-              <Forms PlaceHolder="Search Products..." />
-            </Col>
-            <Col lg="12">
-              <Buttons
-                label={<><IoFilter className="me-2" /> View Cart</>}
-                onClick={() => setShowFilter(true)}
-              />
-            </Col>
-          </Row>
+         <Row className="mb-4 align-items-end"> 
+  {/* Category Select */}
+  <Col lg="6" md="6" className="py-2">
+    <Forms
+      type="select"
+      options={categories.map(c => ({ label: c.category_name, value: c.category_id }))}
+    />
+  </Col>
+
+  {/* Search Bar - Reduced width to lg=4 to make room */}
+  <Col lg="4" md="4" className="py-2">
+    <Forms PlaceHolder="Search Products..." />
+  </Col>
+
+  {/* View Cart Button - Set to lg=2 to sit next to Search */}
+  <Col lg="2" md="2" className="py-4 mb-1">
+    <Buttons
+      label={<><IoFilter className="me-2" /> View Cart</>}
+      onClick={() => setShowFilter(true)}
+      // Added w-100 to make the button fill its 2-column container
+      className="w-100" 
+    />
+  </Col>
+</Row>
 
           {/* Grouped Products by Category */}
         {categories.map((cat) => {
@@ -81,7 +90,7 @@ const Shop = () => {
                 <div className="category-title-strip mb-3">
                   <h5 className="m-0 p-2 bg-light border-start border-4 border-warning">
                     {cat.category_name}
-                   Wall</h5>
+                   </h5>
                 </div>
 
                 <Row>

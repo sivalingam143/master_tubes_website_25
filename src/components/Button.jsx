@@ -6,18 +6,27 @@ const Buttons = ({label, onClick}) => {
     <button className="shop_now body-font" onClick={onClick}>{label}</button>
   </>;
 };
-const DoButton = ({ onClick }) => {
+const DoButton = ({ value, onAdd, onSubtract }) => {
   return (
     <>
-      <div className="do-button">
-        <button className="mx-2 dos" onClick={onClick}>
+      <div className="do-button d-flex align-items-center">
+        {/* Minus Button */}
+        <button className="mx-2 dos mb-4" onClick={onSubtract} type="button">
           <FaMinus />
         </button>
+
+        {/* Displaying the quantity value */}
         <div className="w-25">
-          {" "}
-          <Forms PlaceHolder="No" />
+          <Forms 
+            type="text" 
+            readOnly 
+            value={value} 
+            className="text-center" 
+          />
         </div>
-        <button className="mx-2 dos" onClick={onClick}>
+
+        {/* Plus Button */}
+        <button className="mx-2 dos mb-4" onClick={onAdd} type="button">
           <FaPlus />
         </button>
       </div>

@@ -583,3 +583,38 @@
 width:60%;
 height:90%;
 }
+
+.search-modal-dropdown {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.search-item-hover:hover {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+/* Ensure the input looks like the screenshot */
+.form-control.rounded-pill {
+  padding-left: 20px;
+  border: 1px solid #ddd !important;
+}
+/* This targets the modal dialog container */
+.address-modal .modal-dialog {
+    max-width: 600px; /* This is the "sweet spot" between sm and lg */
+    width: 75%;      /* Ensures it doesn't overflow on mobile */
+}
+
+/* Optional: Match the input styling from your image */
+.address-modal .form-control, 
+.address-modal .form-select {
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.address-modal .btn-danger {
+    background-color: #e92e2e; /* Matching your red Save button */
+    border: none;
+    padding: 8px 25px;
+}

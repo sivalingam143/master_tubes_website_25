@@ -5,7 +5,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { NavLink } from "react-router-dom";
 import StoreLogo from "../assets/images/category/Logo2.png";
-import Forms from "./Forms";
+import SearchForms from "./SearchForms";
 import { Table } from "react-bootstrap";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { useCart } from "./CartContext";
@@ -33,14 +33,21 @@ const iconLinks = [
 ];
 
 function AppBar() {
-  const [showCart, setShowCart] = useState(false);
+  const { cartItems, showCart, setShowCart } = useCart();
   const [show, setShow] = useState(false);
   const cartContext = useCart();
-  const cartItems = cartContext ? cartContext.cartItems : [];
   const removeFromCart = cartContext ? cartContext.removeFromCart : () => {};
-
-  // Calculate total count for the red badge
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const totalOriginalPrice = cartItems.reduce(
+    (acc, item) => acc + Number(item.product_price) * item.quantity,
+    0
+  );
+  const totalDiscountedPrice = cartItems.reduce(
+    (acc, item) =>
+      acc + Number(item.product_with_discount_price) * item.quantity,
+    0
+  );
+  const totalSavings = totalOriginalPrice - totalDiscountedPrice;
 
   return (
     <>
@@ -119,8 +126,8 @@ function AppBar() {
           </Navbar.Brand>
 
           <div className="mx-auto w-50">
-            <Forms PlaceHolder="Search Products" />
-          </div>
+  <SearchForms placeholder="Search Products" />
+</div>
 
           <Nav className="ms-auto align-items-center gap-3">
             {iconLinks.map((item, i) => (
@@ -167,57 +174,133 @@ function AppBar() {
         <Offcanvas.Header closeButton>
           <Offcanvas.Title className="body-font">Your Cart</Offcanvas.Title>
         </Offcanvas.Header>
-
         <Offcanvas.Body>
-          {/* CART ITEMS HERE */}
-          <p className="title-font">Your cart items will appear here</p>
-          <button className="py-3 shop_now body-font">
-            Continue To Shopping
-          </button>
+          {cartItems.length === 0 ? (
+            <div className="text-center py-5">
+              <p className="title-font">Your cart is empty</p>
+              <button
+                className="py-3 shop_now body-font"
+                onClick={() => setShowCart(false)}
+              >
+                Continue To Shopping
+              </button>
+            </div>
+          ) : (
+            <>
+              {/* Scrollable Items List */}
+              <div
+                style={{
+                  maxHeight: "55vh",
+                  overflowY: "auto",
+                  marginBottom: "20px",
+                }}
+              >
+                <Table responsive borderless>
+                  <thead>
+                    <tr
+                      className="border-bottom cart-font text-muted"
+                      style={{ fontSize: "12px" }}
+                    >
+                      <th>Products</th>
+                      <th className="text-end">Price</th>
+                      <th className="text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cartItems.map((item) => (
+                      <tr key={item.product_id} className="border-bottom">
+                        <td>
+                          <div className="d-flex align-items-center">
+                            {/* --- PRODUCT IMAGE --- */}
+                            <img
+                              src={item.product_img_url}
+                              alt={item.product_name}
+                              className="me-2 rounded border"
+                              style={{
+                                width: "50px",
+                                height: "50px",
+                                objectFit: "cover",
+                              }}
+                            />
+                            <div>
+                              <div
+                                className="title-font fw-bold"
+                                style={{ fontSize: "14px", lineHeight: "1.2" }}
+                              >
+                                {item.product_name}
+                              </div>
+                              <div className="text-muted small">
+                                Qty: {item.quantity}
+                              </div>
+                              <div
+                                className="text-danger small"
+                                style={{ textDecoration: "line-through" }}
+                              >
+                                Rs. {item.product_price}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="text-end fw-bold align-middle">
+                          Rs.{" "}
+                          {(
+                            item.product_with_discount_price * item.quantity
+                          ).toFixed(2)}
+                        </td>
+                        <td className="text-center align-middle">
+                          <MdOutlineDeleteOutline
+                            size={20}
+                            style={{ cursor: "pointer", color: "red" }}
+                            onClick={() => removeFromCart(item.product_id)}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
 
-          <div>
-            <Table>
-              <thead>
-                <tr>
-                  <td>Products</td>
-                  <td>Price</td>
-                  <td>Action</td>
-                </tr>
-              </thead>
-              <tbody>
-                {cartItems.map((item) => (
-                  <tr key={item.product_id}>
-                    <td>
-                      <div className="title-font cart-font">
-                        {item.product_name}
-                      </div>
-                      <div className="text-muted small">
-                        Qty: {item.quantity}
-                      </div>
-                      <div className="text-danger small">
-                        Rs. {item.product_with_discount_price}
-                      </div>
-                    </td>
-                    <td>
-                      <div className="cart-font body-font">
-                        Rs.{" "}
-                        {(
-                          item.product_with_discount_price * item.quantity
-                        ).toFixed(2)}
-                      </div>
-                    </td>
-                    <td className="text-center">
-                      <MdOutlineDeleteOutline
-                        size={20}
-                        style={{ cursor: "pointer", color: "red" }}
-                        onClick={() => removeFromCart(item.product_id)}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </div>
+              {/* --- PRICE DETAILS SECTION --- */}
+              <div className="p-3 border rounded bg-light mt-auto">
+                <h6 className="body-font fw-bold border-bottom pb-2 mb-3">
+                  Price Details
+                </h6>
+
+                <div className="d-flex justify-content-between mb-2">
+                  <span>Price ({cartItems.length} items)</span>
+                  <span>Rs. {totalOriginalPrice.toFixed(2)}</span>
+                </div>
+
+                <div className="d-flex justify-content-between mb-2 text-success">
+                  <span>Discount</span>
+                  <span>- Rs. {totalSavings.toFixed(2)}</span>
+                </div>
+
+                <div className="d-flex justify-content-between mb-3 pt-2 border-top fw-bold h5">
+                  <span>Total Amount</span>
+                  <span>Rs. {totalDiscountedPrice.toFixed(2)}</span>
+                </div>
+
+                <div
+                  className="bg-success-subtle text-success p-2 rounded text-center small mb-3 fw-bold"
+                  style={{ backgroundColor: "#d1e7dd" }}
+                >
+                  You will save Rs. {totalSavings.toFixed(2)} on this order!
+                </div>
+
+                <button
+                  className="btn btn-warning w-100 fw-bold py-2 shadow-sm"
+                  style={{
+                    backgroundColor: "#fb641b",
+                    color: "white",
+                    border: "none",
+                  }}
+                >
+                  PLACE ORDER
+                </button>
+              </div>
+            </>
+          )}
         </Offcanvas.Body>
       </Offcanvas>
     </>

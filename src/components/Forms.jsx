@@ -16,14 +16,18 @@ function Forms({
 
       {/* ===== REACT-SELECT DROPDOWN ===== */}
       {type === "select" ? (
-        <Select
-          options={options}
-          value={value}
-          onChange={onChange}
-          isMulti={isMulti}
+       <select 
+        className="form-select" 
+        value={value} 
+        onChange={onChange} // This MUST be here
+        isMulti={isMulti}
           placeholder={PlaceHolder}
           classNamePrefix="react-select"
-        />
+      >
+        {options.map((opt, index) => (
+          <option key={index} value={opt.value}>{opt.label}</option>
+        ))}
+      </select>
       ) : (
         /* ===== NORMAL INPUT ===== */
         <Form.Control

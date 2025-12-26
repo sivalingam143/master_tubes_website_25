@@ -10,6 +10,7 @@ const Shop = () => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("all");
   
   const navigate = useNavigate();
 
@@ -52,10 +53,16 @@ const Shop = () => {
          <Row className="mb-4 align-items-end"> 
   {/* Category Select */}
   <Col lg="6" md="6" className="py-2">
-    <Forms
-      type="select"
-      options={categories.map(c => ({ label: c.category_name, value: c.category_id }))}
-    />
+  <Forms
+  type="select"
+  // Add an "All" option so users can reset the filter
+  options={[
+    { label: "All Categories", value: "all" }, 
+    ...categories.map(c => ({ label: c.category_name, value: c.category_id }))
+  ]}
+  // This captures the selection and saves it to state
+  onChange={(e) => setSelectedCategory(e.target.value)} 
+/>
   </Col>
 
   {/* Search Bar - Reduced width to lg=4 to make room */}
@@ -74,16 +81,14 @@ const Shop = () => {
   </Col>
 </Row>
 
-          {/* Grouped Products by Category */}
-        {categories.map((cat) => {
-  // Use category_id (the string) to match, not the numeric .id
-  const categoryProducts = products.filter(
-    (p) => String(p.category_id) === String(cat.category_id)
-  );
+{categories
+  .filter((cat) => selectedCategory === "all" || String(cat.category_id) === String(selectedCategory))
+  .map((cat) => {
+    const categoryProducts = products.filter(
+      (p) => String(p.category_id) === String(cat.category_id)
+    );
 
-  // If products are not assigned to categories yet, 
-  // they won't show up in this loop.
-  if (categoryProducts.length === 0) return null;
+    if (categoryProducts.length === 0) return null;
             return (
               <div key={cat.category_id} className="mb-5">
                 {/* Category Header Strip */}

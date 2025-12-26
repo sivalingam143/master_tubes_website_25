@@ -53,9 +53,9 @@ function Bottoms() {
             <Col lg="3" className="py-3">
               <h6 className="body-font">Customer Service</h6>
               <div className="title-font">
-                <Nav.Link as={NavLink} to="/profile" className="py-2"> My Account</Nav.Link>
+                <Nav.Link as={NavLink} to="/account" className="py-2"> My Account</Nav.Link>
                 <Nav.Link className="py-2">Order History </Nav.Link>
-                <Nav.Link className="py-2"> Shopping cart</Nav.Link>
+                <Nav.Link className="py-2" > Shopping cart</Nav.Link>
                 <Nav.Link className="py-2"> Wishing Cart</Nav.Link>
               </div>
             </Col>

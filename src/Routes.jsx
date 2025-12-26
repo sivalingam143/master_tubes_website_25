@@ -8,28 +8,31 @@ import Contact from "./Pages/Contact";
 
 // Profile Components
 import ProfileLayout from "./Pages/ProfileLayout";
-import ProfileForm from "./Pages/Profile"; 
+import ProfileForm from "./Pages/Profile";
 import DeliveryAddress from "./Pages/DeliveryAddress";
 
+//Bottom Section
+import Account from "./Pages/Account";
+
 const Routes = [
-  { path: "/", element: <Home/> },
-  { path: "/shop", element: <Shop/> },
-  { path: "/blog", element: <h1>Blog</h1> },
-  { path: "/about", element:<About/> },
-  { path: "/contact", element: <Contact/> },
-  { path: "/wishlist", element: <WishList/> },
+  { path: "/", element: <Home /> },
+  { path: "/shop", element: <Shop /> },
+  { path: "/about", element: <About /> },
+  { path: "/contact", element: <Contact /> },
+  { path: "/wishlist", element: <WishList /> },
+  { path: "/account", element: <Account /> },
   { path: "/cart", element: <h1>Cart</h1> },
-  { path: "/prdt/:productId", element: <ProductDetails/>},
-  { path: "/login", element: <Login/>},
-  
+  { path: "/prdt/:productId", element: <ProductDetails /> },
+  { path: "/login", element: <Login /> },
+
   // Update this section for Nested Routing
   {
     path: "/profile",
     element: <ProfileLayout />, // This contains the Red Sidebar
     children: [
-      { path: "", element: <ProfileForm /> },      // URL: /profile (The Form)
-      { path: "address", element: <DeliveryAddress /> } // URL: /profile/address
-    ]
+      { path: "", element: <ProfileForm /> }, // URL: /profile (The Form)
+      { path: "address", element: <DeliveryAddress /> }, // URL: /profile/address
+    ],
   },
 ];
 

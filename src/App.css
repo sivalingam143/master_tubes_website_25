@@ -547,6 +547,7 @@
   width: 350px;
 }
 
+<<<<<<< HEAD
 .profile-nav .nav-item {
   cursor: pointer;
   font-size: 14px;
@@ -570,5 +571,46 @@
 .form-control:focus {
   background-color: #f8f9fa;
   box-shadow: none;
+=======
+/* ADD TO CART: Full width, static color, no hover effect */
+.btn-add-cart {
+  background-color: #ff0000 !important;
+  color: white !important;
+  padding: 15px 0;
+  border: none;
+  border-radius: 4px;
+  text-transform: uppercase;
+>>>>>>> cc79dba2b5caf02197c3082be25a8e08e649cfc4
 }
 
+.btn-add-cart:hover, 
+.btn-add-cart:active, 
+.btn-add-cart:focus {
+  background-color: #ff0000 !important; /* Forces color to stay the same */
+  color: white !important;
+  box-shadow: none !important;
+}
+
+/* WISHLIST: Full width, static white, no hover effect */
+.btn-wishlist {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #000000 !important;
+  /* border-right: none !important; */
+  border-radius: 4px 0 0 4px !important;
+  padding: 12px 0;
+  text-transform: uppercase;
+}
+
+.btn-wishlist:hover,
+.btn-wishlist:active,
+.btn-wishlist:focus {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: none !important;
+}
+
+.img-fluid1{
+width:70%;
+height:70%;
+}

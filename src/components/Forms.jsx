@@ -37,13 +37,7 @@ function Forms({
           type={type}
           placeholder={PlaceHolder}
           value={value}
-          onChange={onChange}
-          readOnly={readOnly}
-          maxLength={maxLength}
-          style={{
-            backgroundColor: readOnly ? "#f8f9fa" : "white",
-            cursor: readOnly ? "not-allowed" : "text",
-          }}
+          onChange={(e) => onChange && onChange(e.target.value)}
         />
       )}
     </Form.Group>

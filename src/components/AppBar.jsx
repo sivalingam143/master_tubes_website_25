@@ -8,6 +8,7 @@ import StoreLogo from "../assets/images/category/Logo2.png";
 import Forms from "./Forms";
 import { Table } from "react-bootstrap";
 import { MdOutlineDeleteOutline } from "react-icons/md";
+import { useCart } from "./CartContext";
 
 // import Forms from "./Forms";
 import {
@@ -34,6 +35,12 @@ const iconLinks = [
 function AppBar() {
   const [showCart, setShowCart] = useState(false);
   const [show, setShow] = useState(false);
+  const cartContext = useCart();
+  const cartItems = cartContext ? cartContext.cartItems : [];
+  const removeFromCart = cartContext ? cartContext.removeFromCart : () => {};
+
+  // Calculate total count for the red badge
+  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <>
@@ -49,9 +56,8 @@ function AppBar() {
 
           <div className="cart-mobile" onClick={() => setShowCart(true)}>
             <IoBagHandleOutline size={22} />
-            <span>99</span>
+            <span>{totalItems}</span>
           </div>
-
           {/* Offcanvas */}
           <Navbar.Offcanvas
             show={show}
@@ -63,20 +69,34 @@ function AppBar() {
                 <img src={StoreLogo} alt="Logo" className="img-fluid logo" />
               </Offcanvas.Title>
             </Offcanvas.Header>
-
             <Offcanvas.Body>
-              <Nav>
-                {menuLinks.map((item, i) => (
-                  <Nav.Link
-                    key={i}
-                    as={NavLink}
-                    to={item.path}
-                    onClick={() => setShow(false)} // 👈 CLOSE HERE
-                  >
-                    {item.label}
-                  </Nav.Link>
-                ))}
-              </Nav>
+              {cartItems.length === 0 ? (
+                <p>Your cart is empty</p>
+              ) : (
+                <Table>
+                  <tbody>
+                    {cartItems.map((item) => (
+                      <tr key={item.product_id}>
+                        <td>
+                          <div className="cart-font">{item.product_name}</div>
+                          <div className="text-muted small">
+                            Qty: {item.quantity}
+                          </div>
+                          <div className="text-danger">
+                            Rs. {item.product_with_discount_price}
+                          </div>
+                        </td>
+                        <td className="text-center">
+                          <MdOutlineDeleteOutline
+                            style={{ cursor: "pointer", color: "red" }}
+                            onClick={() => removeFromCart(item.product_id)}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              )}
             </Offcanvas.Body>
           </Navbar.Offcanvas>
           <div className="mx-auto w-100">
@@ -110,13 +130,12 @@ function AppBar() {
             ))}
 
             <Nav.Link
-              as="div"
               onClick={() => setShowCart(true)}
               style={{ cursor: "pointer" }}
             >
               <div className="cart-mobile">
                 <IoBagHandleOutline size={22} />
-                <span>99</span>
+                <span>{totalItems}</span> {/* REAL COUNT */}
               </div>
             </Nav.Link>
           </Nav>
@@ -155,9 +174,7 @@ function AppBar() {
           <button className="py-3 shop_now body-font">
             Continue To Shopping
           </button>
-          <div className="py-3">
-            <Nav.Link className="login title-font">Login Here</Nav.Link>
-          </div>
+
           <div>
             <Table>
               <thead>
@@ -168,29 +185,36 @@ function AppBar() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td >
-                    <div className="title-font cart-font" >7cm Green (1 Box)</div>
-                    <div className="cart-font body-font ">
-                      {" "}
-                      <span className="discount_price">Rs. 19.50</span>{" "}
-                      <span className="mx-2">Rs. 18.53</span>
-                    </div>
-                      <DoButton/>
-                  </td>
-                  <td>
-                    <div className="cart-font body-font w-100">
-                      {" "}
-                      <div className="discount_price">Rs. 19.50</div>{" "}
-                      <div>Rs. 18.53</div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="cart-font text-center">
-                      <MdOutlineDeleteOutline />
-                    </div>
-                  </td>
-                </tr>
+                {cartItems.map((item) => (
+                  <tr key={item.product_id}>
+                    <td>
+                      <div className="title-font cart-font">
+                        {item.product_name}
+                      </div>
+                      <div className="text-muted small">
+                        Qty: {item.quantity}
+                      </div>
+                      <div className="text-danger small">
+                        Rs. {item.product_with_discount_price}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="cart-font body-font">
+                        Rs.{" "}
+                        {(
+                          item.product_with_discount_price * item.quantity
+                        ).toFixed(2)}
+                      </div>
+                    </td>
+                    <td className="text-center">
+                      <MdOutlineDeleteOutline
+                        size={20}
+                        style={{ cursor: "pointer", color: "red" }}
+                        onClick={() => removeFromCart(item.product_id)}
+                      />
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
           </div>

@@ -18,24 +18,23 @@ const ProductDetails = () => {
 
   const handleAddToCart = () => {
     addToCart(product, quantity);
-    // Optional: open the cart sidebar automatically
-    // This depends on if you pass the setShowCart state via context too
+    setQuantity(1);
   };
-  useEffect(() => {
+useEffect(() => {
     const fetchDetails = async () => {
       try {
         setLoading(true);
         // 1. Fetch Main Product Details
         const response = await fetch(`${API_BASE}/product.php`, {
           method: "POST",
-          body: JSON.stringify({
-            company_id: COMPANY_ID,
-            product_id: productId,
-            fetch_all: false,
+          body: JSON.stringify({ 
+         
+            product_id: productId, 
+            fetch_all: false 
           }),
         });
         const data = await response.json();
-
+        
         if (data.head.code === 200 && data.body.products.length > 0) {
           const mainProduct = data.body.products[0];
           setProduct(mainProduct);
@@ -43,19 +42,17 @@ const ProductDetails = () => {
           // 2. Fetch Related Products from the same category
           const relatedRes = await fetch(`${API_BASE}/product.php`, {
             method: "POST",
-            body: JSON.stringify({
-              company_id: COMPANY_ID,
-              fetch_all: true,
+            body: JSON.stringify({ 
+             
+              fetch_all: true 
             }),
           });
           const relatedData = await relatedRes.json();
-
+          
           if (relatedData.head.code === 200) {
             // Filter products that belong to the same category, excluding the current product
             const filtered = relatedData.body.products.filter(
-              (p) =>
-                String(p.category_id) === String(mainProduct.category_id) &&
-                p.product_id !== productId
+              (p) => String(p.category_id) === String(mainProduct.category_id) && p.product_id !== productId
             );
             setRelatedProducts(filtered);
           }

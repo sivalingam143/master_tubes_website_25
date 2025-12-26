@@ -33,10 +33,11 @@ const iconLinks = [
 ];
 
 function AppBar() {
-  const [showCart, setShowCart] = useState(false);
+  // 
+  const { cartItems, showCart, setShowCart } = useCart();
   const [show, setShow] = useState(false);
   const cartContext = useCart();
-  const cartItems = cartContext ? cartContext.cartItems : [];
+  // const cartItems = cartContext ? cartContext.cartItems : [];
   const removeFromCart = cartContext ? cartContext.removeFromCart : () => {};
 
   // Calculate total count for the red badge

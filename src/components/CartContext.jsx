@@ -4,30 +4,45 @@ const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
+  const [showCart, setShowCart] = useState(false); // Added for auto-open
 
   const addToCart = (product, quantity) => {
     setCartItems((prevCart) => {
-      // Check if product already exists in cart
-      const existingItem = prevCart.find(item => item.product_id === product.product_id);
-      
+      const existingItem = prevCart.find(
+        (item) => item.product_id === product.product_id
+      );
+      // Change this specific block in your addToCart function
       if (existingItem) {
-        return prevCart.map(item =>
-          item.product_id === product.product_id 
-          ? { ...item, quantity: item.quantity + quantity } 
-          : item
+        return prevCart.map((item) =>
+          item.product_id === product.product_id
+            ? { ...item, quantity: quantity } // Change this: use 'quantity' instead of 'item.quantity + quantity'
+            : item
         );
       }
-      // Add new item if it doesn't exist
       return [...prevCart, { ...product, quantity }];
     });
+
+    // Automatically slide the cart open
+    setShowCart(true);
   };
 
+  // Ensure this function is defined!
   const removeFromCart = (productId) => {
-    setCartItems(prev => prev.filter(item => item.product_id !== productId));
+    setCartItems((prev) =>
+      prev.filter((item) => item.product_id !== productId)
+    );
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart }}>
+    <CartContext.Provider
+      value={{
+        cartItems,
+        addToCart,
+        removeFromCart, // This was likely causing your error if undefined
+        showCart,
+        setShowCart,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

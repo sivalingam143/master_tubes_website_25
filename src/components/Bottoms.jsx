@@ -7,6 +7,7 @@ import {
   FaWhatsapp,
 } from "react-icons/fa";
 import StoreLogo from "../assets/images/category/Logo2.png";
+import { NavLink } from "react-router-dom";
 import UPI from "../assets/images/upi.webp";
 function Bottoms() {
   return (
@@ -15,13 +16,13 @@ function Bottoms() {
         <Container>
           <Row>
             <Col lg="3" className="py-3">
-              <h6 className="body-font">
+              {/* <h6 className="body-font">
                 Subscribe To Receive Updates, Access To Exclusive Deals, And
                 More.
-              </h6>
-              <div className="py-2">
+              </h6> */}
+              {/* <div className="py-2">
                 <Forms PlaceHolder="Search Products" />
-              </div>
+              </div> */}
               <div className="d-flex">
                 <div className="social-icon">
                   <FaFacebookF />
@@ -43,17 +44,16 @@ function Bottoms() {
             <Col lg="3" className="py-3">
               <h6 className="body-font">My Accounts</h6>
               <div className="title-font">
-                <Nav.Link className="py-2"> Shop</Nav.Link>
-                <Nav.Link className="py-2"> About us </Nav.Link>
-                <Nav.Link className="py-2"> Blog</Nav.Link>
-                <Nav.Link className="py-2"> FAQ</Nav.Link>
-                <Nav.Link className="py-2"> Contact Us</Nav.Link>
+                <Nav.Link as={NavLink} to="/shop" className="py-2">Shop</Nav.Link>
+                <Nav.Link as={NavLink} to="/about" className="py-2">About us</Nav.Link>
+                <Nav.Link as={NavLink} to="/faq" className="py-2">FAQ</Nav.Link>
+                <Nav.Link as={NavLink} to="/contact" className="py-2">Contact Us</Nav.Link>
               </div>
             </Col>
             <Col lg="3" className="py-3">
               <h6 className="body-font">Customer Service</h6>
               <div className="title-font">
-                <Nav.Link className="py-2"> My Account</Nav.Link>
+                <Nav.Link as={NavLink} to="/profile" className="py-2"> My Account</Nav.Link>
                 <Nav.Link className="py-2">Order History </Nav.Link>
                 <Nav.Link className="py-2"> Shopping cart</Nav.Link>
                 <Nav.Link className="py-2"> Wishing Cart</Nav.Link>

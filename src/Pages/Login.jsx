@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import Forms from "../components/Forms";
 import { Buttons } from "../components/Button";
-import emailjs from "@emailjs/browser";
+// import emailjs from "@emailjs/browser";
 import API_DOMAIN from "../config/config";
 
 const Login = () => {

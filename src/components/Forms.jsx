@@ -34,7 +34,7 @@ function Forms({
           type={type}
           placeholder={PlaceHolder}
           value={value}
-          onChange={(e) => onChange && onChange(e.target.value)}
+        onChange={onChange}
         />
       )}
     </Form.Group>

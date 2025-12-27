@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import Forms from "../components/Forms";
 import { Buttons } from "../components/Button";
@@ -27,6 +27,15 @@ const Login = () => {
 
   const navigate = useNavigate();
   const location = useLocation(); // Get location for redirect state
+
+  // Check if already logged in on mount
+  useEffect(() => {
+    const customer = localStorage.getItem("customer");
+    if (customer) {
+      const redirectTo = location.state?.redirectTo || "/home";
+      navigate(redirectTo, { replace: true });
+    }
+  }, [navigate, location.state]);
 
   // ... existing states
   // Initialize EmailJS (do this once, e.g., in useEffect)
@@ -134,6 +143,11 @@ const Login = () => {
       alert(result.head.msg);
     }
   };
+
+  // If already logged in, we navigate away, so don't render the form
+  if (localStorage.getItem("customer")) {
+    return null; // Or a loading spinner, but since useEffect handles it
+  }
 
   return (
     <>

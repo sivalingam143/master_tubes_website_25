@@ -26,22 +26,16 @@ const Routes = [
   { path: "/prdt/:productId", element: <ProductDetails /> },
   {
     path: "/login",
-    element: !localStorage.getItem("customer") ? (
-      <Login />
-    ) : (
-      <Navigate to="/home" />
-    ),
+    element: <Login />,
   },
   {
     path: "/profile",
-    element: localStorage.getItem("customer") ? (
-      <ProfileLayout />
-    ) : (
-      <Navigate to="/login" />
-    ),
+    element: <ProfileLayout />,
     children: [
       { path: "", element: <ProfileForm /> },
       { path: "address", element: <DeliveryAddress /> },
+      { path: "orders", element: <h1>Orders</h1> }, // Add if needed
+      { path: "wishlist", element: <WishList /> }, // Nested if needed
     ],
   },
   {

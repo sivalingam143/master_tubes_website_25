@@ -13,7 +13,7 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
 
-  const API_BASE = "http://localhost/master_tubes_website_api/api";
+  const API_BASE = "http://localhost/master_tubes_website_api";
   const COMPANY_ID = "COMP-000001";
 
   const handleAddToCart = () => {

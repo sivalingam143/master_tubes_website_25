@@ -6,7 +6,7 @@ const ProductGrid = () => {
   useEffect(() => {
     const getNewArrivals = async () => {
       try {
-        const response = await fetch("http://localhost/master_tubes_website_api/api/product.php", {
+        const response = await fetch("http://localhost/master_tubes_website_api/product.php", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

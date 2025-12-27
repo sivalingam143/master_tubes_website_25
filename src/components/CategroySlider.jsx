@@ -14,7 +14,7 @@ export default function HeroSlider() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost/master_tubes_website_api/api/category.php", {
+        const response = await fetch("http://localhost/master_tubes_website_api/category.php", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

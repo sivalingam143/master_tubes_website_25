@@ -17,8 +17,8 @@ const Shop = () => {
   const { addToDetails } = useCart();
   const navigate = useNavigate();
 
-  const API_BASE = "http://localhost/master_tubes_website_api/api";
-  // Removed COMPANY_ID constant
+  const API_BASE = "http://localhost/master_tubes_website_api";
+
 
   useEffect(() => {
     fetchData();

@@ -5,7 +5,9 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [showCart, setShowCart] = useState(false); // Added for auto-open
-
+const clearCart = () => {
+  setCartItems([]);
+};
   const addToCart = (product, quantity) => {
     setCartItems((prevCart) => {
       const existingItem = prevCart.find(
@@ -57,7 +59,8 @@ export const CartProvider = ({ children }) => {
       value={{
         cartItems,
         addToCart,
-        removeFromCart, // This was likely causing your error if undefined
+        removeFromCart,
+        clearCart, // This was likely causing your error if undefined
         showCart,
         setShowCart,
         addToDetails

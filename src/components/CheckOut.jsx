@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../components/CartContext";
-import API_DOMAIN from "../config/config"; // Adjust if needed
+import API_DOMAIN from "../config/config"; 
 
 const Checkout = () => {
   const { cartItems, clearCart } = useCart();
@@ -73,72 +73,66 @@ const Checkout = () => {
     setAddressForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (
-      !addressForm.address_line1 ||
-      !addressForm.city ||
-      !addressForm.pin_code ||
-      !addressForm.phone
-    ) {
-      setError("Please fill all required fields");
-      return;
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    setLoading(true);
-    setError(null);
+  if (cartItems.length === 0) {
+    setError("Cart is empty");
+    return;
+  }
 
-    // Format shipping address
-    const shippingAddress = `${addressForm.first_name} ${
-      addressForm.last_name
-    }, ${addressForm.address_line1}${
-      addressForm.address_line2 ? `, ${addressForm.address_line2}` : ""
-    }, ${addressForm.city}, ${addressForm.state}, ${addressForm.pin_code}, ${
-      addressForm.country
-    }, Phone: ${addressForm.phone}`;
+  setLoading(true);
+  setError(null);
 
-    // Format product details
-    const productDetails = cartItems.map((item) => ({
+  // 1. Define the shipping address string
+  const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${addressForm.address_line1}, ${addressForm.city}, ${addressForm.state}, ${addressForm.pin_code}, ${addressForm.country}, Phone: ${addressForm.phone}`;
+
+  // 2. Prepare the payload (This was missing in your snippet)
+  const payload = {
+    customer_id: customer.customer_id,
+    product_details: cartItems.map((item) => ({
       product_id: item.product_id,
       product_name: item.product_name,
       quantity: item.quantity,
       price: item.product_with_discount_price,
-    }));
-
-    const payload = {
-      customer_id: customer.customer_id,
-      product_details: productDetails,
-      shipping_address: shippingAddress,
-      total_items: totalItems,
-      sub_total: subTotal,
-      discount: discount,
-      shipping_charges: shippingCharges,
-      grand_total: grandTotal,
-    };
-
-    try {
-      const response = await fetch(`${API_DOMAIN}/order.php`, {
-        // Assuming order.php
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const result = await response.json();
-
-      if (result.head.code === 200) {
-        clearCart();
-        alert(`Order placed successfully! Order No: ${result.body.order_no}`);
-        navigate("/profile/orders"); // Or to success page
-      } else {
-        setError(result.head.msg);
-      }
-    } catch (err) {
-      setError("Failed to place order");
-    } finally {
-      setLoading(false);
-    }
+    })),
+    shipping_address: shippingAddress,
+    total_items: totalItems,
+    sub_total: subTotal,
+    discount: discount,
+    shipping_charges: shippingCharges,
+    grand_total: grandTotal,
   };
 
+  try {
+    const response = await fetch(`${API_DOMAIN}/order.php`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error("Server responded with an error");
+    }
+
+    const result = await response.json();
+
+    if (result.head && result.head.code == 200) {
+      alert(result.head.msg);
+      if (typeof clearCart === "function") {
+        clearCart();
+      }
+      navigate("/profile/orders");
+    } else {
+      setError(result.head ? result.head.msg : "Order failed");
+    }
+  } catch (err) {
+    console.error("Network Error:", err);
+    setError("Connection failed. Check if WAMP is running and CORS is enabled.");
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <section className="py-5">
       <Container>
@@ -294,7 +288,7 @@ const Checkout = () => {
                 variant="danger"
                 className="w-100 mt-3"
                 onClick={handleSubmit}
-                disabled={loading}
+                disabled={loading || cartItems.length === 0}
               >
                 {loading ? "Processing..." : "Confirm Order"}
               </Button>

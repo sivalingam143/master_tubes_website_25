@@ -5,6 +5,7 @@ import Login from "./Pages/Login";
 import WishList from "./Pages/WishList";
 import About from "./Pages/About";
 import Contact from "./Pages/Contact";
+import Checkout from "./components/CheckOut";
 // Profile Components
 import ProfileLayout from "./Pages/ProfileLayout";
 import ProfileForm from "./Pages/Profile";
@@ -24,6 +25,7 @@ const Routes = [
   { path: "/account", element: <Account /> },
   { path: "/cart", element: <h1>Cart</h1> },
   { path: "/prdt/:productId", element: <ProductDetails /> },
+  { path: "/checkout", element: <Checkout /> }, // Add this route
   {
     path: "/login",
     element: <Login />,

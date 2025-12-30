@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Buttons, DoButton } from "../components/Button";
 import Forms from "../components/Forms";
 import { useCart } from "../components/CartContext";
-import API_DOMAIN from "../config/config"; 
+import API_DOMAIN from "../config/config";
 import { useLocation } from "react-router-dom";
 const Shop = () => {
   const [categories, setCategories] = useState([]);
@@ -18,27 +18,27 @@ const Shop = () => {
   const { addToDetails } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
-// Inside Shop.jsx
-useEffect(() => {
+
+  useEffect(() => {
     const params = new URLSearchParams(location.search);
     const categoryFromUrl = params.get("category");
 
     if (categoryFromUrl) {
-      // Set the ID as the selected category
       setSelectedCategory(categoryFromUrl);
-      
-      // Force scroll to top so user sees the filtered products
       window.scrollTo(0, 0);
     }
-}, [location.search]);
+  }, [location.search]);
 
-// Now, update your product display logic (the part that filters the list)
-const filteredProducts = products.filter((product) => {
-    const matchesCategory = selectedCategory === "all" || String(product.category_id) === String(selectedCategory);
-    const matchesSearch = product.product_name.toLowerCase().includes(searchTerm.toLowerCase());
+  // Now, update your product display logic (the part that filters the list)
+  const filteredProducts = products.filter((product) => {
+    const matchesCategory =
+      selectedCategory === "all" ||
+      String(product.category_id) === String(selectedCategory);
+    const matchesSearch = product.product_name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
-});
-  
+  });
 
   useEffect(() => {
     fetchData();
@@ -49,14 +49,14 @@ const filteredProducts = products.filter((product) => {
       // Removed company_id from the request body
       const catRes = await fetch(`${API_DOMAIN}/category.php`, {
         method: "POST",
-        body: JSON.stringify({   search_text: "",}),
+        body: JSON.stringify({ search_text: "" }),
       });
       const catData = await catRes.json();
 
       // Removed company_id from the request body
       const prodRes = await fetch(`${API_DOMAIN}/product.php`, {
         method: "POST",
-        body: JSON.stringify({   search_text: "", }),
+        body: JSON.stringify({ search_text: "" }),
       });
       const prodData = await prodRes.json();
 

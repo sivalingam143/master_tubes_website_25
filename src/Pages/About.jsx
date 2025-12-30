@@ -13,7 +13,7 @@ const About = () => {
           {/* Main About Section */}
           <Row>
             <Col lg="12" className="py-5">
-              <h4 className="body-font text-center">About BigFestival</h4>
+              <h4 className="body-font text-center">About Master Tubes</h4>
             </Col>
             <Col lg="3" md="6" className="py-3">
               <div className="bg-light p-4 h-100 shadow-sm">

@@ -10,35 +10,92 @@ import StoreLogo from "../assets/images/category/Logo2.png";
 import { NavLink } from "react-router-dom";
 import UPI from "../assets/images/upi.webp";
 import { useCart } from "../components/CartContext";
+import { useEffect, useState } from "react";
+import API_DOMAIN from "../config/config";
+
 function Bottoms() {
   const { setShowCart } = useCart();
+  const [company, setCompany] = useState(null);
+
+ useEffect(() => {
+  const fetchCompanyData = async () => {
+    try {
+      const response = await fetch(`${API_DOMAIN}/company.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          search_text: "" // Fetches all companies as per your PHP logic
+        }),
+      });
+      
+      const data = await response.json();
+      console.log("data", data);
+      
+      if (data.head.code === 200 && data.body.company) {
+        // Find the specific company ID in the array returned by PHP
+        const targetCompany = data.body.company.find(
+          (c) => c.company_id === "COMP-000002"
+        );
+        setCompany(targetCompany);
+        console.log("targetCompany", targetCompany);
+      }
+    } catch (error) {
+      console.error("Error fetching company data:", error);
+    }
+  };
+  
+  fetchCompanyData();
+}, []);
   return (
     <>
       <section className="bottoms">
         <Container>
           <Row>
             <Col lg="3" className="py-3">
-              {/* <h6 className="body-font">
-                Subscribe To Receive Updates, Access To Exclusive Deals, And
-                More.
-              </h6> */}
-              {/* <div className="py-2">
-                <Forms PlaceHolder="Search Products" />
-              </div> */}
               <div className="d-flex">
-                <div className="social-icon">
+                {/* Facebook */}
+                <a
+                  href={company?.facebook_link || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon"
+                >
                   <FaFacebookF />
-                </div>
-                <div className="social-icon">
+                </a>
+
+                {/* Instagram */}
+                <a
+                  href={company?.instagram_link || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon"
+                >
                   <FaInstagram />
-                </div>
-                <div className="social-icon">
+                </a>
+
+                {/* Youtube */}
+                <a
+                  href={company?.youtube_link || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon"
+                >
                   <FaYoutube />
-                </div>
-                <div className="social-icon">
+                </a>
+
+                {/* WhatsApp - Use the mobile number from DB if no link is provided */}
+                <a
+                  href={
+                    company?.mobile ? `https://wa.me/${company.mobile}` : "#"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon"
+                >
                   <FaWhatsapp />
-                </div>
+                </a>
               </div>
+
               <div className="py-3">
                 <img src={StoreLogo} alt="Logo" className="img-fluid logo" />
               </div>

@@ -3,8 +3,10 @@ import { Col, Container, Row, Form, Button } from "react-bootstrap";
 import API_DOMAIN from "../config/config";
 import { MdMailOutline, MdAccessTime } from "react-icons/md";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Contact = () => {
+  const navigate = useNavigate();
   const storedCustomer = JSON.parse(localStorage.getItem("customer")) || {};
   const [formData, setFormData] = useState({
     name: storedCustomer.first_name
@@ -53,6 +55,9 @@ const Contact = () => {
       if (result.head.code === 200) {
         toast.success("Message sent successfully!");
         setFormData(getStoredData());
+        setTimeout(() => {
+        navigate("/"); 
+      }, 1500);
         // setFormData({ name: "", email: "", phone: "", comment: "" });
       } else {
         alert("Error: " + result.head.msg);

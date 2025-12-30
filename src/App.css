@@ -40,7 +40,7 @@
 }
 .custom-swiper-slide {
   width: 300px; /* Adjust size as needed */
-  height: 400px;
+  height: 350px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -68,7 +68,9 @@
 .swiper-slide-active .explore-btn {
   opacity: 1;
 }
-
+.mySwiper .swiper-pagination {
+  bottom: -6px !important; /* This moves the entire row of dots down */
+}
 /* Style the dots to match the video */
 .swiper-pagination-bullet {
   background: #fff !important;
@@ -625,4 +627,18 @@ height:90%;
 border-radius: 5px;
   margin-left: 40%;
   color: white !important;
+}
+
+/* Targets the input field inside your custom quantity button */
+.do-button-container input, 
+.pt-2 input {
+    text-align: center !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* If you use a specific class for the quantity input */
+.quantity-input {
+    text-align: center;
 }

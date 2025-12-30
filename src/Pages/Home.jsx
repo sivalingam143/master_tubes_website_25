@@ -64,9 +64,9 @@ const Home = () => {
       </section>
 
       <section className="product-grids overflow-hidden">
-        <Container className="py-5">
+        <Container className="py-3">
           <Row>
-            <Col lg="12" className="py-5 mb-5 mx-auto">
+            <Col lg="12" className="py-5 mb-3 mx-auto">
               <div
                 className="d-flex justify-content-center"
                 data-aos="fade-up" // Ribbon slides up

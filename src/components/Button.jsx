@@ -1,9 +1,10 @@
 import React from "react";
 import { FaPlus ,FaMinus  } from "react-icons/fa";
 import Forms from "./Forms";
-const Buttons = ({label, onClick}) => {
+const Buttons = ({label, onClick,disabled,style}) => {
   return <>
-    <button className="shop_now body-font" onClick={onClick}>{label}</button>
+    <button className="shop_now body-font" onClick={onClick}disabled={disabled} // Now the button actually disables
+        style={style}>{label}</button>
   </>;
 };
 const DoButton = ({ value, onAdd, onSubtract }) => {

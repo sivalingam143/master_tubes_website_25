@@ -4,12 +4,17 @@ import Forms from "../components/Forms";
 import { Buttons } from "../components/Button";
 import emailjs from "@emailjs/browser";
 import API_DOMAIN from "../config/config";
-import { useNavigate, useLocation } from "react-router-dom"; // Add useLocation
+import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Login = () => {
   // States for steps: 1 - Email, 2 - OTP, 3 - Profile
   const [currentStep, setCurrentStep] = useState(1);
   const [customer, setCustomer] = useState(null);
+  const [isAgreed, setIsAgreed] = useState(false);
+  // Add these to your other states in Login.jsx
+  const [timeLeft, setTimeLeft] = useState(300);
+  const [isTimerActive, setIsTimerActive] = useState(false);
 
   // Form states
   const [email, setEmail] = useState("");
@@ -46,6 +51,26 @@ const Login = () => {
   // Email validation regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+  useEffect(() => {
+    let timer;
+    if (isTimerActive && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setIsTimerActive(false);
+      toast.error("OTP expired. Please resend."); // Using your toast setup
+    }
+    return () => clearInterval(timer);
+  }, [isTimerActive, timeLeft]);
+
+  // Helper to format 300 seconds into 5:00
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+  };
+
   // API call helper (assume fetch to your PHP endpoint, e.g., /api/customers.php)
   const apiCall = async (data) => {
     try {
@@ -79,71 +104,86 @@ const Login = () => {
       };
       try {
         await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams);
-        alert("OTP sent to your email!");
+        toast.success("OTP sent to your email!");
+        setTimeLeft(300);
+        setIsTimerActive(true);
         setCurrentStep(2);
       } catch (error) {
         console.error("EmailJS Error:", error);
-        alert("Failed to send OTP. Please try again.");
+        toast.error("Failed to send email. Please try again.");
       }
     } else {
-      alert(result.head.msg);
+      toast.warning(result.head.msg);
     }
   };
 
-  const handleVerifyOtp = async () => {
-    if (!otp || otp.length !== 4 || !/^\d{4}$/.test(otp)) {
-      alert("Please enter a valid 4-digit OTP.");
-      return;
-    }
+ // ... inside Login.jsx ...
+const handleVerifyOtp = async () => {
+  if (!otp || otp.length !== 4 || !/^\d{4}$/.test(otp)) {
+    alert("Please enter a valid 4-digit OTP.");
+    return;
+  }
 
-    const result = await apiCall({
-      action: "verify_otp",
-      email_id: email,
-      otp,
-    });
-    if (result.head.code === 200) {
-      setCustomer(result.body.customer);
-      setCurrentStep(3);
-    } else {
-      alert(result.head.msg);
-    }
-  };
+  const result = await apiCall({
+    action: "verify_otp",
+    email_id: email,
+    otp,
+  });
 
-  const handleUpdateProfile = async () => {
-    if (!firstName || !lastName || !phone || !gender || !dob) {
-      alert("Please fill all fields.");
-      return;
-    }
-    if (!/^\d{10}$/.test(phone)) {
-      alert("Please enter a valid 10-digit phone number.");
-      return;
-    }
-    const dobDate = new Date(dob);
-    if (isNaN(dobDate.getTime())) {
-      alert("Please enter a valid DOB.");
-      return;
-    }
+  if (result.head.code === 200) {
+    // EXISTING USER: Save to local storage and go to home page
+    localStorage.setItem("customer", JSON.stringify(result.body.customer));
+    toast.success("Login successful!");
+    
+    // Check if user was trying to go somewhere else (like checkout), else go home
+    const redirectTo = location.state?.redirectTo || "/home";
+    navigate(redirectTo, { replace: true });
 
-    const result = await apiCall({
-      first_name: firstName,
-      last_name: lastName,
-      phone_number: phone,
-      email_id: email,
-      gender,
-      date_of_birth: dob, // YYYY-MM-DD format from input
-      edit_customer_id: customer.customer_id,
-    });
-    if (result.head.code === 200) {
-      localStorage.setItem("customer", JSON.stringify(result.body.customer));
-      alert("Profile updated successfully! You are now signed in.");
-      // Handle redirect: check state for redirectTo (e.g., from cart), else default to /home
-      const redirectTo = location.state?.redirectTo || "/home";
-      navigate(redirectTo, { replace: true });
-    } else {
-      alert(result.head.msg);
-    }
-  };
+  } else if (result.head.code === 400) {
+    // NEW USER: Move to Step 3 (Profile details page)
+    toast.info("Welcome! Please complete your profile.");
+    setCurrentStep(3);
+    
+  } else {
+    // WRONG OTP: Show error message
+    toast.error(result.head.msg || "Invalid OTP");
+  }
+};
+ 
+ const handleUpdateProfile = async () => {
+  // 1. Validation
+  if (!firstName || !lastName || !phone || !gender || !dob) {
+    toast.error("Please fill all fields.");
+    return;
+  }
+  if (!/^\d{10}$/.test(phone)) {
+    toast.error("Please enter a valid 10-digit phone number.");
+    return;
+  }
 
+  // 2. API Call to the NEW action
+  const result = await apiCall({
+    action: "register_customer", // Matches the new PHP block
+    first_name: firstName,
+    last_name: lastName,
+    phone_number: phone,
+    email_id: email, // This links the verified email to the new profile
+    gender: gender,
+    dob: dob,
+  });
+
+  if (result.head.code === 200) {
+    // 3. Save the newly created customer data
+    localStorage.setItem("customer", JSON.stringify(result.body.customer));
+    toast.success("Profile created! You are now signed in.");
+    
+    // 4. Redirect
+    const redirectTo = location.state?.redirectTo || "/home";
+    navigate(redirectTo, { replace: true });
+  } else {
+    toast.error(result.head.msg);
+  }
+};
   // If already logged in, we navigate away, so don't render the form
   if (localStorage.getItem("customer")) {
     return null; // Or a loading spinner, but since useEffect handles it
@@ -176,6 +216,8 @@ const Login = () => {
                         type="checkbox"
                         id="consent"
                         className="mt-1 me-2"
+                        checked={isAgreed}
+                        onChange={(e) => setIsAgreed(e.target.checked)}
                       />
                       <label
                         htmlFor="consent"
@@ -183,6 +225,7 @@ const Login = () => {
                           fontSize: "12px",
                           color: "#555",
                           maxWidth: "300px",
+                          cursor: "pointer",
                         }}
                       >
                         I agree to receive updates and offers from
@@ -196,6 +239,15 @@ const Login = () => {
                           label="Request OTP"
                           className="w-100 py-2"
                           onClick={handleRequestOtp}
+                          disabled={!isAgreed}
+                          style={{
+                            backgroundColor: isAgreed ? "#ff0000" : "#cccccc",
+                            color: isAgreed ? "#ffffff" : "#666666",
+                            border: "none",
+                            opacity: isAgreed ? 1 : 0.7,
+                            cursor: isAgreed ? "pointer" : "not-allowed",
+                            borderRadius: "5px",
+                          }}
                         />
                       </div>
                     </div>
@@ -211,6 +263,12 @@ const Login = () => {
                     <p className="title-font text-muted mb-4">
                       We sent a 4-digit code to {email}
                     </p>
+                    <div
+                      className="mb-4 fw-bold text-danger"
+                      style={{ fontSize: "18px" }}
+                    >
+                      OTP expires in: {formatTime(timeLeft)}
+                    </div>
 
                     <div className="mb-3">
                       <Forms
@@ -229,13 +287,24 @@ const Login = () => {
                         label="Verify OTP"
                         className="w-100 py-2"
                         onClick={handleVerifyOtp}
+                        disabled={timeLeft === 0}
                       />
                     </div>
 
                     <p className="text-muted" style={{ fontSize: "11px" }}>
                       Didn't receive?{" "}
-                      <a href="#" onClick={() => setCurrentStep(1)}>
-                        Resend OTP
+                      <a
+                        href="#"
+                        style={{
+                          pointerEvents: isTimerActive ? "none" : "auto",
+                          color: isTimerActive ? "#ccc" : "#007bff",
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCurrentStep(1);
+                        }}
+                      >
+                        {isTimerActive ? `Wait for timer to end` : "Resend OTP"}
                       </a>
                     </p>
                   </>

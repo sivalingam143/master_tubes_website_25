@@ -87,36 +87,38 @@ const Login = () => {
     }
   };
 
-  const handleRequestOtp = async () => {
-    if (!email || !emailRegex.test(email)) {
-      // Simple client validation
-      alert("Please enter a valid email.");
-      return;
-    }
+ const handleRequestOtp = async () => {
+  if (!email || !emailRegex.test(email)) {
+    alert("Please enter a valid email.");
+    return;
+  }
 
-    const result = await apiCall({ action: "send_otp", email_id: email });
-    if (result.head.code === 200) {
-      // Send email via EmailJS
-      const templateParams = {
-        to_email: email,
-        otp: result.body.otp, // Assuming template uses {{otp}}
-        // Add other params if needed, e.g., {{to_name}}
-      };
-      try {
-        await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams);
-        toast.success("OTP sent to your email!");
-        setTimeLeft(300);
-        setIsTimerActive(true);
-        setCurrentStep(2);
-      } catch (error) {
+  const result = await apiCall({ action: "send_otp", email_id: email });
+
+  if (result.head.code === 200) {
+    // 1. UPDATE UI IMMEDIATELY
+    toast.success("OTP sent to your email!");
+    setTimeLeft(300);
+    setIsTimerActive(true);
+    setCurrentStep(2);
+
+    // 2. TRIGGER EMAIL IN BACKGROUND (Remove 'await' if you don't want to wait)
+    const templateParams = {
+      to_email: email,
+      otp: result.body.otp,
+    };
+
+    // We still use a try/catch, but it won't block the UI transition anymore
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
+      .catch((error) => {
         console.error("EmailJS Error:", error);
-        toast.error("Failed to send email. Please try again.");
-      }
-    } else {
-      toast.warning(result.head.msg);
-    }
-  };
+        toast.error("Background error: Email failed to send.");
+      });
 
+  } else {
+    toast.warning(result.head.msg);
+  }
+};
 
 const handleVerifyOtp = async () => {
   if (!otp || otp.length !== 4 || !/^\d{4}$/.test(otp)) {

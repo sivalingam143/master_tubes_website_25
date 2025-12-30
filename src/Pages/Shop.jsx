@@ -49,14 +49,14 @@ const filteredProducts = products.filter((product) => {
       // Removed company_id from the request body
       const catRes = await fetch(`${API_DOMAIN}/category.php`, {
         method: "POST",
-        body: JSON.stringify({ fetch_all: true }),
+        body: JSON.stringify({   search_text: "",}),
       });
       const catData = await catRes.json();
 
       // Removed company_id from the request body
       const prodRes = await fetch(`${API_DOMAIN}/product.php`, {
         method: "POST",
-        body: JSON.stringify({ fetch_all: true }),
+        body: JSON.stringify({   search_text: "", }),
       });
       const prodData = await prodRes.json();
 

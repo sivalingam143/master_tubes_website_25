@@ -54,13 +54,18 @@ const Profile = () => {
   const handleSave = async () => {
     setLoading(true);
     try {
+      // PREVENT DEPRECATION ERROR: 
+      // Ensure phone_number is sent as a string to satisfy PHP's ctype_digit
+      const payload = {
+        ...userData,
+        phone_number: userData.phone_number ? String(userData.phone_number) : "",
+        edit_customer_id: userData.customer_id, 
+      };
+
       const response = await fetch(`${API_DOMAIN}/customer.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...userData,
-          edit_customer_id: userData.customer_id, // Triggers update in PHP
-        }),
+        body: JSON.stringify(payload),
       });
 
       const result = await response.json();
@@ -73,7 +78,8 @@ const Profile = () => {
         alert("Error: " + result.head.msg);
       }
     } catch (error) {
-      alert("Failed to save changes.");
+      console.error("Save error:", error);
+      alert("Failed to save changes. If you see an error table, the phone number must be text.");
     } finally {
       setLoading(false);
     }
@@ -178,18 +184,22 @@ const Profile = () => {
             ))}
           </Form.Group>
 
-          {/* Save and Cancel Buttons positioned after Gender */}
           {isEditing && (
             <div className="mt-4">
-             <Button 
-  onClick={handleSave} 
-  disabled={loading}
-  className=" save border-0 px-3 py-2 "
-  
->
-  {loading ? <Spinner size="sm" animation="border" /> : "Save"}
-</Button>
-             
+              <Button 
+                onClick={handleSave} 
+                disabled={loading}
+                className="btn btn-danger border-0 px-4 py-2"
+              >
+                {loading ? <Spinner size="sm" animation="border" /> : "Save Changes"}
+              </Button>
+              <Button 
+                variant="link" 
+                className="text-muted ms-2" 
+                onClick={() => setIsEditing(false)}
+              >
+                Cancel
+              </Button>
             </div>
           )}
         </Form>

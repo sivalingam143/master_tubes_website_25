@@ -13,6 +13,7 @@ import DeliveryAddress from "./Pages/DeliveryAddress";
 import { Navigate } from "react-router-dom";
 //Bottom Section
 import Account from "./Pages/Account";
+import Orders from "./Pages/orders";
 const Routes = [
   {
     path: "/home",
@@ -36,7 +37,7 @@ const Routes = [
     children: [
       { path: "", element: <ProfileForm /> },
       { path: "address", element: <DeliveryAddress /> },
-      { path: "orders", element: <h1>Orders</h1> }, // Add if needed
+      { path: "orders", element: <Orders/> }, // Add if needed
       { path: "wishlist", element: <WishList /> }, // Nested if needed
     ],
   },

@@ -132,16 +132,18 @@ const Profile = () => {
 
           <Row className="mb-3">
             <Form.Group as={Col}>
-              <Form.Label className="small text-muted">Email</Form.Label>
-              <Form.Control
-                name="email_id"
-                type="email"
-                value={userData.email_id || ""}
-                onChange={handleInputChange}
-                className={isEditing ? "border" : "bg-light border-0"}
-                readOnly={!isEditing}
-              />
-            </Form.Group>
+  <Form.Label className="small text-muted">Email</Form.Label>
+  <Form.Control
+    name="email_id"
+    type="email"
+    value={userData.email_id || ""}
+    className="bg-light border-0"
+    readOnly={true}                    // Always non-editable
+    // Optionally add disabled to gray it out consistently
+    disabled={true}
+    // No onChange handler → prevents state updates
+  />
+</Form.Group>
             <Form.Group as={Col}>
               <Form.Label className="small text-muted">Contact number</Form.Label>
               <Form.Control
@@ -189,13 +191,13 @@ const Profile = () => {
               <Button 
                 onClick={handleSave} 
                 disabled={loading}
-                className="btn btn-danger border-0 px-4 py-2"
+                className=" save px-1 py-2"
               >
                 {loading ? <Spinner size="sm" animation="border" /> : "Save Changes"}
               </Button>
               <Button 
-                variant="link" 
-                className="text-muted ms-2" 
+                // variant="link" 
+                className=" ms-3 cancel " 
                 onClick={() => setIsEditing(false)}
               >
                 Cancel

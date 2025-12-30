@@ -622,13 +622,18 @@ height:90%;
 }
 
 .save{
-  background-color: red !important;
-  width: 70px;
+  background-color: rgb(241, 7, 7) !important;
+  width: 150px;
 border-radius: 5px;
   margin-left: 40%;
   color: white !important;
 }
-
+.cancel{
+   background-color: rgb(252, 207, 207) !important;
+    color: black !important;
+    padding: 8px;
+    
+}
 /* Targets the input field inside your custom quantity button */
 .do-button-container input, 
 .pt-2 input {

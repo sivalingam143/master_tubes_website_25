@@ -357,12 +357,12 @@ const DeliveryAddress = () => {
             </Form.Select>
           </Col>
         </Row>
-        <div className="text-end mt-4">
+        <div className=" mt-4">
           <Button
             variant="danger"
-            className="px-5 py-2 fw-bold"
+            className="save"
             onClick={handleSaveAddress}
-            style={{ borderRadius: "8px", minWidth: "150px" }}
+            
           >
             Save
           </Button>

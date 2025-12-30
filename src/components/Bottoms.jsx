@@ -9,7 +9,9 @@ import {
 import StoreLogo from "../assets/images/category/Logo2.png";
 import { NavLink } from "react-router-dom";
 import UPI from "../assets/images/upi.webp";
+import { useCart } from "../components/CartContext";
 function Bottoms() {
+  const { setShowCart } = useCart();
   return (
     <>
       <section className="bottoms">
@@ -63,9 +65,14 @@ function Bottoms() {
                   {" "}
                   My Account
                 </Nav.Link>
-                <Nav.Link as={NavLink} to="/profile/orders"className="py-2">Order History </Nav.Link>
                 <Nav.Link as={NavLink} to="/profile/orders" className="py-2">
-                  {" "}
+                  Order History{" "}
+                </Nav.Link>
+                <Nav.Link
+                  className="py-2"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setShowCart(true)}
+                >
                   Shopping cart
                 </Nav.Link>
                 <Nav.Link as={NavLink} to="/profile/wishlist" className="py-2">

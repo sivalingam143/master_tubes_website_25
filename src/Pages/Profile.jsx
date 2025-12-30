@@ -3,7 +3,7 @@ import { Col, Card, Form, Row, Button, Spinner } from "react-bootstrap";
 import { FaEdit } from "react-icons/fa";
 import { Navigate } from "react-router-dom";
 import API_DOMAIN from "../config/config";
-
+import { toast } from "react-toastify";
 const Profile = () => {
   const [userData, setUserData] = useState({
     first_name: "",
@@ -69,17 +69,18 @@ const Profile = () => {
       });
 
       const result = await response.json();
-      if (result.head.code === 200) {
-        setIsEditing(false);
-        setUserData(result.body.customer);
-        localStorage.setItem("customer", JSON.stringify(result.body.customer));
-        alert("Profile updated successfully!");
-      } else {
-        alert("Error: " + result.head.msg);
-      }
+     if (result.head.code === 200) {
+  setIsEditing(false);
+  setUserData(result.body.customer);
+  localStorage.setItem("customer", JSON.stringify(result.body.customer));
+  toast.success("Profile updated successfully!");
+} else {
+  toast.error(result.head.msg || "Failed to update profile.");
+}
     } catch (error) {
       console.error("Save error:", error);
-      alert("Failed to save changes. If you see an error table, the phone number must be text.");
+    // In the catch block
+toast.error("Failed to save changes. Please try again.");
     } finally {
       setLoading(false);
     }

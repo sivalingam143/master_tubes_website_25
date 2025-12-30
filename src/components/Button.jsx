@@ -1,7 +1,6 @@
 import React from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import Forms from "./Forms";
-
 const Buttons = ({ label, onClick, disabled, style }) => {
   return (
     <button
@@ -16,55 +15,51 @@ const Buttons = ({ label, onClick, disabled, style }) => {
 };
 
 const DoButton = ({
-  value = 0,
+  value = 1,
   onChange,
-  min = 0,
+  min = 1,
   max = Infinity,
   disabled = false,
-  inputProps = {},
 }) => {
-  const updateValue = (newVal) => {
+  const change = (input) => {
     if (disabled) return;
-    const num = Number(newVal);
-    if (!isNaN(num)) {
-      onChange(Math.max(min, Math.min(max, num)));
+
+    // Allow empty input while typing
+    if (input === "") {
+      onChange("");
+      return;
+    }
+
+    const num = Number(input);
+    if (!isNaN(num) && num >= min && num <= max) {
+      onChange(num);
     }
   };
 
   return (
-    <div className="do-button d-flex align-items-center">
-      {/* Minus */}
+    <div className=" do-button d-flex align-items-center">
       <button
         className="mx-2 dos mb-4"
-        onClick={() => updateValue(value - 1)}
+        onClick={() => change(Math.max(min, value - 1))}
         disabled={disabled || value <= min}
-        type="button"
       >
         <FaMinus />
       </button>
 
-      {/* Input Field */}
       <div className="w-25">
         <Forms
           type="text"
           value={value}
-          onChange={(e) => {
-            const val = e.target.value;
-            if (val === "") onChange("");
-            else updateValue(val);
-          }}
-          readOnly={disabled}
+          onChange={(e) => change(e.target.value)}
           className="text-center"
-          {...inputProps}
+          readOnly={disabled}
         />
       </div>
 
-      {/* Plus */}
       <button
         className="mx-2 dos mb-4"
-        onClick={() => updateValue(value + 1)}
+        onClick={() => change(value + 1)}
         disabled={disabled || value >= max}
-        type="button"
       >
         <FaPlus />
       </button>

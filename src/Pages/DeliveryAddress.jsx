@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Form, Button } from "react-bootstrap";
 import { FaPlusCircle, FaEdit } from "react-icons/fa";
 import API_DOMAIN from "../config/config";
-
+import { toast } from "react-toastify";
 const DeliveryAddress = () => {
   const [userData, setUserData] = useState(null);
   console.log("userData", userData);
@@ -98,16 +98,16 @@ const DeliveryAddress = () => {
       const result = await response.json();
 
       if (result.head.code === 200) {
-        alert("Address updated successfully!");
-        setIsEditing(false);
-        fetchProfile(userData.customer_id);
-      } else {
-        alert("Error: " + result.head.msg);
-      }
+  toast.success("Address updated successfully!");
+  setIsEditing(false);
+  fetchProfile(userData.customer_id); // Refresh data
+} else {
+  toast.error(result.head.msg || "Failed to save address.");
+}
     } catch (error) {
-      console.error("Save error:", error);
-    }
-  };
+  console.error("Save error:", error);
+  toast.error("Network error. Please try again.");
+}}
 
   // NEW: Supports both JSON (new) and old comma format (for backward compatibility)
   const parseAddressForEditing = (deliveryAddress) => {

@@ -3,7 +3,7 @@ import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../components/CartContext";
 import API_DOMAIN from "../config/config";
-
+import { toast } from "react-toastify";
 const Checkout = () => {
   const { cartItems, clearCart, setShowCart } = useCart();
   const navigate = useNavigate();
@@ -68,22 +68,22 @@ const Checkout = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      !addressForm.address_line1 ||
-      !addressForm.city ||
-      !addressForm.pin_code ||
-      !addressForm.phone
-    ) {
-      setError("Please fill all required fields");
-      return;
-    }
+   if (
+  !addressForm.address_line1 ||
+  !addressForm.city ||
+  !addressForm.pin_code ||
+  !addressForm.phone
+) {
+  toast.error("Please fill all required fields");
+  return;
+}
 
     setLoading(true);
     setError(null);
-    if (cartItems.length === 0) {
-      setError("Cart is empty");
-      return;
-    }
+   if (cartItems.length === 0) {
+  toast.error("Your cart is empty!");
+  return;
+}
 
     setLoading(true);
     setError(null);
@@ -128,20 +128,19 @@ const Checkout = () => {
 
       const result = await response.json();
 
-      if (result.head && result.head.code == 200) {
-        alert(result.head.msg);
-        if (typeof clearCart === "function") {
-          clearCart();
-        }
-        navigate("/profile/orders");
-      } else {
-        setError(result.head ? result.head.msg : "Order failed");
-      }
+    if (result.head && result.head.code === 200) {
+  toast.success(result.head.msg || "Order placed successfully!");
+  if (typeof clearCart === "function") {
+    clearCart();
+  }
+  navigate("/profile/orders");
+} else {
+  toast.error(result.head?.msg || "Order failed. Please try again.");
+}
     } catch (err) {
-      console.error("Network Error:", err);
-      setError(
-        "Connection failed. Check if WAMP is running and CORS is enabled."
-      );
+  console.error("Order Error:", err);
+  toast.error("Network error. Please check your connection and try again.");
+
     } finally {
       setLoading(false);
     }
@@ -157,7 +156,7 @@ const Checkout = () => {
         <Row>
           <Col lg={8}>
             <h3 className="mb-4">Shipping Address</h3>
-            {error && <Alert variant="danger">{error}</Alert>}
+            {/* {error && <Alert variant="danger">{error}</Alert>} */}
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={6}>

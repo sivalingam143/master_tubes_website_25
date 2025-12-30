@@ -188,16 +188,13 @@ const ProductDetails = () => {
                     RS. {product.product_with_discount_price}
                   </div>
                 </div>
-                <div className="pt-3">
-                <div className="pt-3">
+              <div className=" do-button1">
   <DoButton
     value={quantity}
     onChange={setQuantity}
-    min={1}  // prevents going below 1
-    // max={100} // optional: add if you want an upper limit
+    min={1}
   />
 </div>
-                </div>
               </div>
             </Row>
 

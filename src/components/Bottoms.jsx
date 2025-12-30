@@ -44,19 +44,34 @@ function Bottoms() {
             <Col lg="3" className="py-3">
               <h6 className="body-font">My Accounts</h6>
               <div className="title-font">
-                <Nav.Link as={NavLink} to="/shop" className="py-2">Shop</Nav.Link>
-                <Nav.Link as={NavLink} to="/about" className="py-2">About us</Nav.Link>
-                <Nav.Link as={NavLink} to="/faq" className="py-2">FAQ</Nav.Link>
-                <Nav.Link as={NavLink} to="/contact" className="py-2">Contact Us</Nav.Link>
+                <Nav.Link as={NavLink} to="/shop" className="py-2">
+                  Shop
+                </Nav.Link>
+                <Nav.Link as={NavLink} to="/about" className="py-2">
+                  About us
+                </Nav.Link>
+
+                <Nav.Link as={NavLink} to="/contact" className="py-2">
+                  Contact Us
+                </Nav.Link>
               </div>
             </Col>
             <Col lg="3" className="py-3">
               <h6 className="body-font">Customer Service</h6>
               <div className="title-font">
-                <Nav.Link as={NavLink} to="/account" className="py-2"> My Account</Nav.Link>
+                <Nav.Link as={NavLink} to="/account" className="py-2">
+                  {" "}
+                  My Account
+                </Nav.Link>
                 <Nav.Link className="py-2">Order History </Nav.Link>
-                <Nav.Link as={NavLink} to="/shop" className="py-2" > Shopping cart</Nav.Link>
-                <Nav.Link as={NavLink} to="/wishlist" className="py-2"> Wishing Cart</Nav.Link>
+                <Nav.Link as={NavLink} to="/shop" className="py-2">
+                  {" "}
+                  Shopping cart
+                </Nav.Link>
+                <Nav.Link as={NavLink} to="/wishlist" className="py-2">
+                  {" "}
+                  Wishing Cart
+                </Nav.Link>
               </div>
             </Col>
             <Col lg="3" className="py-3">

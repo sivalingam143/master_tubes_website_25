@@ -129,7 +129,7 @@ const WishList = () => {
 
   return (
     <>
-      <section className="py-5">
+      <section >
         <Container>
           <Row>
             <Col lg="12" className="text-center">

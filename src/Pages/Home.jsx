@@ -107,9 +107,9 @@ const Home = () => {
                   Refer Piggy Bank to your friends and family, turn small
                   savings into memorable special moments!
                 </p>
-                <div>
+                {/* <div>
                   <button className="shop_now body-font" disabled={true}>Shop Now</button>
-                </div>
+                </div> */}
               </div>
             </Col>
             <Col lg="6" className="p-0" data-aos="fade-left">
@@ -174,12 +174,12 @@ const Home = () => {
                 inspiring, it’s a beautiful reminder that every coin saved
                 brings you closer to your dreams.
               </p>
-              <button
+              {/* <button
                 className="shop_now"
                 onClick={() => addToDetails(topSellProduct, 1)}
               >
                 Add to Cart
-              </button>
+              </button> */}
             </Col>
           </Row>
         </Container>

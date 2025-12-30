@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Col, Card, Form, Row } from "react-bootstrap";
 import { FaEdit } from "react-icons/fa";
 import { Navigate } from "react-router-dom"; // Add Navigate
-
+import API_DOMAIN from "../config/config"; 
 const Profile = () => {
   const [userData, setUserData] = useState({
     first_name: "",
@@ -19,14 +19,40 @@ const Profile = () => {
     return <Navigate to="/login" replace />;
   }
 
-  useEffect(() => {
-    // Get stored data from localStorage
-    const storedCustomer = localStorage.getItem("customer");
-    if (storedCustomer) {
-      const parsedData = JSON.parse(storedCustomer);
-      setUserData(parsedData);
+useEffect(() => {
+  const fetchProfile = async () => {
+    // 1. Get ONLY the ID from localStorage so we know who to fetch
+    const storedAuth = JSON.parse(localStorage.getItem("customer"));
+    const customerId = storedAuth?.customer_id;
+
+    if (customerId) {
+      try {
+        // 2. Make the API call to your new backend block
+        const response = await fetch(`${API_DOMAIN}/customer.php`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            action: "get_profile", // This triggers your new PHP block
+            customer_id: customerId 
+          }),
+        });
+
+        const result = await response.json();
+
+        if (result.head.code === 200) {
+          // 3. Set the state with fresh data from the Database
+          setUserData(result.body.customer);
+        } else {
+          console.error("Profile fetch failed:", result.head.msg);
+        }
+      } catch (error) {
+        console.error("Network error:", error);
+      }
     }
-  }, []);
+  };
+
+  fetchProfile();
+}, []);
 
   // Helper function to split YYYY-MM-DD into DD, MM, YYYY for the inputs
   const getDobParts = () => {

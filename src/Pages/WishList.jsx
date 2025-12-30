@@ -162,7 +162,7 @@ const WishList = () => {
                     <tr>
                       <th>Product</th>
                       <th>Price</th>
-                      <th>Stock Status</th>
+                     <th>Category</th>
                       <th>Add to Cart</th>
                       <th>Remove</th>
                     </tr>
@@ -205,14 +205,11 @@ const WishList = () => {
                             </div>
                           </div>
                         </td>
-                        <td>
-                          <span
-                            className={item.product_stock > 0 ? "text-success" : "text-danger"}
-                            style={{ fontWeight: "bold" }}
-                          >
-                            {item.product_stock > 0 ? "In Stock" : "Out of Stock"}
-                          </span>
-                        </td>
+                      <td>
+  <span className="body-font">
+    {item.category_name || "Uncategorized"}   {/* Display category_name */}
+  </span>
+</td>
                         <td>
                           <Buttons
                             label="Add to Cart"

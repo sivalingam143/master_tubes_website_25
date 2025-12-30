@@ -1,23 +1,91 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // Added useNavigate
+import { useParams, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Accordion, Spinner } from "react-bootstrap";
 import { DoButton, Buttons } from "../components/Button";
 import { useCart } from "../components/CartContext";
 import API_DOMAIN from "../config/config";
+
 const ProductDetails = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
-  const [relatedProducts, setRelatedProducts] = useState([]); // State for recommendations
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [customer, setCustomer] = useState(null);
   const { addToCart } = useCart();
-
 
   const handleAddToCart = () => {
     addToCart(product, quantity);
     setQuantity(1);
   };
+
+  useEffect(() => {
+    const storedCustomer = localStorage.getItem("customer");
+    if (storedCustomer) {
+      const parsedData = JSON.parse(storedCustomer);
+      setCustomer(parsedData);
+    }
+  }, []);
+
+  const updateCustomerInLocalStorage = (updatedCustomer) => {
+    try {
+      localStorage.setItem("customer", JSON.stringify(updatedCustomer));
+      setCustomer(updatedCustomer);
+    } catch (err) {
+      console.error("Error updating customer in localStorage:", err);
+    }
+  };
+
+  const handleWishlistToggle = async () => {
+    if (!customer || !customer.customer_id) {
+      alert("Please log in to manage wishlist.");
+      return;
+    }
+
+    if (!product) {
+      alert("Product not available.");
+      return;
+    }
+
+    setWishlistLoading(true);
+    try {
+      const response = await fetch(`${API_DOMAIN}/customer.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "toggle_wishlist",
+          customer_id: customer.customer_id,
+          product: product,
+        }),
+      });
+      const data = await response.json();
+
+      if (data.head.code === 200) {
+        // Update local state
+        setIsInWishlist(data.body.in_wishlist);
+
+        // Update localStorage and state
+        const updatedCustomer = {
+          ...customer,
+          wishlist_products: data.body.wishlist,
+        };
+        updateCustomerInLocalStorage(updatedCustomer);
+      } else {
+        alert(data.head.msg || "Failed to update wishlist.");
+      }
+    } catch (err) {
+      console.error("Wishlist API Error:", err);
+      alert("An error occurred. Please try again.");
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
+
   useEffect(() => {
     const fetchDetails = async () => {
       try {
@@ -35,6 +103,20 @@ const ProductDetails = () => {
         if (data.head.code === 200 && data.body.products.length > 0) {
           const mainProduct = data.body.products[0];
           setProduct(mainProduct);
+
+          // Check wishlist status
+          let wishlist = [];
+          if (customer && customer.wishlist_products) {
+            try {
+              wishlist = JSON.parse(customer.wishlist_products) || [];
+            } catch (err) {
+              console.error("Error parsing wishlist:", err);
+              wishlist = [];
+            }
+          }
+          setIsInWishlist(
+            wishlist.some((item) => item && item.product_id === productId)
+          );
 
           // 2. Fetch Related Products from the same category
           const relatedRes = await fetch(`${API_DOMAIN}/product.php`, {
@@ -63,8 +145,7 @@ const ProductDetails = () => {
     };
 
     if (productId) fetchDetails();
-  }, [productId]);
-
+  }, [productId, customer]);
   if (loading)
     return (
       <div className="text-center py-5">
@@ -73,8 +154,12 @@ const ProductDetails = () => {
     );
   if (!product)
     return <div className="text-center py-5">Product not found.</div>;
+
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+
+  const buttonText = isInWishlist ? "REMOVE FROM WISHLIST" : "ADD TO WISHLIST";
+
   return (
     <section className="py-5">
       <Container>
@@ -117,8 +202,12 @@ const ProductDetails = () => {
                 ADD TO CART
               </button>
               <div className="wishlist-wrapper d-flex w-100 mb-3">
-                <button className="btn btn-wishlist flex-grow-1 fw-bold">
-                  ADD TO WISHLIST
+                <button
+                  className="btn btn-wishlist flex-grow-1 fw-bold"
+                  onClick={handleWishlistToggle}
+                  disabled={wishlistLoading}
+                >
+                  {wishlistLoading ? "LOADING..." : buttonText}
                 </button>
               </div>
             </div>

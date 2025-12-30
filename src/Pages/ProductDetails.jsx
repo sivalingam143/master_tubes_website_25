@@ -87,21 +87,35 @@ const ProductDetails = () => {
   };
 
   useEffect(() => {
-    const fetchDetails = async () => {
+       const fetchDetails = async () => {
       try {
         setLoading(true);
-        // 1. Fetch Main Product Details
+
+        // Fetch ALL products (or use a broad search that returns everything)
         const response = await fetch(`${API_DOMAIN}/product.php`, {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
-            product_id: productId,
-             search_text: "",
+            search_text: "",  // Empty search returns all products (based on your current backend logic)
           }),
         });
+
         const data = await response.json();
 
         if (data.head.code === 200 && data.body.products.length > 0) {
-          const mainProduct = data.body.products[0];
+          // Find the exact product by product_id in frontend
+          const allProducts = data.body.products;
+          const mainProduct = allProducts.find(
+            (p) => p.product_id === productId
+          );
+
+          if (!mainProduct) {
+            setLoading(false);
+            return; // Will show "Product not found"
+          }
+
           setProduct(mainProduct);
 
           // Check wishlist status
@@ -118,24 +132,15 @@ const ProductDetails = () => {
             wishlist.some((item) => item && item.product_id === productId)
           );
 
-          // 2. Fetch Related Products from the same category
-          const relatedRes = await fetch(`${API_DOMAIN}/product.php`, {
-            method: "POST",
-            body: JSON.stringify({
-               search_text: "",
-            }),
-          });
-          const relatedData = await relatedRes.json();
-
-          if (relatedData.head.code === 200) {
-            // Filter products that belong to the same category, excluding the current product
-            const filtered = relatedData.body.products.filter(
-              (p) =>
-                String(p.category_id) === String(mainProduct.category_id) &&
-                p.product_id !== productId
-            );
-            setRelatedProducts(filtered);
-          }
+          // Filter related products: same category, exclude current
+          const filtered = allProducts.filter(
+            (p) =>
+              String(p.category_id) === String(mainProduct.category_id) &&
+              p.product_id !== productId
+          );
+          setRelatedProducts(filtered);
+        } else {
+          console.error("No products returned from API");
         }
       } catch (err) {
         console.error("API Error:", err);

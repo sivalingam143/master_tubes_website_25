@@ -160,8 +160,7 @@ const ProductDetails = () => {
   if (!product)
     return <div className="text-center py-5">Product not found.</div>;
 
-  const handleIncrease = () => setQuantity((prev) => prev + 1);
-  const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  
 
   const buttonText = isInWishlist ? "REMOVE FROM WISHLIST" : "ADD TO WISHLIST";
 
@@ -190,11 +189,14 @@ const ProductDetails = () => {
                   </div>
                 </div>
                 <div className="pt-3">
-                  <DoButton
-                    value={quantity}
-                    onAdd={handleIncrease}
-                    onSubtract={handleDecrease}
-                  />
+                <div className="pt-3">
+  <DoButton
+    value={quantity}
+    onChange={setQuantity}
+    min={1}  // prevents going below 1
+    // max={100} // optional: add if you want an upper limit
+  />
+</div>
                 </div>
               </div>
             </Row>

@@ -66,21 +66,19 @@ const Shop = () => {
       console.error("Error loading shop data:", error);
     }
   };
-  const handleIncrease = (product) => {
-    // 1. Update local quantity state for the UI counter
+  const handleQuantityChange = (product, newQuantity) => {
+    if (typeof newQuantity !== "number" || isNaN(newQuantity)) return;
+
+    const currentQty = quantities[product.product_id] || 0;
+    const diff = newQuantity - currentQty;
     setQuantities((prev) => ({
       ...prev,
-      [product.product_id]: (prev[product.product_id] || 0) + 1,
+      [product.product_id]: newQuantity,
     }));
 
-    addToDetails(product, 1);
-  };
-
-  const handleDecrease = (productId) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [productId]: prev[productId] > 1 ? prev[productId] - 1 : 1,
-    }));
+    if (diff > 0) {
+      addToDetails(product, diff);
+    }
   };
   return (
     <>
@@ -193,13 +191,15 @@ const Shop = () => {
                               </span>
                             </div>
                             <div className="pt-2">
-                              <DoButton
-                                value={quantities[item.product_id] || 0} // Start at 0 if not added yet
-                                onAdd={() => handleIncrease(item)} // Pass the whole 'item' object here
-                                onSubtract={() =>
-                                  handleDecrease(item.product_id)
-                                }
-                              />
+                              <div className="pt-2">
+                                <DoButton
+                                  value={quantities[item.product_id] || 0}
+                                  onChange={(newVal) =>
+                                    handleQuantityChange(item, newVal)
+                                  }
+                                  min={0}
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>

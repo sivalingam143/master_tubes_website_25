@@ -30,7 +30,7 @@ const SearchForms = ({ placeholder }) => {
       try {
         const response = await fetch(`${API_BASE}/product.php`, {
           method: "POST",
-          body: JSON.stringify({ fetch_all: true }), // Using your existing READ logic
+          body: JSON.stringify({   search_text: "", }), // Using your existing READ logic
         });
         const data = await response.json();
         if (data.head.code === 200) {

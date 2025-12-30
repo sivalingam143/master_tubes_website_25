@@ -95,7 +95,7 @@ const ProductDetails = () => {
           method: "POST",
           body: JSON.stringify({
             product_id: productId,
-            fetch_all: false,
+             search_text: "",
           }),
         });
         const data = await response.json();
@@ -122,7 +122,7 @@ const ProductDetails = () => {
           const relatedRes = await fetch(`${API_DOMAIN}/product.php`, {
             method: "POST",
             body: JSON.stringify({
-              fetch_all: true,
+               search_text: "",
             }),
           });
           const relatedData = await relatedRes.json();

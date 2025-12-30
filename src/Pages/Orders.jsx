@@ -20,7 +20,7 @@ const Orders = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            fetch_all: true,
+              search_text: "",
             customer_id: customer_id,
           }),
         });

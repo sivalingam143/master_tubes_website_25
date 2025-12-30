@@ -22,7 +22,7 @@ export default function HeroSlider() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
            
-            fetch_all: true,
+           search_text: "",
           }),
         });
         const data = await response.json();

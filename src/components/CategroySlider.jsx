@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
-
+import API_DOMAIN from "../config/config";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/effect-coverflow";
@@ -13,19 +13,15 @@ export default function HeroSlider() {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost/master_tubes_website_api/api/category.php",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              company_id: "COMP-000001",
-              fetch_all: true,
-            }),
-          }
-        );
-
+       try {
+        const response = await fetch(`${API_DOMAIN}/category.php`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+           
+            fetch_all: true,
+          }),
+        });
         const data = await response.json();
 
         if (data.head && data.head.code === 200) {

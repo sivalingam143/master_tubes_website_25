@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom"; // Added useNavigate
 import { Container, Row, Col, Accordion, Spinner } from "react-bootstrap";
 import { DoButton, Buttons } from "../components/Button";
 import { useCart } from "../components/CartContext";
-
+import API_DOMAIN from "../config/config";
 const ProductDetails = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
@@ -13,8 +13,6 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
 
-  const API_BASE = "http://localhost/master_tubes_website_api/api";
-  const COMPANY_ID = "COMP-000001";
 
   const handleAddToCart = () => {
     addToCart(product, quantity);
@@ -25,7 +23,7 @@ const ProductDetails = () => {
       try {
         setLoading(true);
         // 1. Fetch Main Product Details
-        const response = await fetch(`${API_BASE}/product.php`, {
+        const response = await fetch(`${API_DOMAIN}/product.php`, {
           method: "POST",
           body: JSON.stringify({
             product_id: productId,
@@ -39,7 +37,7 @@ const ProductDetails = () => {
           setProduct(mainProduct);
 
           // 2. Fetch Related Products from the same category
-          const relatedRes = await fetch(`${API_BASE}/product.php`, {
+          const relatedRes = await fetch(`${API_DOMAIN}/product.php`, {
             method: "POST",
             body: JSON.stringify({
               fetch_all: true,

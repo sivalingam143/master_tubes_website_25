@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Buttons, DoButton } from "../components/Button";
 import Forms from "../components/Forms";
 import { useCart } from "../components/CartContext";
-
+import API_DOMAIN from "../config/config"; 
 const Shop = () => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
@@ -17,7 +17,7 @@ const Shop = () => {
   const { addToDetails } = useCart();
   const navigate = useNavigate();
 
-  const API_BASE = "http://localhost/master_tubes_website_api/api";
+  
 
   useEffect(() => {
     fetchData();
@@ -26,14 +26,14 @@ const Shop = () => {
   const fetchData = async () => {
     try {
       // Removed company_id from the request body
-      const catRes = await fetch(`${API_BASE}/category.php`, {
+      const catRes = await fetch(`${API_DOMAIN}/category.php`, {
         method: "POST",
         body: JSON.stringify({ fetch_all: true }),
       });
       const catData = await catRes.json();
 
       // Removed company_id from the request body
-      const prodRes = await fetch(`${API_BASE}/product.php`, {
+      const prodRes = await fetch(`${API_DOMAIN}/product.php`, {
         method: "POST",
         body: JSON.stringify({ fetch_all: true }),
       });

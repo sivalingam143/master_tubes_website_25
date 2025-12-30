@@ -1,25 +1,19 @@
 import React, { useState, useEffect } from "react";
-
+import API_DOMAIN from "../config/config"; 
 const ProductGrid = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const getNewArrivals = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost/master_tubes_website_api/api/product.php",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            // Your backend requires these fields to trigger the READ action
-            body: JSON.stringify({
-              company_id: "COMP-000001",
-              fetch_all: true,
-            }),
-          }
-        );
+        try {
+        const response = await fetch(`${API_DOMAIN}/product.php`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+           
+            fetch_all: true,
+          }),
+        });
 
         const data = await response.json();
 

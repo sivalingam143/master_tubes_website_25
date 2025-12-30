@@ -6,17 +6,20 @@ const ProductGrid = () => {
   useEffect(() => {
     const getNewArrivals = async () => {
       try {
-        const response = await fetch("http://localhost/master_tubes_website_api/product.php", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          // Your backend requires these fields to trigger the READ action
-          body: JSON.stringify({
-            company_id: "COMP-000001", 
-            fetch_all: true
-          }),
-        });
+        const response = await fetch(
+          "http://localhost/master_tubes_website_api/api/product.php",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            // Your backend requires these fields to trigger the READ action
+            body: JSON.stringify({
+              company_id: "COMP-000001",
+              fetch_all: true,
+            }),
+          }
+        );
 
         const data = await response.json();
 
@@ -39,8 +42,8 @@ const ProductGrid = () => {
     <section>
       <div className="parent">
         {products.map((item, index) => (
-          <div 
-            key={item.id} 
+          <div
+            key={item.id}
             className="product-card"
             data-aos="zoom-in"
             data-aos-delay={index * 100}

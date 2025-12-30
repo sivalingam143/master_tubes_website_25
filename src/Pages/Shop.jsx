@@ -17,8 +17,7 @@ const Shop = () => {
   const { addToDetails } = useCart();
   const navigate = useNavigate();
 
-  const API_BASE = "http://localhost/master_tubes_website_api";
-
+  const API_BASE = "http://localhost/master_tubes_website_api/api";
 
   useEffect(() => {
     fetchData();
@@ -53,7 +52,6 @@ const Shop = () => {
       [product.product_id]: (prev[product.product_id] || 0) + 1,
     }));
 
-  
     addToDetails(product, 1);
   };
 

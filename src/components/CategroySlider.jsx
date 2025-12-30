@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { EffectCoverflow, Pagination, Autoplay } from 'swiper/modules';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
 
 // Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/effect-coverflow';
-import 'swiper/css/pagination';
+import "swiper/css";
+import "swiper/css/effect-coverflow";
+import "swiper/css/pagination";
 
 export default function HeroSlider() {
   const [categories, setCategories] = useState([]);
@@ -14,21 +14,27 @@ export default function HeroSlider() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost/master_tubes_website_api/category.php", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            company_id: "COMP-000001", 
-            fetch_all: true
-          }),
-        });
+        const response = await fetch(
+          "http://localhost/master_tubes_website_api/api/category.php",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              company_id: "COMP-000001",
+              fetch_all: true,
+            }),
+          }
+        );
 
         const data = await response.json();
 
         if (data.head && data.head.code === 200) {
           setCategories(data.body.categories);
         } else {
-          console.error("API Error:", data.head ? data.head.msg : "No response head");
+          console.error(
+            "API Error:",
+            data.head ? data.head.msg : "No response head"
+          );
         }
       } catch (error) {
         console.error("Fetch Error:", error);
@@ -40,16 +46,19 @@ export default function HeroSlider() {
     fetchCategories();
   }, []);
 
-  if (loading) return <div style={{ textAlign: 'center', padding: '20px' }}>Loading...</div>;
+  if (loading)
+    return (
+      <div style={{ textAlign: "center", padding: "20px" }}>Loading...</div>
+    );
 
   return (
     <section className="slider-wrapper1">
       <Swiper
-        effect={'coverflow'}
+        effect={"coverflow"}
         grabCursor={true}
         centeredSlides={true}
         // Essential fix for 3 images:
-        loop={categories.length >= 3} 
+        loop={categories.length >= 3}
         slidesPerView={1} // Default for mobile
         breakpoints={{
           // On larger screens, show roughly 3 slides to see the one on the right
@@ -76,13 +85,16 @@ export default function HeroSlider() {
         {categories.map((item) => (
           <SwiperSlide key={item.category_id} className="custom-swiper-slide">
             <div className="slider-image-wrapper1">
-              <img 
-                src={item.category_img_url || "https://via.placeholder.com/150"} 
-                alt={item.category_name} 
-                className="slider-image" 
+              <img
+                src={item.category_img_url || "https://via.placeholder.com/150"}
+                alt={item.category_name}
+                className="slider-image"
               />
             </div>
-            <p className="slider-name1" style={{background: "red", color: "#fff", textAlign: "center" }}>
+            <p
+              className="slider-name1"
+              style={{ background: "red", color: "#fff", textAlign: "center" }}
+            >
               {item.category_name}
             </p>
           </SwiperSlide>

@@ -108,7 +108,7 @@ const Home = () => {
                   savings into memorable special moments!
                 </p>
                 <div>
-                  <button className="shop_now body-font">Shop Now</button>
+                  <button className="shop_now body-font" disabled={true}>Shop Now</button>
                 </div>
               </div>
             </Col>

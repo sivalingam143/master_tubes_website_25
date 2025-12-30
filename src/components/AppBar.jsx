@@ -54,15 +54,15 @@ function AppBar() {
   const userPath = isLoggedIn ? "/profile" : "/login";
 
   // Handle place order click
-  const handlePlaceOrder = () => {
-    if (isLoggedIn) {
-      // Assume /checkout is your order placement page; adjust as needed
-      navigate("/checkout");
-    } else {
-      // Redirect to login with state to return to checkout after login
-      navigate("/login", { state: { redirectTo: "/checkout" } });
-    }
-  };
+const handlePlaceOrder = () => {
+  if (isLoggedIn) {
+    navigate("/checkout");
+    setShowCart(false); // closes right after navigation starts
+  } else {
+    navigate("/login", { state: { redirectTo: "/checkout" } });
+    setShowCart(false);
+  }
+};
 
   // Add user icon dynamically
   const userIconLink = { icon: <IoPersonOutline size={22} />, path: userPath };

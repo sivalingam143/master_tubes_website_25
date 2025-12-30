@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
 import API_DOMAIN from "../config/config";
+import { useNavigate } from "react-router-dom";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/effect-coverflow";
@@ -10,6 +11,8 @@ import "swiper/css/pagination";
 export default function HeroSlider() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -42,6 +45,9 @@ export default function HeroSlider() {
     fetchCategories();
   }, []);
 
+  const handleCategoryClick = (categoryId) => {
+  navigate(`/shop?category=${categoryId}`);
+};
   if (loading)
     return (
       <div style={{ textAlign: "center", padding: "20px" }}>Loading...</div>
@@ -79,7 +85,12 @@ export default function HeroSlider() {
         className="mySwiper"
       >
         {categories.map((item) => (
-          <SwiperSlide key={item.category_id} className="custom-swiper-slide">
+          <SwiperSlide 
+            key={item.category_id} 
+            className="custom-swiper-slide"
+            style={{ cursor: 'pointer' }} // Make it look clickable
+            onClick={() => handleCategoryClick(item.category_id)}// Trigger navigation
+          >
             <div className="slider-image-wrapper1">
               <img
                 src={item.category_img_url || "https://via.placeholder.com/150"}

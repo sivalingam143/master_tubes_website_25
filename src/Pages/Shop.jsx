@@ -7,6 +7,7 @@ import { Buttons, DoButton } from "../components/Button";
 import Forms from "../components/Forms";
 import { useCart } from "../components/CartContext";
 import API_DOMAIN from "../config/config"; 
+import { useLocation } from "react-router-dom";
 const Shop = () => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
@@ -16,7 +17,27 @@ const Shop = () => {
   const [quantities, setQuantities] = useState({});
   const { addToDetails } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
+// Inside Shop.jsx
+useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const categoryFromUrl = params.get("category");
 
+    if (categoryFromUrl) {
+      // Set the ID as the selected category
+      setSelectedCategory(categoryFromUrl);
+      
+      // Force scroll to top so user sees the filtered products
+      window.scrollTo(0, 0);
+    }
+}, [location.search]);
+
+// Now, update your product display logic (the part that filters the list)
+const filteredProducts = products.filter((product) => {
+    const matchesCategory = selectedCategory === "all" || String(product.category_id) === String(selectedCategory);
+    const matchesSearch = product.product_name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+});
   
 
   useEffect(() => {

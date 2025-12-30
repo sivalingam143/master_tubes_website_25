@@ -96,7 +96,9 @@ if (
   setError(null);
 
   // 1. Define the shipping address string
-  const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${addressForm.address_line1}, ${addressForm.city}, ${addressForm.state}, ${addressForm.pin_code}, ${addressForm.country}, Phone: ${addressForm.phone}`;
+  // const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${addressForm.address_line1}, ${addressForm.city}, ${addressForm.state}, ${addressForm.pin_code}, ${addressForm.country}, Phone: ${addressForm.phone}`;
+  const shippingAddress = ` FirstName :${addressForm.first_name} ,LastName:${addressForm.last_name}, Adddress1:${addressForm.address_line1},City: ${addressForm.city}, State:${addressForm.state},Pincode: ${addressForm.pin_code},Country : ${addressForm.country}, PhoneNumber: ${addressForm.phone}`;
+
  const productDetails = cartItems.map((item) => ({
       product_id: item.product_id,
       product_name: item.product_name,

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import API_DOMAIN from "../config/config"; 
+import { useCart } from "./CartContext";
 const ProductGrid = () => {
   const [products, setProducts] = useState([]);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const getNewArrivals = async () => {
@@ -49,7 +51,7 @@ const ProductGrid = () => {
             </div>
             <div>
               <h4>{item.product_name}</h4>
-              <button className="shop_now">Shop Now</button>
+              <button className="shop_now"onClick={() => addToCart(item, 1)}>Shop Now</button>
             </div>
           </div>
         ))}

@@ -188,17 +188,18 @@ toast.error("Failed to save changes. Please try again.");
           </Form.Group>
 
           {isEditing && (
-            <div className="mt-4">
+            <div className="mt-4 d-flex">
               <Button 
                 onClick={handleSave} 
                 disabled={loading}
-                className=" save px-1 py-2"
+                className=" save1 px-1 py-2"
               >
                 {loading ? <Spinner size="sm" animation="border" /> : "Save Changes"}
               </Button>
               <Button 
                 // variant="link" 
-                className=" ms-3 cancel " 
+
+                className=" ms-3 cancel1 " 
                 onClick={() => setIsEditing(false)}
               >
                 Cancel

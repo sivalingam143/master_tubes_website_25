@@ -136,14 +136,14 @@ const WishList = () => {
               <h2 className="title-font">My Wishlist</h2>
               {wishlist.length === 0 ? (
                 <>
-                  <div className="body-font my-4">Your wishlist looks empty</div>
+                  <div className="body-font ">Your wishlist looks empty</div>
                   <Buttons
                     label="Continue Shopping"
                     onClick={() => navigate("/products")}
                   />
                 </>
               ) : (
-                <div className="my-4 body-font">
+                <div className=" body-font">
                   You have {wishlist.length} item{wishlist.length > 1 ? "s" : ""} in your wishlist
                 </div>
               )}

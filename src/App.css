@@ -621,19 +621,40 @@ height:90%;
     padding: 8px 25px;
 }
 
-.save{
+.save1{
   background-color: rgb(241, 7, 7) !important;
   width: 150px;
 border-radius: 5px;
   margin-left: 40%;
   color: white !important;
 }
-.cancel{
+.cancel1{
    background-color: rgb(252, 207, 207) !important;
     color: black !important;
     padding: 8px;
     
 }
+@media (max-width: 576px) {
+
+.cancel1{
+   background-color: rgb(252, 207, 207) !important;
+    color: black !important;
+    padding: 10px;
+    /* margin-top: 20px; */
+   margin-left:30% !important;
+   
+}
+.save1{
+  background-color: rgb(241, 7, 7) !important;
+  width: 115px;
+border-radius: 5px;
+  margin-left: 10%;
+  color: white !important;
+
+}
+  
+}
+
 /* Targets the input field inside your custom quantity button */
 .do-button1 {
     text-align: center !important;

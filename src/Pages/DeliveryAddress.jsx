@@ -360,7 +360,7 @@ const DeliveryAddress = () => {
         <div className=" mt-4">
           <Button
             variant="danger"
-            className="save"
+            className="save1 "
             onClick={handleSaveAddress}
             
           >

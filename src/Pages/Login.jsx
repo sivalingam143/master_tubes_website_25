@@ -117,7 +117,7 @@ const Login = () => {
     }
   };
 
- // ... inside Login.jsx ...
+
 const handleVerifyOtp = async () => {
   if (!otp || otp.length !== 4 || !/^\d{4}$/.test(otp)) {
     alert("Please enter a valid 4-digit OTP.");
@@ -131,11 +131,8 @@ const handleVerifyOtp = async () => {
   });
 
   if (result.head.code === 200) {
-    // EXISTING USER: Save to local storage and go to home page
     localStorage.setItem("customer", JSON.stringify(result.body.customer));
     toast.success("Login successful!");
-    
-    // Check if user was trying to go somewhere else (like checkout), else go home
     const redirectTo = location.state?.redirectTo || "/home";
     navigate(redirectTo, { replace: true });
 
@@ -167,24 +164,21 @@ const handleVerifyOtp = async () => {
     first_name: firstName,
     last_name: lastName,
     phone_number: phone,
-    email_id: email, // This links the verified email to the new profile
+    email_id: email, 
     gender: gender,
     dob: dob,
   });
 
   if (result.head.code === 200) {
-    // 3. Save the newly created customer data
     localStorage.setItem("customer", JSON.stringify(result.body.customer));
     toast.success("Profile created! You are now signed in.");
-    
-    // 4. Redirect
     const redirectTo = location.state?.redirectTo || "/home";
     navigate(redirectTo, { replace: true });
   } else {
     toast.error(result.head.msg);
   }
 };
-  // If already logged in, we navigate away, so don't render the form
+
   if (localStorage.getItem("customer")) {
     return null; // Or a loading spinner, but since useEffect handles it
   }

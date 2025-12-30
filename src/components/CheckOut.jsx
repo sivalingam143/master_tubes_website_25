@@ -23,35 +23,28 @@ const Checkout = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Check login
-  useEffect(() => {
-    const storedCustomer = localStorage.getItem("customer");
-    if (!storedCustomer) {
-      navigate("/login", { state: { redirectTo: "/checkout" } });
-      return;
-    }
-    const parsedCustomer = JSON.parse(storedCustomer);
-    setCustomer(parsedCustomer);
-    // Prefill form
-    setAddressForm({
-      first_name: parsedCustomer.first_name,
-      last_name: parsedCustomer.last_name,
-      phone: parsedCustomer.phone_number.toString(),
-      address_line1: parsedCustomer.delivery_address
-        ? parsedCustomer.delivery_address.split(",")[0] || ""
-        : "",
-      address_line2: "",
-      city: parsedCustomer.delivery_address
-        ? parsedCustomer.delivery_address.split(",")[2] || ""
-        : "",
-      state: "Tamil Nadu", // Default or from DB
-      pin_code: parsedCustomer.delivery_address
-        ? parsedCustomer.delivery_address.split(",")[3] || ""
-        : "",
-      country: "India",
-    });
-  }, [navigate]);
+useEffect(() => {
+  const storedCustomer = localStorage.getItem("customer");
+  if (!storedCustomer) {
+    navigate("/login", { state: { redirectTo: "/checkout" } });
+    return;
+  }
+  const parsedCustomer = JSON.parse(storedCustomer);
+  setCustomer(parsedCustomer);
 
+  // Completely blank form
+  setAddressForm({
+    first_name: "",
+    last_name: "",
+    address_line1: "",
+    address_line2: "",
+    city: "",
+    state: "",           // Blank state
+    pin_code: "",
+    phone: "",
+    country: "India",    // Only keep country if required
+  });
+}, [navigate]);
   // Compute totals
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const subTotal = cartItems.reduce(
@@ -155,7 +148,6 @@ if (
     <section className="py-5">
       <Container>
         <Row>
-          {/* Left: Shipping Address */}
           <Col lg={8}>
             <h3 className="mb-4">Shipping Address</h3>
             {error && <Alert variant="danger">{error}</Alert>}

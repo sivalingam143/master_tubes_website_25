@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../components/CartContext";
-import API_DOMAIN from "../config/config"; 
+import API_DOMAIN from "../config/config";
 
 const Checkout = () => {
-  const { cartItems, clearCart } = useCart();
+  const { cartItems, clearCart, setShowCart } = useCart();
   const navigate = useNavigate();
   const [customer, setCustomer] = useState(null);
   const [addressForm, setAddressForm] = useState({
@@ -23,28 +23,28 @@ const Checkout = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-useEffect(() => {
-  const storedCustomer = localStorage.getItem("customer");
-  if (!storedCustomer) {
-    navigate("/login", { state: { redirectTo: "/checkout" } });
-    return;
-  }
-  const parsedCustomer = JSON.parse(storedCustomer);
-  setCustomer(parsedCustomer);
+  useEffect(() => {
+    const storedCustomer = localStorage.getItem("customer");
+    if (!storedCustomer) {
+      navigate("/login", { state: { redirectTo: "/checkout" } });
+      return;
+    }
+    const parsedCustomer = JSON.parse(storedCustomer);
+    setCustomer(parsedCustomer);
 
-  // Completely blank form
-  setAddressForm({
-    first_name: "",
-    last_name: "",
-    address_line1: "",
-    address_line2: "",
-    city: "",
-    state: "",           // Blank state
-    pin_code: "",
-    phone: "",
-    country: "India",    // Only keep country if required
-  });
-}, [navigate]);
+    // Completely blank form
+    setAddressForm({
+      first_name: "",
+      last_name: "",
+      address_line1: "",
+      address_line2: "",
+      city: "",
+      state: "", // Blank state
+      pin_code: "",
+      phone: "",
+      country: "India", // Only keep country if required
+    });
+  }, [navigate]);
   // Compute totals
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const subTotal = cartItems.reduce(
@@ -66,9 +66,9 @@ useEffect(() => {
     setAddressForm((prev) => ({ ...prev, [name]: value }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-if (
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (
       !addressForm.address_line1 ||
       !addressForm.city ||
       !addressForm.pin_code ||
@@ -80,70 +80,77 @@ if (
 
     setLoading(true);
     setError(null);
-  if (cartItems.length === 0) {
-    setError("Cart is empty");
-    return;
-  }
+    if (cartItems.length === 0) {
+      setError("Cart is empty");
+      return;
+    }
 
-  setLoading(true);
-  setError(null);
+    setLoading(true);
+    setError(null);
 
-  // 1. Define the shipping address string
-  // const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${addressForm.address_line1}, ${addressForm.city}, ${addressForm.state}, ${addressForm.pin_code}, ${addressForm.country}, Phone: ${addressForm.phone}`;
-  const shippingAddress = ` FirstName :${addressForm.first_name} ,LastName:${addressForm.last_name}, Adddress1:${addressForm.address_line1},City: ${addressForm.city}, State:${addressForm.state},Pincode: ${addressForm.pin_code},Country : ${addressForm.country}, PhoneNumber: ${addressForm.phone}`;
+    // 1. Define the shipping address string
+    // const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${addressForm.address_line1}, ${addressForm.city}, ${addressForm.state}, ${addressForm.pin_code}, ${addressForm.country}, Phone: ${addressForm.phone}`;
+    const shippingAddress = ` FirstName :${addressForm.first_name} ,LastName:${addressForm.last_name}, Adddress1:${addressForm.address_line1},City: ${addressForm.city}, State:${addressForm.state},Pincode: ${addressForm.pin_code},Country : ${addressForm.country}, PhoneNumber: ${addressForm.phone}`;
 
- const productDetails = cartItems.map((item) => ({
+    const productDetails = cartItems.map((item) => ({
       product_id: item.product_id,
       product_name: item.product_name,
       quantity: item.quantity,
       price: item.product_with_discount_price,
     }));
-  // 2. Prepare the payload (This was missing in your snippet)
-  const payload = {
-    customer_id: customer.customer_id,
-    product_details: cartItems.map((item) => ({
-      product_id: item.product_id,
-      product_name: item.product_name,
-      quantity: item.quantity,
-      price: item.product_with_discount_price,
-    })),
-    shipping_address: shippingAddress,
-    total_items: totalItems,
-    sub_total: subTotal,
-    discount: discount,
-    shipping_charges: shippingCharges,
-    grand_total: grandTotal,
+    // 2. Prepare the payload (This was missing in your snippet)
+    const payload = {
+      customer_id: customer.customer_id,
+      product_details: cartItems.map((item) => ({
+        product_id: item.product_id,
+        product_name: item.product_name,
+        quantity: item.quantity,
+        price: item.product_with_discount_price,
+      })),
+      shipping_address: shippingAddress,
+      total_items: totalItems,
+      sub_total: subTotal,
+      discount: discount,
+      shipping_charges: shippingCharges,
+      grand_total: grandTotal,
+    };
+
+    try {
+      const response = await fetch(`${API_DOMAIN}/order.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Server responded with an error");
+      }
+
+      const result = await response.json();
+
+      if (result.head && result.head.code == 200) {
+        alert(result.head.msg);
+        if (typeof clearCart === "function") {
+          clearCart();
+        }
+        navigate("/profile/orders");
+      } else {
+        setError(result.head ? result.head.msg : "Order failed");
+      }
+    } catch (err) {
+      console.error("Network Error:", err);
+      setError(
+        "Connection failed. Check if WAMP is running and CORS is enabled."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
-  try {
-    const response = await fetch(`${API_DOMAIN}/order.php`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      throw new Error("Server responded with an error");
-    }
-
-    const result = await response.json();
-
-    if (result.head && result.head.code == 200) {
-      alert(result.head.msg);
-      if (typeof clearCart === "function") {
-        clearCart();
-      }
-      navigate("/profile/orders");
-    } else {
-      setError(result.head ? result.head.msg : "Order failed");
-    }
-  } catch (err) {
-    console.error("Network Error:", err);
-    setError("Connection failed. Check if WAMP is running and CORS is enabled.");
-  } finally {
-    setLoading(false);
-  }
-};
+  const handleReturnToCart = () => {
+    navigate(-1);
+    setShowCart(true);
+  };
   return (
     <section className="py-5">
       <Container>
@@ -247,7 +254,7 @@ if (
                   required
                 />
               </Form.Group>
-              <Button variant="secondary" onClick={() => navigate(-1)}>
+              <Button variant="secondary" onClick={handleReturnToCart}>
                 Return to Cart
               </Button>
             </Form>

@@ -54,12 +54,14 @@ const Profile = () => {
   const handleSave = async () => {
     setLoading(true);
     try {
-      // PREVENT DEPRECATION ERROR: 
+      // PREVENT DEPRECATION ERROR:
       // Ensure phone_number is sent as a string to satisfy PHP's ctype_digit
       const payload = {
         ...userData,
-        phone_number: userData.phone_number ? String(userData.phone_number) : "",
-        edit_customer_id: userData.customer_id, 
+        phone_number: userData.phone_number
+          ? String(userData.phone_number)
+          : "",
+        edit_customer_id: userData.customer_id,
       };
 
       const response = await fetch(`${API_DOMAIN}/customer.php`, {
@@ -69,18 +71,18 @@ const Profile = () => {
       });
 
       const result = await response.json();
-     if (result.head.code === 200) {
-  setIsEditing(false);
-  setUserData(result.body.customer);
-  localStorage.setItem("customer", JSON.stringify(result.body.customer));
-  toast.success("Profile updated successfully!");
-} else {
-  toast.error(result.head.msg || "Failed to update profile.");
-}
+      if (result.head.code === 200) {
+        setIsEditing(false);
+        setUserData(result.body.customer);
+        localStorage.setItem("customer", JSON.stringify(result.body.customer));
+        toast.success("Profile updated successfully!");
+      } else {
+        toast.error(result.head.msg || "Failed to update profile.");
+      }
     } catch (error) {
       console.error("Save error:", error);
-    // In the catch block
-toast.error("Failed to save changes. Please try again.");
+      // In the catch block
+      toast.error("Failed to save changes. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -93,18 +95,18 @@ toast.error("Failed to save changes. Please try again.");
       <h2 className="mb-4 text-capitalize">
         Good morning! {userData.first_name || "Guest"}
       </h2>
-      
+
       <Card className="border-0 shadow-sm p-4 rounded-4">
         <div className="d-flex justify-content-end mb-2">
           {!isEditing && (
-            <FaEdit 
-              className="text-muted cursor-pointer" 
-              style={{ cursor: 'pointer' }} 
-              onClick={() => setIsEditing(true)} 
+            <FaEdit
+              className="text-muted cursor-pointer"
+              style={{ cursor: "pointer" }}
+              onClick={() => setIsEditing(true)}
             />
           )}
         </div>
-        
+
         <Form>
           <Row className="mb-3">
             <Form.Group as={Col}>
@@ -133,20 +135,22 @@ toast.error("Failed to save changes. Please try again.");
 
           <Row className="mb-3">
             <Form.Group as={Col}>
-  <Form.Label className="small text-muted">Email</Form.Label>
-  <Form.Control
-    name="email_id"
-    type="email"
-    value={userData.email_id || ""}
-    className="bg-light border-0"
-    readOnly={true}                    // Always non-editable
-    // Optionally add disabled to gray it out consistently
-    disabled={true}
-    // No onChange handler → prevents state updates
-  />
-</Form.Group>
+              <Form.Label className="small text-muted">Email</Form.Label>
+              <Form.Control
+                name="email_id"
+                type="email"
+                value={userData.email_id || ""}
+                className="bg-light border-0"
+                readOnly={true} // Always non-editable
+                // Optionally add disabled to gray it out consistently
+                disabled={true}
+                // No onChange handler → prevents state updates
+              />
+            </Form.Group>
             <Form.Group as={Col}>
-              <Form.Label className="small text-muted">Contact number</Form.Label>
+              <Form.Label className="small text-muted">
+                Contact number
+              </Form.Label>
               <Form.Control
                 name="phone_number"
                 type="text"
@@ -189,17 +193,21 @@ toast.error("Failed to save changes. Please try again.");
 
           {isEditing && (
             <div className="mt-4 d-flex">
-              <Button 
-                onClick={handleSave} 
+              <Button
+                onClick={handleSave}
                 disabled={loading}
                 className=" save1 px-1 py-2"
               >
-                {loading ? <Spinner size="sm" animation="border" /> : "Save Changes"}
+                {loading ? (
+                  <Spinner size="sm" animation="border" />
+                ) : (
+                  "Save Changes"
+                )}
               </Button>
-              <Button 
-                // variant="link" 
+              <Button
+                // variant="link"
 
-                className=" ms-3 cancel1 " 
+                className=" ms-3 cancel1 "
                 onClick={() => setIsEditing(false)}
               >
                 Cancel

@@ -15,7 +15,14 @@ const Profile = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
-
+const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    if (hour < 21) return "Good evening";
+    return "Good night";
+  };
+  //
   const isLoggedIn = !!localStorage.getItem("customer");
 
   useEffect(() => {
@@ -91,9 +98,10 @@ const Profile = () => {
   if (!isLoggedIn) return <Navigate to="/login" replace />;
 
   return (
+    
     <Col lg={12}>
-      <h2 className="mb-4 text-capitalize">
-        Good morning! {userData.first_name || "Guest"}
+     <h2 className="mb-4 text-capitalize">
+        {getGreeting()}! {userData.first_name || "Guest"}
       </h2>
 
       <Card className="border-0 shadow-sm p-4 rounded-4">

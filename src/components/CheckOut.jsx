@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../components/CartContext";
 import API_DOMAIN from "../config/config";
 import { toast } from "react-toastify";
+import { State } from "country-state-city";
 const Checkout = () => {
   const { cartItems, clearCart, setShowCart } = useCart();
   const navigate = useNavigate();
   const [customer, setCustomer] = useState(null);
+  const statesInIndia = State.getStatesOfCountry("IN");
   const [addressForm, setAddressForm] = useState({
     first_name: "",
     last_name: "",
@@ -220,14 +222,19 @@ const Checkout = () => {
                 </Col>
                 <Col md={3}>
                   <Form.Group className="mb-3">
-                    <Form.Label>State</Form.Label>
+                    <Form.Label>State *</Form.Label>
                     <Form.Select
                       name="state"
                       value={addressForm.state}
                       onChange={handleInputChange}
+                      required
                     >
-                      <option>Tamil Nadu</option>
-                      {/* Add more states */}
+                      <option value="">Select State</option>
+                      {statesInIndia.map((state) => (
+                        <option key={state.isoCode} value={state.name}>
+                          {state.name}
+                        </option>
+                      ))}
                     </Form.Select>
                   </Form.Group>
                 </Col>

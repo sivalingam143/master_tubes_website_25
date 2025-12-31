@@ -18,10 +18,12 @@
 
 .slider-container {
   overflow: hidden;
+  
 }
 
 .slider-track {
   display: flex;
+  
 }
 
 .slider-slide {
@@ -445,7 +447,7 @@
     background-size: cover;
 }
 .testimonial {
-  background-color: #e7e7e7;
+  background-color: #dbe0e2;
   padding: 15px;
   border-radius: 12px;
   margin: 10px;

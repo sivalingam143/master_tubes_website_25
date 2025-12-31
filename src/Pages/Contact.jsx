@@ -1,25 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Col, Container, Row, Form, Button } from "react-bootstrap";
+import { Col, Container, Row, Form, Button, Modal } from "react-bootstrap";
 import API_DOMAIN from "../config/config";
 import { MdMailOutline, MdAccessTime } from "react-icons/md";
+import { FaStar } from "react-icons/fa"; // Run: npm install react-icons
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const Contact = () => {
   const navigate = useNavigate();
-  const storedCustomer = JSON.parse(localStorage.getItem("customer")) || {};
+  const [showFeedback, setShowFeedback] = useState(false);
+  
+  // Feedback states
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [feedbackText, setFeedbackText] = useState("");
+
   const [formData, setFormData] = useState({
-    name: storedCustomer.first_name
-      ? `${storedCustomer.first_name} ${storedCustomer.last_name || ""}`.trim()
-      : "",
-    email: storedCustomer.email_id || "",
-    phone: storedCustomer.phone_number || "",
+    name: "",
+    email: "",
+    phone: "",
     comment: "",
   });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("customer"));
@@ -32,143 +33,170 @@ const Contact = () => {
       }));
     }
   }, []);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const getStoredData = () => {
-    const user = JSON.parse(localStorage.getItem("customer")) || {};
-    return {
-      name: user.first_name || "", // Restores only First Name as requested
-      email: user.email_id || "",
-      phone: user.phone_number || "",
-      comment: "" // Comment should always be cleared
-    };
-  };
     try {
       const response = await fetch(`${API_DOMAIN}/contact.php`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
       const result = await response.json();
       if (result.head.code === 200) {
         toast.success("Message sent successfully!");
-        setFormData(getStoredData());
-        setTimeout(() => {
-        navigate("/"); 
-      }, 1500);
-        // setFormData({ name: "", email: "", phone: "", comment: "" });
-      } else {
-        alert("Error: " + result.head.msg);
+        setTimeout(() => navigate("/"), 1500);
       }
     } catch (error) {
-      console.error("Submission Error", error);
-      alert("Failed to connect to the server.");
+      toast.error("Failed to send message.");
     }
   };
+
+  const handleSaveFeedback = async () => {
+    const user = JSON.parse(localStorage.getItem("customer"));
+    
+    if (!user || !user.customer_id) {
+        toast.warning("Please login to submit feedback.");
+        return;
+    }
+
+    if (rating === 0) {
+        toast.error("Please select a star rating.");
+        return;
+    }
+
+    if (feedbackText.length > 500) {
+        toast.error("Feedback must be 500 characters or less.");
+        return;
+    }
+
+    const payload = {
+        action: "save_feedback",
+        customer_id: user.customer_id,
+        feedback: feedbackText,
+        rating: String(rating) // Match ENUM string type
+    };
+
+    try {
+        const response = await fetch(`${API_DOMAIN}/customer.php`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
+        const result = await response.json();
+        if (result.head.code === 200) {
+            toast.success("Feedback saved! Thank you.");
+            setShowFeedback(false);
+            setFeedbackText("");
+            setRating(0);
+        } else {
+            toast.error(result.head.msg);
+        }
+    } catch (error) {
+        toast.error("Connection error. Try again.");
+    }
+  };
+
   return (
     <>
       <section className="py-5">
         <Container>
           <Row>
-            {/* Left Side: Contact Information */}
             <Col lg={5} className="py-3">
               <div className="contact-info-section">
                 <div className="mb-4">
-                  <p className="title-font text-muted">
-                    Master Tubes, Madurai 625005, Tamilnadu, India
-                  </p>
+                  <p className="title-font text-muted">Master Tubes, Madurai 625005, India</p>
                 </div>
-
-                <div className="mb-4">
-                  <h6 className="fw-bold">Sales</h6>
-                  <p className="mb-0">+91 93608 26673 (Call/WhatsApp)</p>
-                  <h6 className="fw-bold mt-3">Support</h6>
-                  <p>+91 93608 26673</p>
-                </div>
-
                 <div className="mb-4 d-flex align-items-center">
                   <MdMailOutline size={20} className="me-2" />
                   <span>saipackagingproducts@gmail.com</span>
                 </div>
-
                 <div className="mb-4 d-flex align-items-start">
                   <MdAccessTime size={20} className="me-2 mt-1" />
                   <div>
-                    <p className="mb-0">
-                      Monday to Saturday 09:30 AM - 06:30 PM
-                    </p>
-                    <p className="mb-0">Sunday 10:00 AM - 07:00 PM</p>
+                    <p className="mb-0">Mon-Sat: 09:30 AM - 06:30 PM</p>
+                    <p className="mb-0">Sun: 10:00 AM - 07:00 PM</p>
                   </div>
                 </div>
               </div>
             </Col>
 
-            {/* Right Side: Contact Form */}
             <Col lg={7} className="py-3">
               <h3 className="body-font mb-4">Contact form</h3>
-              <Form>
+              <Form onSubmit={handleSubmit}>
                 <Row>
                   <Col md={6} className="mb-3">
-                    <Form.Control
-                      name="name"
-                      placeholder="Name"
-                      required
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="bg-light border-0 py-2"
-                    />
+                    <Form.Control name="name" placeholder="Name" required value={formData.name} onChange={handleChange} className="bg-light border-0 py-2" />
                   </Col>
                   <Col md={6} className="mb-3">
-                    <Form.Control
-                      name="email"
-                      type="email"
-                      placeholder="Email*"
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="bg-light border-0 py-2"
-                    />
+                    <Form.Control name="email" type="email" placeholder="Email*" required value={formData.email} onChange={handleChange} className="bg-light border-0 py-2" />
                   </Col>
                 </Row>
-
                 <Form.Group className="mb-3">
-                  <Form.Control
-                    name="phone"
-                    placeholder="Phone number"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="bg-light border-0 py-2"
-                  />
+                  <Form.Control name="phone" placeholder="Phone number" value={formData.phone} onChange={handleChange} className="bg-light border-0 py-2" />
                 </Form.Group>
-
                 <Form.Group className="mb-4">
-                  <Form.Control
-                    as="textarea"
-                    rows={4}
-                    name="comment"
-                    placeholder="Comment"
-                    required
-                    value={formData.comment}
-                    onChange={handleChange}
-                    className="bg-light border-0"
-                  />
+                  <Form.Control as="textarea" rows={4} name="comment" placeholder="Comment" required value={formData.comment} onChange={handleChange} className="bg-light border-0" />
                 </Form.Group>
 
-                <Button
-                  type="submit"
-                  variant="danger"
-                  className="px-5"
-                  onClick={handleSubmit}
-                >
-                  Submit
-                </Button>
+                <div className="d-flex gap-3">
+                    <Button type="submit" variant="danger" className="px-5">Submit</Button>
+                    <Button variant="outline-dark" onClick={() => setShowFeedback(true)}>Feedback</Button>
+                </div>
               </Form>
             </Col>
           </Row>
         </Container>
       </section>
+
+      {/* Feedback Modal */}
+      <Modal show={showFeedback} onHide={() => setShowFeedback(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title className="body-font">Your Feedback</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="text-center mb-4">
+            <p className="fw-bold mb-2">Rate your experience</p>
+            {[...Array(5)].map((_, index) => {
+              const ratingValue = index + 1;
+              return (
+                <label key={index}>
+                  <input type="radio" name="rating" style={{ display: "none" }} value={ratingValue} onClick={() => setRating(ratingValue)} />
+                  <FaStar
+                    size={35}
+                    color={ratingValue <= (hover || rating) ? "#ffc107" : "#e4e5e9"}
+                    onMouseEnter={() => setHover(ratingValue)}
+                    onMouseLeave={() => setHover(0)}
+                    style={{ cursor: "pointer", transition: "color 200ms" }}
+                  />
+                </label>
+              );
+            })}
+          </div>
+          <Form.Group>
+            <Form.Label className="small fw-bold">Comments (Max 500 chars)</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={4}
+              maxLength={500}
+              value={feedbackText}
+              onChange={(e) => setFeedbackText(e.target.value)}
+              placeholder="Tell us what we can improve..."
+              className="bg-light border-0"
+            />
+            <div className="text-end small text-muted mt-1">{feedbackText.length}/500</div>
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer className="border-0">
+         
+          <Button className="save1" onClick={handleSaveFeedback} style={{ border: 'none' }}>Save Feedback</Button>
+           <Button className="cancel1" onClick={() => setShowFeedback(false)}>Cancel</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

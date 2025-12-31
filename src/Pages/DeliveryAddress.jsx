@@ -3,12 +3,13 @@ import { Row, Col, Card, Form, Button } from "react-bootstrap";
 import { FaPlusCircle, FaEdit } from "react-icons/fa";
 import API_DOMAIN from "../config/config";
 import { toast } from "react-toastify";
+import { State } from "country-state-city";  // Add this import at the top
 const DeliveryAddress = () => {
   const [userData, setUserData] = useState(null);
   console.log("userData", userData);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
-
+const statesInIndia = State.getStatesOfCountry("IN");  // Add this inside the component (after useState hooks)
   const [addressForm, setAddressForm] = useState({
     firstName: "",
     lastName: "",
@@ -16,7 +17,7 @@ const DeliveryAddress = () => {
     address2: "",
     city: "",
     zipCode: "",
-    company: "",
+    state: "",
     contactNumber: "",
   });
 
@@ -69,7 +70,7 @@ const DeliveryAddress = () => {
       address2: addressForm.address2,
       city: addressForm.city,
       zipCode: addressForm.zipCode,
-      company: addressForm.company,
+      state: addressForm.state,
       contactNumber: addressForm.contactNumber,
       country: "India", // Based on your UI screenshot
     };
@@ -118,7 +119,7 @@ const DeliveryAddress = () => {
       address2: "",
       city: "",
       zipCode: "",
-      company: "",
+      state: "",
       contactNumber: "",
     };
 
@@ -143,8 +144,8 @@ const DeliveryAddress = () => {
             parsed.city = field.replace("City ", "");
           if (field.startsWith("Zip "))
             parsed.zipCode = field.replace("Zip ", "");
-          if (field.startsWith("Company "))
-            parsed.company = field.replace("Company ", "");
+          if (field.startsWith("state "))
+            parsed.state = field.replace("state ", "");
           if (field.startsWith("Contact "))
             parsed.contactNumber = field.replace("Contact ", "");
         });
@@ -172,7 +173,7 @@ const DeliveryAddress = () => {
         address2: "Address2",
         city: "City",
         zipCode: "Zip",
-        company: "Company",
+        state: "state",
         contactNumber: "Contact",
       };
       const match = fields.find((f) => f.startsWith(oldMap[key] + " "));
@@ -193,8 +194,8 @@ const DeliveryAddress = () => {
         return parsed.city || "";
       case "zipCode":
         return parsed.zipCode || "";
-      case "company":
-        return parsed.company || "";
+      case "state":
+        return parsed.state || "";
       case "contactNumber":
         return parsed.contactNumber || "";
       default:
@@ -214,11 +215,7 @@ const DeliveryAddress = () => {
         >
           Delivery address
         </h5>
-        <button
-          type="button"
-          className="btn-close"
-          onClick={() => setIsEditing(false)}
-        ></button>
+       
       </div>
       <Form>
         <Row className="mb-3">
@@ -278,19 +275,27 @@ const DeliveryAddress = () => {
           </Col>
         </Row>
         <Row className="mb-3">
-          <Col md={4}>
-            <Form.Label className="small text-muted">Company</Form.Label>
-            <Form.Control
-              name="company"
-              value={addressForm.company}
-              onChange={handleInputChange}
-              style={{
-                backgroundColor: "#eff2f7",
-                border: "none",
-                height: "45px",
-              }}
-            />
-          </Col>
+       
+<Col md={4}>
+  <Form.Label className="small text-muted">State</Form.Label>
+  <Form.Select
+    name="state"
+    value={addressForm.state}
+    onChange={handleInputChange}
+    style={{
+      backgroundColor: "#eff2f7",
+      border: "none",
+      height: "45px",
+    }}
+  >
+    <option value="">Select State</option>
+    {statesInIndia.map((state) => (
+      <option key={state.isoCode} value={state.name}>
+        {state.name}
+      </option>
+    ))}
+  </Form.Select>
+</Col>
           <Col md={4}>
             <Form.Label className="small text-muted">
               Postal/Zip Code
@@ -316,7 +321,7 @@ const DeliveryAddress = () => {
                 height: "45px",
               }}
             >
-              <span className="me-2 small">+91</span>
+              
               <Form.Control
                 name="contactNumber"
                 value={addressForm.contactNumber}
@@ -366,6 +371,14 @@ const DeliveryAddress = () => {
           >
             Save
           </Button>
+             <Button
+                          // variant="link"
+          
+                          className=" ms-3 cancel1 "
+                          onClick={() => setIsEditing(false)}
+                        >
+                          Cancel
+                        </Button>
         </div>
       </Form>
     </Card>
@@ -390,15 +403,7 @@ const DeliveryAddress = () => {
             onClick={() => parseAddressForEditing(userData.delivery_address)}
             size={20}
           />
-          <button
-            type="button"
-            className="btn-close"
-            onClick={() => {
-              const updated = { ...userData, delivery_address: "" };
-              setUserData(updated);
-              localStorage.setItem("customer", JSON.stringify(updated));
-            }}
-          ></button>
+          
         </div>
       </div>
       <div className="px-2">
@@ -463,20 +468,21 @@ const DeliveryAddress = () => {
           </Col>
         </Row>
         <Row className="mb-3">
-          <Col md={4}>
-            <label className="small text-muted d-block">Company</label>
-            <div
-              className="p-2 rounded-2"
-              style={{
-                backgroundColor: "#eff2f7",
-                height: "45px",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              {getField("company")}
-            </div>
-          </Col>
+ 
+<Col md={4}>
+  <label className="small text-muted d-block">State</label>
+  <div
+    className="p-2 rounded-2"
+    style={{
+      backgroundColor: "#eff2f7",
+      height: "45px",
+      display: "flex",
+      alignItems: "center",
+    }}
+  >
+    {getField("state")}
+  </div>
+</Col>
           <Col md={4}>
             <label className="small text-muted d-block">City</label>
             <div
@@ -518,7 +524,7 @@ const DeliveryAddress = () => {
                 alignItems: "center",
               }}
             >
-              +91 {getField("contactNumber")}
+              {getField("contactNumber")}
             </div>
           </Col>
         </Row>
@@ -552,7 +558,7 @@ const DeliveryAddress = () => {
                 address2: "",
                 city: "",
                 zipCode: "",
-                company: "",
+                state: "",
                 contactNumber: "",
               });
               setIsEditing(true);

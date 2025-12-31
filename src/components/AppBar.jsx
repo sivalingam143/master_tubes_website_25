@@ -9,22 +9,28 @@ import SearchForms from "./SearchForms";
 import { Table } from "react-bootstrap";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { useCart } from "./CartContext";
-
-// import Forms from "./Forms";
 import {
   IoBagHandleOutline,
   IoPersonOutline,
   IoHeartOutline,
+  IoHomeOutline,
+  IoStorefrontOutline,
+  IoInformationCircleOutline,
+  IoCallOutline,
+  IoLogOutOutline,
 } from "react-icons/io5";
 import { DoButton } from "./Button";
 
 /* ===== MENU DATA ===== */
 const menuLinks = [
-  { label: "Home", path: "/" },
-  { label: "Shop", path: "/shop" },
-  // { label: "Blog", path: "/blog" },
-  { label: "About", path: "/about" },
-  { label: "Contact", path: "/contact" },
+  { label: "Home", path: "/", icon: <IoHomeOutline size={24} /> },
+  { label: "Shop", path: "/shop", icon: <IoStorefrontOutline size={24} /> },
+  {
+    label: "About",
+    path: "/about",
+    icon: <IoInformationCircleOutline size={24} />,
+  },
+  { label: "Contact", path: "/contact", icon: <IoCallOutline size={24} /> },
 ];
 
 const iconLinks = [{ icon: <IoHeartOutline size={22} />, path: "/wishlist" }];
@@ -54,15 +60,22 @@ function AppBar() {
   const userPath = isLoggedIn ? "/profile" : "/login";
 
   // Handle place order click
-const handlePlaceOrder = () => {
-  if (isLoggedIn) {
-    navigate("/checkout");
-    setShowCart(false); // closes right after navigation starts
-  } else {
-    navigate("/login", { state: { redirectTo: "/checkout" } });
-    setShowCart(false);
-  }
-};
+  const handlePlaceOrder = () => {
+    if (isLoggedIn) {
+      navigate("/checkout");
+      setShowCart(false);
+    } else {
+      navigate("/login", { state: { redirectTo: "/checkout" } });
+      setShowCart(false);
+    }
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem("customer");
+    navigate("/");
+    setShow(false);
+  };
 
   // Add user icon dynamically
   const userIconLink = { icon: <IoPersonOutline size={22} />, path: userPath };
@@ -72,71 +85,91 @@ const handlePlaceOrder = () => {
       {/* ================= MOBILE APP BAR ================= */}
       <Navbar expand="lg" className="p-0 body-font d-lg-none d-block">
         <Container fluid className="px-lg-5">
-          {/* Toggle */}
+          {/* Toggle for Menu */}
           <Navbar.Toggle onClick={() => setShow(true)} />
 
           <Navbar.Brand as={NavLink} to="/" className="mx-auto">
             <img src={StoreLogo} alt="Logo" className="img-fluid logo" />
           </Navbar.Brand>
 
+          {/* Cart Icon - Opens Cart Offcanvas */}
           <div className="cart-mobile" onClick={() => setShowCart(true)}>
             <IoBagHandleOutline size={22} />
             <span>{totalItems}</span>
           </div>
-          {/* Offcanvas */}
+
+          {/* Menu Offcanvas */}
           <Navbar.Offcanvas
             show={show}
             onHide={() => setShow(false)}
             placement="start"
+            className="mobile-menu-offcanvas"
           >
-            <Offcanvas.Header closeButton>
-              <Offcanvas.Title>
+            <Offcanvas.Header closeButton className="border-bottom">
+              <Offcanvas.Title className="d-flex align-items-center">
                 <img src={StoreLogo} alt="Logo" className="img-fluid logo" />
               </Offcanvas.Title>
             </Offcanvas.Header>
-            <Offcanvas.Body>
-              {cartItems.length === 0 ? (
-                <p>Your cart is empty</p>
-              ) : (
-                <Table>
-                  <tbody>
-                    {cartItems.map((item) => (
-                      <tr key={item.product_id}>
-                        <td>
-                          <div className="cart-font">{item.product_name}</div>
-                          <div className="text-muted small">
-                            Qty: {item.quantity}
-                          </div>
-                          <div className="text-danger">
-                            Rs. {item.product_with_discount_price}
-                          </div>
-                        </td>
-                        <td className="text-center">
-                          <MdOutlineDeleteOutline
-                            style={{ cursor: "pointer", color: "red" }}
-                            onClick={() => removeFromCart(item.product_id)}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              )}
+            <Offcanvas.Body className="p-0">
+              <Nav className="flex-column px-3 py-2">
+                {menuLinks.map((item, i) => (
+                  <Nav.Link
+                    key={i}
+                    as={NavLink}
+                    to={item.path}
+                    onClick={() => setShow(false)}
+                    className="d-flex align-items-center py-3 px-2 rounded mobile-menu-item" // New classes
+                  >
+                    <span className="me-3">{item.icon}</span>
+                    <span>{item.label}</span>
+                  </Nav.Link>
+                ))}
+              </Nav>
+
+              <hr className="mx-3" />
+
+              <Nav className="flex-column px-3 py-2">
+                {iconLinks.map((item, i) => (
+                  <Nav.Link
+                    key={i}
+                    as={NavLink}
+                    to={item.path}
+                    onClick={() => setShow(false)}
+                    className="d-flex align-items-center py-3 px-2 rounded mobile-menu-item"
+                  >
+                    <span className="me-3">{item.icon}</span>
+                    <span>Wishlist</span>
+                  </Nav.Link>
+                ))}
+
+                {/* User Link */}
+                <Nav.Link
+                  as={NavLink}
+                  to={userIconLink.path}
+                  onClick={() => setShow(false)}
+                  className="d-flex align-items-center py-3 px-2 rounded mobile-menu-item"
+                >
+                  <span className="me-3">{userIconLink.icon}</span>
+                  <span>{isLoggedIn ? "Profile" : "Login"}</span>
+                </Nav.Link>
+
+                {/* Logout if Logged In */}
+                {isLoggedIn && (
+                  <Nav.Link
+                    onClick={handleLogout}
+                    className="d-flex align-items-center py-3 px-2 rounded mobile-menu-item text-danger"
+                  >
+                    <IoLogOutOutline size={24} className="me-3" />
+                    <span>Logout</span>
+                  </Nav.Link>
+                )}
+              </Nav>
             </Offcanvas.Body>
           </Navbar.Offcanvas>
-          <div className="mx-auto w-100">
-            {/* <Forms
-            type="text"
-            placeholder="Search products"
-            value={search}
-            onChange={handleSearchChange}
-            onClear={clearSearch}
-  /> */}
-          </div>
         </Container>
       </Navbar>
 
-      {/* ================= DESKTOP APP BAR ================= */}
+      {/* ================= DESKTOP APP BAR  ================= */}
       <Navbar expand="lg" className="p-0 body-font d-none d-lg-block">
         <Container fluid className="px-lg-5">
           <Navbar.Brand as={NavLink} to="/">
@@ -154,7 +187,6 @@ const handlePlaceOrder = () => {
               </Nav.Link>
             ))}
 
-            {/* Dynamic user icon */}
             <Nav.Link as={NavLink} to={userIconLink.path}>
               {userIconLink.icon}
             </Nav.Link>
@@ -165,14 +197,15 @@ const handlePlaceOrder = () => {
             >
               <div className="cart-mobile">
                 <IoBagHandleOutline size={22} />
-                <span>{totalItems}</span> {/* REAL COUNT */}
+                <span>{totalItems}</span>
               </div>
             </Nav.Link>
           </Nav>
         </Container>
       </Navbar>
-      {/* ================= DESKTOP APP BAR ================= */}
-      <Navbar expand="lg" className=" body-font d-none d-lg-block nav-bg p-0">
+
+      {/* ================= DESKTOP MENU BAR  ================= */}
+      <Navbar expand="lg" className="body-font d-none d-lg-block nav-bg p-0">
         <Container fluid className="px-lg-5">
           <Nav>
             {menuLinks.map((item, i) => (
@@ -181,7 +214,7 @@ const handlePlaceOrder = () => {
                 key={i}
                 as={NavLink}
                 to={item.path}
-                onClick={() => setShow(false)} // 👈 CLOSE HERE
+                onClick={() => setShow(false)}
               >
                 {item.label}
               </Nav.Link>
@@ -189,6 +222,7 @@ const handlePlaceOrder = () => {
           </Nav>
         </Container>
       </Navbar>
+
       <Offcanvas
         show={showCart}
         onHide={() => setShowCart(false)}
@@ -210,7 +244,6 @@ const handlePlaceOrder = () => {
             </div>
           ) : (
             <>
-              {/* Scrollable Items List */}
               <div
                 style={{
                   maxHeight: "55vh",
@@ -234,7 +267,6 @@ const handlePlaceOrder = () => {
                       <tr key={item.product_id} className="border-bottom">
                         <td>
                           <div className="d-flex align-items-center">
-                            {/* --- PRODUCT IMAGE --- */}
                             <img
                               src={item.product_img_url}
                               alt={item.product_name}
@@ -283,7 +315,6 @@ const handlePlaceOrder = () => {
                 </Table>
               </div>
 
-              {/* --- PRICE DETAILS SECTION --- */}
               <div className="p-3 border rounded bg-light mt-auto">
                 <h6 className="body-font fw-bold border-bottom pb-2 mb-3">
                   Price Details

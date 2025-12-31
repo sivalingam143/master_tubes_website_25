@@ -357,8 +357,9 @@ textarea.form-control {
   background-size: contain;
 } */
   .social-icon{
-    border: 2px solid #fff;
+    border: 2px solid grey;
     border-radius: 50px;
+ color:rgb(3, 44, 83) !important;
     height: 30px;
     width: 30px;
     padding: 2px;
@@ -366,6 +367,7 @@ textarea.form-control {
     text-align: center;
     margin: 0 5px;
     font-size: 20px;
+
   }
   .upi{
     background-color: #FFF;

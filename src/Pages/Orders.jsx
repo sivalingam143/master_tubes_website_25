@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Card, Row, Col, Badge, Spinner, Button, Collapse } from "react-bootstrap";
+import {
+  Card,
+  Row,
+  Col,
+  Badge,
+  Spinner,
+  Button,
+  Collapse,
+} from "react-bootstrap";
 import API_DOMAIN from "../config/config";
 
 const Orders = () => {
@@ -20,7 +28,7 @@ const Orders = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-              search_text: "",
+            search_text: "",
             customer_id: customer_id,
           }),
         });
@@ -62,28 +70,41 @@ const Orders = () => {
         </Card>
       ) : (
         orders.map((order) => (
-          <Card key={order.order_id} className="mb-4 border-0 shadow-sm rounded-4 overflow-hidden">
+          <Card
+            key={order.order_id}
+            className="mb-4 border-0 shadow-sm rounded-4 overflow-hidden"
+          >
             <Card.Header className="bg-white border-bottom py-3 px-4">
               <Row className="small text-muted align-items-center">
                 <Col md={3}>
-                  Order placed: <span className="text-dark fw-bold d-block">{order.order_date}</span>
+                  Order placed:{" "}
+                  <span className="text-dark fw-bold d-block">
+                    {order.order_date}
+                  </span>
                 </Col>
                 <Col md={3}>
-                  Order no: <span className="text-dark fw-bold d-block">{order.order_no}</span>
+                  Order no:{" "}
+                  <span className="text-dark fw-bold d-block">
+                    {order.order_no}
+                  </span>
                 </Col>
                 <Col md={2}>
-                  Items: <span className="text-dark fw-bold d-block">{order.total_items}</span>
+                  Items:{" "}
+                  <span className="text-dark fw-bold d-block">
+                    {order.total_items}
+                  </span>
                 </Col>
                 <Col md={4} className="text-md-end mt-2 mt-md-0">
-                  <Button 
-                    variant="danger" 
-                    size="sm" 
+                  <Button
+                    variant="danger"
+                    size="sm"
                     className="rounded-pill px-3 me-2"
                     onClick={() => toggleDetails(order.order_id)}
                   >
-                    {expandedOrderId === order.order_id ? "Hide Details" : "View Details"}
+                    {expandedOrderId === order.order_id
+                      ? "Hide Details"
+                      : "View Details"}
                   </Button>
-                
                 </Col>
               </Row>
             </Card.Header>
@@ -93,30 +114,57 @@ const Orders = () => {
               <div>
                 <Card.Body className="p-4">
                   {/* Product List */}
-                  <div className="d-flex gap-4 overflow-auto pb-3 mb-3" style={{ scrollbarWidth: 'none' }}>
+                  <div
+                    className="d-flex gap-4 overflow-auto pb-3 mb-3"
+                    style={{ scrollbarWidth: "none" }}
+                  >
                     {order.product_details?.map((product, idx) => (
-                      <div key={idx} className="text-center" style={{ minWidth: '110px' }}>
-                        <div className="position-relative bg-light rounded-3 p-2 mb-2" style={{ border: '1px solid #eee' }}>
-                          <img 
-                            src={product.product_img_url || 'https://via.placeholder.com/80'} 
-                            alt={product.product_name} 
-                            style={{ width: '70px', height: '70px', objectFit: 'contain' }}
+                      <div
+                        key={idx}
+                        className="text-center"
+                        style={{ minWidth: "110px" }}
+                      >
+                        <div
+                          className="position-relative bg-light rounded-3 p-2 mb-2"
+                          style={{ border: "1px solid #eee" }}
+                        >
+                          <img
+                            src={product.product_img}
+                            alt={product.product_name}
+                            style={{
+                              width: "70px",
+                              height: "70px",
+                              objectFit: "contain",
+                            }}
                           />
-                          <Badge bg="danger" pill className="position-absolute top-0 start-100 translate-middle">
+                          <Badge
+                            bg="danger"
+                            pill
+                            className="position-absolute top-0 start-100 translate-middle"
+                          >
                             {product.qty}
                           </Badge>
                         </div>
-                        <div className="small text-truncate" style={{ maxWidth: '110px' }}>{product.product_name}</div>
-                 
+                        <div
+                          className="small text-truncate"
+                          style={{ maxWidth: "110px" }}
+                        >
+                          {product.product_name}
+                        </div>
                       </div>
                     ))}
                   </div>
 
                   {/* Summary */}
-                  <div className="pt-3 border-top" style={{ maxWidth: '320px', marginLeft: 'auto' }}>
+                  <div
+                    className="pt-3 border-top"
+                    style={{ maxWidth: "320px", marginLeft: "auto" }}
+                  >
                     <div className="d-flex justify-content-between small mb-1">
                       <span className="text-muted">Subtotal</span>
-                      <span className="fw-bold text-dark">Rs. {parseFloat(order.sub_total).toFixed(2)}</span>
+                      <span className="fw-bold text-dark">
+                        Rs. {parseFloat(order.sub_total).toFixed(2)}
+                      </span>
                     </div>
                     <div className="d-flex justify-content-between small mb-1 text-success">
                       <span>Discount</span>
@@ -124,26 +172,47 @@ const Orders = () => {
                     </div>
                     <div className="d-flex justify-content-between small mb-1">
                       <span className="text-muted">Shipping</span>
-                      <span className="fw-bold text-dark">Rs. {parseFloat(order.shipping_charges).toFixed(2)}</span>
+                      <span className="fw-bold text-dark">
+                        Rs. {parseFloat(order.shipping_charges).toFixed(2)}
+                      </span>
                     </div>
                     <div className="d-flex justify-content-between mt-2 pt-2 border-top bg-light p-2 rounded">
                       <span className="fw-bold">Grand Total</span>
-                      <span className="fw-bold text-danger">Rs. {parseFloat(order.grand_total).toFixed(2)}</span>
+                      <span className="fw-bold text-danger">
+                        Rs. {parseFloat(order.grand_total).toFixed(2)}
+                      </span>
                     </div>
                   </div>
 
                   {/* Address & Status */}
                   <div className="mt-3 pt-3 border-top d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
                     <div className="small">
-                      <span className="text-muted fw-bold">Shipping Address: </span>
-                      <span className="text-muted">{order.shipping_address}</span>
+                      <span className="text-muted fw-bold">
+                        Shipping Address:{" "}
+                      </span>
+                      <span className="text-muted">
+                        {order.shipping_address.replace(
+                          /(FirstName:|LastName:|Address1:|Address2:|City:|State:|Pincode:|Country:|PhoneNumber:)/g,
+                          ""
+                        )}
+                      </span>
                     </div>
-                    <Badge 
-                      bg={order.status === 0 ? "warning" : "success"} 
-                      text={order.status === 0 ? "dark" : "white"}
+                    <Badge
+                      bg={
+                        order.status === 0
+                          ? "danger"
+                          : order.status === 1
+                          ? "warning"
+                          : "success"
+                      }
+                      text={order.status === 1 ? "dark" : "white"}
                       className="p-2 px-3 rounded-pill"
                     >
-                      {order.status === 0 ? "Order Processing" : "Delivered"}
+                      {order.status === 0
+                        ? "Placed"
+                        : order.status === 1
+                        ? "Shipped"
+                        : "Delivered"}
                     </Badge>
                   </div>
                 </Card.Body>

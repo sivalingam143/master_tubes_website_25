@@ -5,11 +5,13 @@ import { useCart } from "../components/CartContext";
 import API_DOMAIN from "../config/config";
 import { toast } from "react-toastify";
 import { State } from "country-state-city";
+
 const Checkout = () => {
   const { cartItems, clearCart, setShowCart } = useCart();
   const navigate = useNavigate();
   const [customer, setCustomer] = useState(null);
   const statesInIndia = State.getStatesOfCountry("IN");
+  
   const [addressForm, setAddressForm] = useState({
     first_name: "",
     last_name: "",
@@ -21,32 +23,82 @@ const Checkout = () => {
     phone: "",
     country: "India",
   });
-  const [shippingCharges, setShippingCharges] = useState(50); // Example fixed shipping
+
+  const [shippingCharges, setShippingCharges] = useState(50);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const storedCustomer = localStorage.getItem("customer");
-    if (!storedCustomer) {
-      navigate("/login", { state: { redirectTo: "/checkout" } });
-      return;
-    }
-    const parsedCustomer = JSON.parse(storedCustomer);
-    setCustomer(parsedCustomer);
+useEffect(() => {
+  const storedCustomer = localStorage.getItem("customer");
+  if (!storedCustomer) {
+    navigate("/login", { state: { redirectTo: "/checkout" } });
+    return;
+  }
 
-    // Completely blank form
+  let parsedCustomer;
+  try {
+    parsedCustomer = JSON.parse(storedCustomer);
+  } catch (err) {
+    console.error("Failed to parse customer from localStorage");
+    navigate("/login", { state: { redirectTo: "/checkout" } });
+    return;
+  }
+
+  setCustomer(parsedCustomer);
+
+  // === EXTRACT AND PARSE DELIVERY ADDRESS FROM CUSTOMER OBJECT ===
+  const deliveryAddressString = parsedCustomer.delivery_address;
+
+  if (deliveryAddressString) {
+    try {
+      const addr = JSON.parse(deliveryAddressString);
+
+      setAddressForm({
+        first_name: addr.firstName || "",
+        last_name: addr.lastName || "",
+        address_line1: addr.address1 || "",
+        address_line2: addr.address2 || "",
+        city: addr.city || "",
+        state: addr.state || "",
+        pin_code: addr.zipCode || "",
+        phone: addr.contactNumber || "",
+        country: addr.country || "India",
+      });
+
+      console.log("✅ Delivery address auto-filled from customer.delivery_address:", addr);
+    } catch (err) {
+      console.error("Failed to parse delivery_address JSON string:", err);
+      console.error("Raw string:", deliveryAddressString);
+      // Fall back to blank form
+      setAddressForm({
+        first_name: "",
+        last_name: "",
+        address_line1: "",
+        address_line2: "",
+        city: "",
+        state: "",
+        pin_code: "",
+        phone: "",
+        country: "India",
+      });
+    }
+  } else {
+    console.log("No delivery_address field in customer object – form remains blank");
+    // Optional: blank form if no saved address
     setAddressForm({
       first_name: "",
       last_name: "",
       address_line1: "",
       address_line2: "",
       city: "",
-      state: "", // Blank state
+      state: "",
       pin_code: "",
       phone: "",
-      country: "India", // Only keep country if required
+      country: "India",
     });
-  }, [navigate]);
+  }
+}, [navigate]);
+
   // Compute totals
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const subTotal = cartItems.reduce(
@@ -80,8 +132,6 @@ const Checkout = () => {
       return;
     }
 
-    setLoading(true);
-    setError(null);
     if (cartItems.length === 0) {
       toast.error("Your cart is empty!");
       return;
@@ -90,17 +140,9 @@ const Checkout = () => {
     setLoading(true);
     setError(null);
 
-    // 1. Define the shipping address string
-    // const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${addressForm.address_line1}, ${addressForm.city}, ${addressForm.state}, ${addressForm.pin_code}, ${addressForm.country}, Phone: ${addressForm.phone}`;
-    const shippingAddress = ` FirstName :${addressForm.first_name} ,LastName:${addressForm.last_name}, Adddress1:${addressForm.address_line1},City: ${addressForm.city}, State:${addressForm.state},Pincode: ${addressForm.pin_code},Country : ${addressForm.country}, PhoneNumber: ${addressForm.phone}`;
-
-    const productDetails = cartItems.map((item) => ({
-      product_id: item.product_id,
-      product_name: item.product_name,
-      quantity: item.quantity,
-      price: item.product_with_discount_price,
-    }));
-    // 2. Prepare the payload (This was missing in your snippet)
+    // const shippingAddress = `FirstName:${addressForm.first_name}, LastName:${addressForm.last_name}, Address1:${addressForm.address_line1}, Address2:${addressForm.address_line2}, City:${addressForm.city}, State:${addressForm.state}, Pincode:${addressForm.pin_code}, Country:${addressForm.country}, PhoneNumber:${addressForm.phone}`;
+// Clean version without labels
+const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${addressForm.address_line1}, ${addressForm.address_line2 ? addressForm.address_line2 + ', ' : ''}${addressForm.city}, ${addressForm.state} - ${addressForm.pin_code}, ${addressForm.phone}`;
     const payload = {
       customer_id: customer.customer_id,
       product_details: cartItems.map((item) => ({
@@ -108,6 +150,7 @@ const Checkout = () => {
         product_name: item.product_name,
         quantity: item.quantity,
         price: item.product_with_discount_price,
+        product_img: item.product_img,
       })),
       shipping_address: shippingAddress,
       total_items: totalItems,
@@ -151,13 +194,13 @@ const Checkout = () => {
     navigate(-1);
     setShowCart(true);
   };
+
   return (
     <section className="py-5">
       <Container>
         <Row>
           <Col lg={7}>
             <h3 className="mb-4">Shipping Address</h3>
-            {/* {error && <Alert variant="danger">{error}</Alert>} */}
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={6}>
@@ -188,14 +231,14 @@ const Checkout = () => {
               <Form.Group className="mb-3">
                 <Form.Label>Address *</Form.Label>
                 <Form.Control
-                  as="textarea" // Changed from type="text"
-                  rows={3} // Sets the initial height
+                  as="textarea"
+                  rows={3}
                   name="address_line1"
                   value={addressForm.address_line1}
                   onChange={handleInputChange}
                   placeholder="House No, Street, etc."
                   required
-                  style={{ resize: "none" }} // Optional: prevents user from manual resizing
+                  style={{ resize: "none" }}
                 />
               </Form.Group>
               <Form.Group className="mb-3">
@@ -261,13 +304,19 @@ const Checkout = () => {
                   required
                 />
               </Form.Group>
-              <Button variant="secondary" onClick={handleReturnToCart}>
+              <Button variant="secondary" onClick={handleReturnToCart} className="me-2">
                 Return to Cart
+              </Button>
+              <Button
+                variant="danger"
+                type="submit"
+                disabled={loading || cartItems.length === 0}
+              >
+                {loading ? "Processing..." : "Confirm Order"}
               </Button>
             </Form>
           </Col>
 
-          {/* Right: Order Summary */}
           <Col lg={5}>
             <h5 className="mb-3">Order Summary</h5>
             <div className="border p-3 rounded">
@@ -308,14 +357,6 @@ const Checkout = () => {
               <div className="d-flex justify-content-between text-success small">
                 <span>You save ₹{discount.toFixed(2)}</span>
               </div>
-              <Button
-                variant="danger"
-                className="w-100 mt-3"
-                onClick={handleSubmit}
-                disabled={loading || cartItems.length === 0}
-              >
-                {loading ? "Processing..." : "Confirm Order"}
-              </Button>
             </div>
           </Col>
         </Row>

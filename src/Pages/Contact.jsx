@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const Contact = () => {
   const navigate = useNavigate();
   const [showFeedback, setShowFeedback] = useState(false);
-  
+
   // Feedback states
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
@@ -58,46 +58,46 @@ const Contact = () => {
 
   const handleSaveFeedback = async () => {
     const user = JSON.parse(localStorage.getItem("customer"));
-    
+
     if (!user || !user.customer_id) {
-        toast.warning("Please login to submit feedback.");
-        return;
+      toast.warning("Please login to submit feedback.");
+      return;
     }
 
     if (rating === 0) {
-        toast.error("Please select a star rating.");
-        return;
+      toast.error("Please select a star rating.");
+      return;
     }
 
     if (feedbackText.length > 500) {
-        toast.error("Feedback must be 500 characters or less.");
-        return;
+      toast.error("Feedback must be 500 characters or less.");
+      return;
     }
 
     const payload = {
-        action: "save_feedback",
-        customer_id: user.customer_id,
-        feedback: feedbackText,
-        rating: String(rating) // Match ENUM string type
+      action: "save_feedback",
+      customer_id: user.customer_id,
+      feedback: feedbackText,
+      rating: String(rating), // Match ENUM string type
     };
 
     try {
-        const response = await fetch(`${API_DOMAIN}/customer.php`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-        });
-        const result = await response.json();
-        if (result.head.code === 200) {
-            toast.success("Feedback saved! Thank you.");
-            setShowFeedback(false);
-            setFeedbackText("");
-            setRating(0);
-        } else {
-            toast.error(result.head.msg);
-        }
+      const response = await fetch(`${API_DOMAIN}/customer.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
+      if (result.head.code === 200) {
+        toast.success("Feedback saved! Thank you.");
+        setShowFeedback(false);
+        setFeedbackText("");
+        setRating(0);
+      } else {
+        toast.error(result.head.msg);
+      }
     } catch (error) {
-        toast.error("Connection error. Try again.");
+      toast.error("Connection error. Try again.");
     }
   };
 
@@ -109,8 +109,17 @@ const Contact = () => {
             <Col lg={5} className="py-3">
               <div className="contact-info-section">
                 <div className="mb-4">
-                  <p className="title-font text-muted">Master Tubes, Madurai 625005, India</p>
+                  <p className="title-font text-muted">
+                    Master Tubes, Madurai 625005, India
+                  </p>
                 </div>
+                <div className="mb-4">
+                  <h6 className="fw-bold">Sales</h6>
+                  <p className="mb-0">+91 93608 26673 (Call/WhatsApp)</p>
+                  <h6 className="fw-bold mt-3">Support</h6>
+                  <p>+91 93608 26673</p>
+                </div>
+
                 <div className="mb-4 d-flex align-items-center">
                   <MdMailOutline size={20} className="me-2" />
                   <span>saipackagingproducts@gmail.com</span>
@@ -126,26 +135,79 @@ const Contact = () => {
             </Col>
 
             <Col lg={7} className="py-3">
-              <h3 className="body-font mb-4">Contact form</h3>
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <h3 className="body-font m-0">Contact form</h3>
+                <Button
+                  variant="dark" // Base variant
+                  size="sm"
+                  onClick={() => setShowFeedback(true)}
+                  style={{
+                    borderRadius: "20px",
+                    padding: "5px 20px",
+                    backgroundColor: "#ffc107", // Custom Gold color
+                    color: "#000", // Black text for contrast
+                    border: "none",
+                  }}
+                >
+                  Feedback Form
+                </Button>
+              </div>
               <Form onSubmit={handleSubmit}>
                 <Row>
                   <Col md={6} className="mb-3">
-                    <Form.Control name="name" placeholder="Name" required value={formData.name} onChange={handleChange} className="bg-light border-0 py-2" />
+                    <Form.Control
+                      name="name"
+                      placeholder="Name"
+                      required
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="bg-light border-0 py-2"
+                    />
                   </Col>
                   <Col md={6} className="mb-3">
-                    <Form.Control name="email" type="email" placeholder="Email*" required value={formData.email} onChange={handleChange} className="bg-light border-0 py-2" />
+                    <Form.Control
+                      name="email"
+                      type="email"
+                      placeholder="Email*"
+                      required
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="bg-light border-0 py-2"
+                    />
                   </Col>
                 </Row>
                 <Form.Group className="mb-3">
-                  <Form.Control name="phone" placeholder="Phone number" value={formData.phone} onChange={handleChange} className="bg-light border-0 py-2" />
+                  <Form.Control
+                    name="phone"
+                    placeholder="Phone number"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="bg-light border-0 py-2"
+                  />
                 </Form.Group>
                 <Form.Group className="mb-4">
-                  <Form.Control as="textarea" rows={4} name="comment" placeholder="Comment" required value={formData.comment} onChange={handleChange} className="bg-light border-0" />
+                  <Form.Control
+                    as="textarea"
+                    rows={4}
+                    name="comment"
+                    placeholder="Comment"
+                    required
+                    value={formData.comment}
+                    onChange={handleChange}
+                    className="bg-light border-0"
+                  />
                 </Form.Group>
 
                 <div className="d-flex gap-3">
-                    <Button type="submit" variant="danger" className="px-5">Submit</Button>
-                    <Button variant="outline-dark" onClick={() => setShowFeedback(true)}>Feedback</Button>
+                  <Button type="submit" variant="danger" className="px-5">
+                    Submit
+                  </Button>
+                  {/* <Button
+                    variant="outline-dark"
+                    onClick={() => setShowFeedback(true)}
+                  >
+                    Feedback
+                  </Button> */}
                 </div>
               </Form>
             </Col>
@@ -165,10 +227,18 @@ const Contact = () => {
               const ratingValue = index + 1;
               return (
                 <label key={index}>
-                  <input type="radio" name="rating" style={{ display: "none" }} value={ratingValue} onClick={() => setRating(ratingValue)} />
+                  <input
+                    type="radio"
+                    name="rating"
+                    style={{ display: "none" }}
+                    value={ratingValue}
+                    onClick={() => setRating(ratingValue)}
+                  />
                   <FaStar
                     size={35}
-                    color={ratingValue <= (hover || rating) ? "#ffc107" : "#e4e5e9"}
+                    color={
+                      ratingValue <= (hover || rating) ? "#ffc107" : "#e4e5e9"
+                    }
                     onMouseEnter={() => setHover(ratingValue)}
                     onMouseLeave={() => setHover(0)}
                     style={{ cursor: "pointer", transition: "color 200ms" }}
@@ -178,7 +248,9 @@ const Contact = () => {
             })}
           </div>
           <Form.Group>
-            <Form.Label className="small fw-bold">Comments (Max 500 chars)</Form.Label>
+            <Form.Label className="small fw-bold">
+              Comments (Max 500 chars)
+            </Form.Label>
             <Form.Control
               as="textarea"
               rows={4}
@@ -188,13 +260,22 @@ const Contact = () => {
               placeholder="Tell us what we can improve..."
               className="bg-light border-0"
             />
-            <div className="text-end small text-muted mt-1">{feedbackText.length}/500</div>
+            <div className="text-end small text-muted mt-1">
+              {feedbackText.length}/500
+            </div>
           </Form.Group>
         </Modal.Body>
         <Modal.Footer className="border-0">
-         
-          <Button className="save1" onClick={handleSaveFeedback} style={{ border: 'none' }}>Save Feedback</Button>
-           <Button className="cancel1" onClick={() => setShowFeedback(false)}>Cancel</Button>
+          <Button
+            className="save1"
+            onClick={handleSaveFeedback}
+            style={{ border: "none" }}
+          >
+            Save Feedback
+          </Button>
+          <Button className="cancel1" onClick={() => setShowFeedback(false)}>
+            Cancel
+          </Button>
         </Modal.Footer>
       </Modal>
     </>

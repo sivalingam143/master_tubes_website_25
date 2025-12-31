@@ -200,7 +200,7 @@ const Shop = () => {
                             </div>
                           <div className="price-content d-flex align-items-center mt-1">
   {Number(item.discount_lock) === 1 ? (
-    <span className="text-dark fw-bold">RS. {item.product_price}</span>
+    <span className="text-dark fw-bold">Rs. {item.product_price}</span>
   ) : (
     <>
       <span className="text-muted text-decoration-line-through small">

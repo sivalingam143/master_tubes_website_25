@@ -191,15 +191,28 @@ const Orders = () => {
                         Shipping Address:{" "}
                       </span>
                       <span className="text-muted">
-                        {order.shipping_address}
+                        {order.shipping_address.replace(
+                          /(FirstName:|LastName:|Address1:|Address2:|City:|State:|Pincode:|Country:|PhoneNumber:)/g,
+                          ""
+                        )}
                       </span>
                     </div>
                     <Badge
-                      bg={order.status === 0 ? "warning" : "success"}
-                      text={order.status === 0 ? "dark" : "white"}
+                      bg={
+                        order.status === 0
+                          ? "danger"
+                          : order.status === 1
+                          ? "warning"
+                          : "success"
+                      }
+                      text={order.status === 1 ? "dark" : "white"}
                       className="p-2 px-3 rounded-pill"
                     >
-                      {order.status === 0 ? "Order Processing" : "Delivered"}
+                      {order.status === 0
+                        ? "Placed"
+                        : order.status === 1
+                        ? "Shipped"
+                        : "Delivered"}
                     </Badge>
                   </div>
                 </Card.Body>

@@ -7,7 +7,7 @@ import {
   FaWhatsapp,
 } from "react-icons/fa";
 import StoreLogo from "../assets/images/category/Logo2.png";
-import { NavLink } from "react-router-dom";
+import { NavLink , useLocation} from "react-router-dom";
 import UPI from "../assets/images/upi.webp";
 import { useCart } from "../components/CartContext";
 import { useEffect, useState } from "react";
@@ -16,7 +16,12 @@ import API_DOMAIN from "../config/config";
 function Bottoms() {
   const { setShowCart } = useCart();
   const [company, setCompany] = useState(null);
+const { pathname } = useLocation();
 
+  // 3. ADD THIS EFFECT TO HANDLE SCROLLING
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 useEffect(() => {
   const fetchCompanyData = async () => {
     try {

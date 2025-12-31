@@ -17,27 +17,21 @@ function Bottoms() {
   const { setShowCart } = useCart();
   const [company, setCompany] = useState(null);
 
- useEffect(() => {
+useEffect(() => {
   const fetchCompanyData = async () => {
     try {
       const response = await fetch(`${API_DOMAIN}/company.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          search_text: "" // Fetches all companies as per your PHP logic
+          search_text: "" 
         }),
       });
       
       const data = await response.json();
-      console.log("data", data);
-      
       if (data.head.code === 200 && data.body.company) {
-        // Find the specific company ID in the array returned by PHP
-        const targetCompany = data.body.company.find(
-          (c) => c.company_id === "COMP-000002"
-        );
+        const targetCompany = data.body.company[0]; 
         setCompany(targetCompany);
-        console.log("targetCompany", targetCompany);
       }
     } catch (error) {
       console.error("Error fetching company data:", error);

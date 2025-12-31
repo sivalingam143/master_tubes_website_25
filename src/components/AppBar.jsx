@@ -54,15 +54,15 @@ function AppBar() {
   const userPath = isLoggedIn ? "/profile" : "/login";
 
   // Handle place order click
-const handlePlaceOrder = () => {
-  if (isLoggedIn) {
-    navigate("/checkout");
-    setShowCart(false); // closes right after navigation starts
-  } else {
-    navigate("/login", { state: { redirectTo: "/checkout" } });
-    setShowCart(false);
-  }
-};
+  const handlePlaceOrder = () => {
+    if (isLoggedIn) {
+      navigate("/checkout");
+      setShowCart(false); // closes right after navigation starts
+    } else {
+      navigate("/login", { state: { redirectTo: "/checkout" } });
+      setShowCart(false);
+    }
+  };
 
   // Add user icon dynamically
   const userIconLink = { icon: <IoPersonOutline size={22} />, path: userPath };
@@ -72,18 +72,20 @@ const handlePlaceOrder = () => {
       {/* ================= MOBILE APP BAR ================= */}
       <Navbar expand="lg" className="p-0 body-font d-lg-none d-block">
         <Container fluid className="px-lg-5">
-          {/* Toggle */}
+          {/* Toggle for Menu */}
           <Navbar.Toggle onClick={() => setShow(true)} />
 
           <Navbar.Brand as={NavLink} to="/" className="mx-auto">
             <img src={StoreLogo} alt="Logo" className="img-fluid logo" />
           </Navbar.Brand>
 
+          {/* Cart Icon - Opens Cart Offcanvas */}
           <div className="cart-mobile" onClick={() => setShowCart(true)}>
             <IoBagHandleOutline size={22} />
             <span>{totalItems}</span>
           </div>
-          {/* Offcanvas */}
+
+          {/* Menu Offcanvas */}
           <Navbar.Offcanvas
             show={show}
             onHide={() => setShow(false)}
@@ -95,44 +97,47 @@ const handlePlaceOrder = () => {
               </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-              {cartItems.length === 0 ? (
-                <p>Your cart is empty</p>
-              ) : (
-                <Table>
-                  <tbody>
-                    {cartItems.map((item) => (
-                      <tr key={item.product_id}>
-                        <td>
-                          <div className="cart-font">{item.product_name}</div>
-                          <div className="text-muted small">
-                            Qty: {item.quantity}
-                          </div>
-                          <div className="text-danger">
-                            Rs. {item.product_with_discount_price}
-                          </div>
-                        </td>
-                        <td className="text-center">
-                          <MdOutlineDeleteOutline
-                            style={{ cursor: "pointer", color: "red" }}
-                            onClick={() => removeFromCart(item.product_id)}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              )}
+              {/* Menu Links */}
+              <Nav className="flex-column">
+                {menuLinks.map((item, i) => (
+                  <Nav.Link
+                    key={i}
+                    as={NavLink}
+                    to={item.path}
+                    onClick={() => setShow(false)}
+                    className="py-3 border-bottom"
+                  >
+                    {item.label}
+                  </Nav.Link>
+                ))}
+              </Nav>
+
+              {/* Optional: Add Icons Below Menu */}
+              <Nav className="flex-column mt-4 pt-3 border-top">
+                {iconLinks.map((item, i) => (
+                  <Nav.Link
+                    key={i}
+                    as={NavLink}
+                    to={item.path}
+                    onClick={() => setShow(false)}
+                    className="py-2"
+                  >
+                    {item.icon} Wishlist
+                  </Nav.Link>
+                ))}
+
+                {/* User Link */}
+                <Nav.Link
+                  as={NavLink}
+                  to={userIconLink.path}
+                  onClick={() => setShow(false)}
+                  className="py-2"
+                >
+                  {userIconLink.icon} {isLoggedIn ? "Profile" : "Login"}
+                </Nav.Link>
+              </Nav>
             </Offcanvas.Body>
           </Navbar.Offcanvas>
-          <div className="mx-auto w-100">
-            {/* <Forms
-            type="text"
-            placeholder="Search products"
-            value={search}
-            onChange={handleSearchChange}
-            onClear={clearSearch}
-  /> */}
-          </div>
         </Container>
       </Navbar>
 

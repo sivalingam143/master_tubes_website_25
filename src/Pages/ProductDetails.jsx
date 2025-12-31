@@ -150,7 +150,7 @@ const ProductDetails = () => {
     };
 
     if (productId) fetchDetails();
-  }, [productId, customer]);
+  }, [productId]);
   if (loading)
     return (
       <div className="text-center py-5">

@@ -66,31 +66,31 @@ const Shop = () => {
       console.error("Error loading shop data:", error);
     }
   };
- const handleQuantityChange = (product, newQuantity) => {
-  // Allow empty string while user is typing (this is the key fix)
-  if (newQuantity === "" || newQuantity === 0) {
-    setQuantities((prev) => ({
-      ...prev,
-      [product.product_id]: 0,
-    }));
-    return;
-  }
-
-  // Only process if it's a valid number
-  if (typeof newQuantity === "number" && !isNaN(newQuantity)) {
-    const currentQty = quantities[product.product_id] || 0;
-    const diff = newQuantity - currentQty;
-
-    setQuantities((prev) => ({
-      ...prev,
-      [product.product_id]: newQuantity,
-    }));
-
-    if (diff > 0) {
-      addToDetails(product, diff);
+  const handleQuantityChange = (product, newQuantity) => {
+    // Allow empty string while user is typing (this is the key fix)
+    if (newQuantity === "" || newQuantity === 0) {
+      setQuantities((prev) => ({
+        ...prev,
+        [product.product_id]: 0,
+      }));
+      return;
     }
-  }
-};
+
+    // Only process if it's a valid number
+    if (typeof newQuantity === "number" && !isNaN(newQuantity)) {
+      const currentQty = quantities[product.product_id] || 0;
+      const diff = newQuantity - currentQty;
+
+      setQuantities((prev) => ({
+        ...prev,
+        [product.product_id]: newQuantity,
+      }));
+
+      if (diff > 0) {
+        addToDetails(product, diff);
+      }
+    }
+  };
   return (
     <>
       <section className="py-5">
@@ -203,14 +203,17 @@ const Shop = () => {
                             </div>
                             <div className="pt-2">
                               <div className="pt-2">
-                            <DoButton
-  value={quantities[item.product_id] || 0}
-  onChange={(newVal) => {
-    // This allows smooth typing: pass empty string or number directly
-    handleQuantityChange(item, newVal === "" ? "" : Number(newVal));
-  }}
-  min={0}
-/>
+                                <DoButton
+                                  value={quantities[item.product_id] || 0}
+                                  onChange={(newVal) => {
+                                    // This allows smooth typing: pass empty string or number directly
+                                    handleQuantityChange(
+                                      item,
+                                      newVal === "" ? "" : Number(newVal)
+                                    );
+                                  }}
+                                  min={0}
+                                />
                               </div>
                             </div>
                           </div>

@@ -68,22 +68,22 @@ const Checkout = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-   if (
-  !addressForm.address_line1 ||
-  !addressForm.city ||
-  !addressForm.pin_code ||
-  !addressForm.phone
-) {
-  toast.error("Please fill all required fields");
-  return;
-}
+    if (
+      !addressForm.address_line1 ||
+      !addressForm.city ||
+      !addressForm.pin_code ||
+      !addressForm.phone
+    ) {
+      toast.error("Please fill all required fields");
+      return;
+    }
 
     setLoading(true);
     setError(null);
-   if (cartItems.length === 0) {
-  toast.error("Your cart is empty!");
-  return;
-}
+    if (cartItems.length === 0) {
+      toast.error("Your cart is empty!");
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -128,19 +128,18 @@ const Checkout = () => {
 
       const result = await response.json();
 
-    if (result.head && result.head.code === 200) {
-  toast.success(result.head.msg || "Order placed successfully!");
-  if (typeof clearCart === "function") {
-    clearCart();
-  }
-  navigate("/profile/orders");
-} else {
-  toast.error(result.head?.msg || "Order failed. Please try again.");
-}
+      if (result.head && result.head.code === 200) {
+        toast.success(result.head.msg || "Order placed successfully!");
+        if (typeof clearCart === "function") {
+          clearCart();
+        }
+        navigate("/profile/orders");
+      } else {
+        toast.error(result.head?.msg || "Order failed. Please try again.");
+      }
     } catch (err) {
-  console.error("Order Error:", err);
-  toast.error("Network error. Please check your connection and try again.");
-
+      console.error("Order Error:", err);
+      toast.error("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
@@ -154,7 +153,7 @@ const Checkout = () => {
     <section className="py-5">
       <Container>
         <Row>
-          <Col lg={8}>
+          <Col lg={7}>
             <h3 className="mb-4">Shipping Address</h3>
             {/* {error && <Alert variant="danger">{error}</Alert>} */}
             <Form onSubmit={handleSubmit}>
@@ -187,12 +186,14 @@ const Checkout = () => {
               <Form.Group className="mb-3">
                 <Form.Label>Address *</Form.Label>
                 <Form.Control
-                  type="text"
+                  as="textarea" // Changed from type="text"
+                  rows={3} // Sets the initial height
                   name="address_line1"
                   value={addressForm.address_line1}
                   onChange={handleInputChange}
                   placeholder="House No, Street, etc."
                   required
+                  style={{ resize: "none" }} // Optional: prevents user from manual resizing
                 />
               </Form.Group>
               <Form.Group className="mb-3">
@@ -260,7 +261,7 @@ const Checkout = () => {
           </Col>
 
           {/* Right: Order Summary */}
-          <Col lg={4}>
+          <Col lg={5}>
             <h5 className="mb-3">Order Summary</h5>
             <div className="border p-3 rounded">
               {cartItems.map((item) => (

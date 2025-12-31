@@ -1,4 +1,4 @@
-*{
+* {
   font-family: serif !important;
 }
 html {
@@ -77,12 +77,10 @@ html {
 
 .slider-container {
   overflow: hidden;
-  
 }
 
 .slider-track {
   display: flex;
-  
 }
 
 .slider-slide {
@@ -745,4 +743,12 @@ html {
 /* This targets the checkmark icon color */
 .Toastify__toast--success .Toastify__toast-icon svg {
   fill: #ffffff !important;
+}
+
+.do-button-container input,
+.pt-2 input {
+  text-align: center !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

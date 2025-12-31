@@ -9,22 +9,28 @@ import SearchForms from "./SearchForms";
 import { Table } from "react-bootstrap";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { useCart } from "./CartContext";
-
-// import Forms from "./Forms";
 import {
   IoBagHandleOutline,
   IoPersonOutline,
   IoHeartOutline,
+  IoHomeOutline,
+  IoStorefrontOutline,
+  IoInformationCircleOutline,
+  IoCallOutline,
+  IoLogOutOutline,
 } from "react-icons/io5";
 import { DoButton } from "./Button";
 
 /* ===== MENU DATA ===== */
 const menuLinks = [
-  { label: "Home", path: "/" },
-  { label: "Shop", path: "/shop" },
-  // { label: "Blog", path: "/blog" },
-  { label: "About", path: "/about" },
-  { label: "Contact", path: "/contact" },
+  { label: "Home", path: "/", icon: <IoHomeOutline size={24} /> },
+  { label: "Shop", path: "/shop", icon: <IoStorefrontOutline size={24} /> },
+  {
+    label: "About",
+    path: "/about",
+    icon: <IoInformationCircleOutline size={24} />,
+  },
+  { label: "Contact", path: "/contact", icon: <IoCallOutline size={24} /> },
 ];
 
 const iconLinks = [{ icon: <IoHeartOutline size={22} />, path: "/wishlist" }];
@@ -57,11 +63,18 @@ function AppBar() {
   const handlePlaceOrder = () => {
     if (isLoggedIn) {
       navigate("/checkout");
-      setShowCart(false); // closes right after navigation starts
+      setShowCart(false);
     } else {
       navigate("/login", { state: { redirectTo: "/checkout" } });
       setShowCart(false);
     }
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem("customer");
+    navigate("/");
+    setShow(false);
   };
 
   // Add user icon dynamically
@@ -90,39 +103,42 @@ function AppBar() {
             show={show}
             onHide={() => setShow(false)}
             placement="start"
+            className="mobile-menu-offcanvas"
           >
-            <Offcanvas.Header closeButton>
-              <Offcanvas.Title>
+            <Offcanvas.Header closeButton className="border-bottom">
+              <Offcanvas.Title className="d-flex align-items-center">
                 <img src={StoreLogo} alt="Logo" className="img-fluid logo" />
               </Offcanvas.Title>
             </Offcanvas.Header>
-            <Offcanvas.Body>
-              {/* Menu Links */}
-              <Nav className="flex-column">
+            <Offcanvas.Body className="p-0">
+              <Nav className="flex-column px-3 py-2">
                 {menuLinks.map((item, i) => (
                   <Nav.Link
                     key={i}
                     as={NavLink}
                     to={item.path}
                     onClick={() => setShow(false)}
-                    className="py-3 border-bottom"
+                    className="d-flex align-items-center py-3 px-2 rounded mobile-menu-item" // New classes
                   >
-                    {item.label}
+                    <span className="me-3">{item.icon}</span>
+                    <span>{item.label}</span>
                   </Nav.Link>
                 ))}
               </Nav>
 
-              {/* Optional: Add Icons Below Menu */}
-              <Nav className="flex-column mt-4 pt-3 border-top">
+              <hr className="mx-3" />
+
+              <Nav className="flex-column px-3 py-2">
                 {iconLinks.map((item, i) => (
                   <Nav.Link
                     key={i}
                     as={NavLink}
                     to={item.path}
                     onClick={() => setShow(false)}
-                    className="py-2"
+                    className="d-flex align-items-center py-3 px-2 rounded mobile-menu-item"
                   >
-                    {item.icon} Wishlist
+                    <span className="me-3">{item.icon}</span>
+                    <span>Wishlist</span>
                   </Nav.Link>
                 ))}
 
@@ -131,17 +147,29 @@ function AppBar() {
                   as={NavLink}
                   to={userIconLink.path}
                   onClick={() => setShow(false)}
-                  className="py-2"
+                  className="d-flex align-items-center py-3 px-2 rounded mobile-menu-item"
                 >
-                  {userIconLink.icon} {isLoggedIn ? "Profile" : "Login"}
+                  <span className="me-3">{userIconLink.icon}</span>
+                  <span>{isLoggedIn ? "Profile" : "Login"}</span>
                 </Nav.Link>
+
+                {/* Logout if Logged In */}
+                {isLoggedIn && (
+                  <Nav.Link
+                    onClick={handleLogout}
+                    className="d-flex align-items-center py-3 px-2 rounded mobile-menu-item text-danger"
+                  >
+                    <IoLogOutOutline size={24} className="me-3" />
+                    <span>Logout</span>
+                  </Nav.Link>
+                )}
               </Nav>
             </Offcanvas.Body>
           </Navbar.Offcanvas>
         </Container>
       </Navbar>
 
-      {/* ================= DESKTOP APP BAR ================= */}
+      {/* ================= DESKTOP APP BAR  ================= */}
       <Navbar expand="lg" className="p-0 body-font d-none d-lg-block">
         <Container fluid className="px-lg-5">
           <Navbar.Brand as={NavLink} to="/">
@@ -159,7 +187,6 @@ function AppBar() {
               </Nav.Link>
             ))}
 
-            {/* Dynamic user icon */}
             <Nav.Link as={NavLink} to={userIconLink.path}>
               {userIconLink.icon}
             </Nav.Link>
@@ -170,14 +197,15 @@ function AppBar() {
             >
               <div className="cart-mobile">
                 <IoBagHandleOutline size={22} />
-                <span>{totalItems}</span> {/* REAL COUNT */}
+                <span>{totalItems}</span>
               </div>
             </Nav.Link>
           </Nav>
         </Container>
       </Navbar>
-      {/* ================= DESKTOP APP BAR ================= */}
-      <Navbar expand="lg" className=" body-font d-none d-lg-block nav-bg p-0">
+
+      {/* ================= DESKTOP MENU BAR  ================= */}
+      <Navbar expand="lg" className="body-font d-none d-lg-block nav-bg p-0">
         <Container fluid className="px-lg-5">
           <Nav>
             {menuLinks.map((item, i) => (
@@ -186,7 +214,7 @@ function AppBar() {
                 key={i}
                 as={NavLink}
                 to={item.path}
-                onClick={() => setShow(false)} // 👈 CLOSE HERE
+                onClick={() => setShow(false)}
               >
                 {item.label}
               </Nav.Link>
@@ -194,6 +222,7 @@ function AppBar() {
           </Nav>
         </Container>
       </Navbar>
+
       <Offcanvas
         show={showCart}
         onHide={() => setShowCart(false)}
@@ -215,7 +244,6 @@ function AppBar() {
             </div>
           ) : (
             <>
-              {/* Scrollable Items List */}
               <div
                 style={{
                   maxHeight: "55vh",
@@ -239,7 +267,6 @@ function AppBar() {
                       <tr key={item.product_id} className="border-bottom">
                         <td>
                           <div className="d-flex align-items-center">
-                            {/* --- PRODUCT IMAGE --- */}
                             <img
                               src={item.product_img_url}
                               alt={item.product_name}
@@ -288,7 +315,6 @@ function AppBar() {
                 </Table>
               </div>
 
-              {/* --- PRICE DETAILS SECTION --- */}
               <div className="p-3 border rounded bg-light mt-auto">
                 <h6 className="body-font fw-bold border-bottom pb-2 mb-3">
                   Price Details

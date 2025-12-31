@@ -149,6 +149,7 @@ useEffect(() => {
         product_name: item.product_name,
         quantity: item.quantity,
         price: item.product_with_discount_price,
+        product_img: item.product_img,
       })),
       shipping_address: shippingAddress,
       total_items: totalItems,

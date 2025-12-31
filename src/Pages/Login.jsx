@@ -28,7 +28,7 @@ const Login = () => {
   // EmailJS config
   const SERVICE_ID = "service_0iy0ptd";
   const TEMPLATE_ID = "template_ucvqly7";
-  const PUBLIC_KEY = "hqsIRM5o5zMiAJeGD";
+  const PUBLIC_KEY = "Z5fMeUywl9A3gBWCa";
 
   const navigate = useNavigate();
   const location = useLocation(); // Get location for redirect state
@@ -87,99 +87,95 @@ const Login = () => {
     }
   };
 
- const handleRequestOtp = async () => {
-  if (!email || !emailRegex.test(email)) {
-    alert("Please enter a valid email.");
-    return;
-  }
+  const handleRequestOtp = async () => {
+    if (!email || !emailRegex.test(email)) {
+      alert("Please enter a valid email.");
+      return;
+    }
 
-  const result = await apiCall({ action: "send_otp", email_id: email });
+    const result = await apiCall({ action: "send_otp", email_id: email });
 
-  if (result.head.code === 200) {
-    // 1. UPDATE UI IMMEDIATELY
-    toast.success("OTP sent to your email!");
-    setTimeLeft(300);
-    setIsTimerActive(true);
-    setCurrentStep(2);
+    if (result.head.code === 200) {
+      // 1. UPDATE UI IMMEDIATELY
+      toast.success("OTP sent to your email!");
+      setTimeLeft(300);
+      setIsTimerActive(true);
+      setCurrentStep(2);
 
-    // 2. TRIGGER EMAIL IN BACKGROUND (Remove 'await' if you don't want to wait)
-    const templateParams = {
-      to_email: email,
-      otp: result.body.otp,
-    };
+      // 2. TRIGGER EMAIL IN BACKGROUND (Remove 'await' if you don't want to wait)
+      const templateParams = {
+        to_email: email,
+        otp: result.body.otp,
+      };
 
-    // We still use a try/catch, but it won't block the UI transition anymore
-    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
-      .catch((error) => {
+      // We still use a try/catch, but it won't block the UI transition anymore
+      emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams).catch((error) => {
         console.error("EmailJS Error:", error);
         toast.error("Background error: Email failed to send.");
       });
+    } else {
+      toast.warning(result.head.msg);
+    }
+  };
 
-  } else {
-    toast.warning(result.head.msg);
-  }
-};
+  const handleVerifyOtp = async () => {
+    if (!otp || otp.length !== 4 || !/^\d{4}$/.test(otp)) {
+      alert("Please enter a valid 4-digit OTP.");
+      return;
+    }
 
-const handleVerifyOtp = async () => {
-  if (!otp || otp.length !== 4 || !/^\d{4}$/.test(otp)) {
-    alert("Please enter a valid 4-digit OTP.");
-    return;
-  }
+    const result = await apiCall({
+      action: "verify_otp",
+      email_id: email,
+      otp,
+    });
 
-  const result = await apiCall({
-    action: "verify_otp",
-    email_id: email,
-    otp,
-  });
+    if (result.head.code === 200) {
+      localStorage.setItem("customer", JSON.stringify(result.body.customer));
+      toast.success("Login successful!");
+      const redirectTo = location.state?.redirectTo || "/home";
+      navigate(redirectTo, { replace: true });
+    } else if (result.head.code === 400) {
+      // NEW USER: Move to Step 3 (Profile details page)
+      // toast.info("Welcome! Please complete your profile.");
+      setCurrentStep(3);
+    } else {
+      // WRONG OTP: Show error message
+      toast.error(result.head.msg || "Invalid OTP");
+    }
+  };
 
-  if (result.head.code === 200) {
-    localStorage.setItem("customer", JSON.stringify(result.body.customer));
-    toast.success("Login successful!");
-    const redirectTo = location.state?.redirectTo || "/home";
-    navigate(redirectTo, { replace: true });
+  const handleUpdateProfile = async () => {
+    // 1. Validation
+    if (!firstName || !lastName || !phone || !gender || !dob) {
+      toast.error("Please fill all fields.");
+      return;
+    }
+    if (!/^\d{10}$/.test(phone)) {
+      toast.error("Please enter a valid 10-digit phone number.");
+      return;
+    }
 
-  } else if (result.head.code === 400) {
-    // NEW USER: Move to Step 3 (Profile details page)
-    // toast.info("Welcome! Please complete your profile.");
-    setCurrentStep(3);
-    
-  } else {
-    // WRONG OTP: Show error message
-    toast.error(result.head.msg || "Invalid OTP");
-  }
-};
- 
- const handleUpdateProfile = async () => {
-  // 1. Validation
-  if (!firstName || !lastName || !phone || !gender || !dob) {
-    toast.error("Please fill all fields.");
-    return;
-  }
-  if (!/^\d{10}$/.test(phone)) {
-    toast.error("Please enter a valid 10-digit phone number.");
-    return;
-  }
+    // 2. API Call to the NEW action
+    const result = await apiCall({
+      action: "register_customer", // Matches the new PHP block
+      first_name: firstName,
+      last_name: lastName,
+      phone_number: phone,
+      email_id: email,
+      gender: gender,
+      dob: dob,
+    });
 
-  // 2. API Call to the NEW action
-  const result = await apiCall({
-    action: "register_customer", // Matches the new PHP block
-    first_name: firstName,
-    last_name: lastName,
-    phone_number: phone,
-    email_id: email, 
-    gender: gender,
-    dob: dob,
-  });
-
-  if (result.head.code === 200) {
-    localStorage.setItem("customer", JSON.stringify(result.body.customer));
-    toast.success("Profile created! You are now signed in.");
-    const redirectTo = location.state?.redirectTo || "/home";
-    navigate(redirectTo, { replace: true });
-  } else {
-    toast.error(result.head.msg);
-  }
-};
+    if (result.head.code === 200) {
+      localStorage.setItem("customer", JSON.stringify(result.body.customer));
+      toast.success("Profile created! You are now signed in.");
+      const redirectTo = location.state?.redirectTo || "/home";
+      navigate(redirectTo, { replace: true });
+    } else {
+      toast.error(result.head.msg);
+    }
+  };
 
   if (localStorage.getItem("customer")) {
     return null; // Or a loading spinner, but since useEffect handles it

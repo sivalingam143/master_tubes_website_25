@@ -18,17 +18,9 @@ import { TbCirclePercentage } from "react-icons/tb";
 import { MdAddShoppingCart } from "react-icons/md";
 import { BiSupport } from "react-icons/bi";
 import Testimonial from "../components/Testimonial";
-import { useCart } from "../components/CartContext";
-import Brands from "../components/Brands";
+
 const Home = () => {
-  const { addToDetails } = useCart();
-  const topSellProduct = {
-    product_id: "top_sell_001", // Give it a unique ID
-    product_name: "Royal Red Piggy Bank",
-    product_price: 300,
-    product_with_discount_price: 64,
-    product_img_url: TopSell, // This uses the 'TopSell' image you imported at the top
-  };
+  
   useEffect(() => {
     AOS.init({
       duration: 1000,

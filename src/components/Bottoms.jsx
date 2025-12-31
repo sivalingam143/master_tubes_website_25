@@ -100,7 +100,7 @@ useEffect(() => {
               </div>
             </Col>
             <Col lg="3" className="py-3">
-              <h6 className="body-font">My Accounts</h6>
+              <h6 className="body-font text-decoration-underline">My Accounts</h6>
               <div className="title-font">
                 <Nav.Link as={NavLink} to="/shop" className="py-2">
                   Shop
@@ -115,7 +115,7 @@ useEffect(() => {
               </div>
             </Col>
             <Col lg="3" className="py-3">
-              <h6 className="body-font">Customer Service</h6>
+              <h6 className="body-font text-decoration-underline">Customer Service</h6>
               <div className="title-font">
                 <Nav.Link as={NavLink} to="/profile" className="py-2">
                   {" "}
@@ -138,7 +138,7 @@ useEffect(() => {
               </div>
             </Col>
             <Col lg="3" className="py-3">
-              <h6 className="body-font">Contact Details</h6>
+              <h6 className="body-font text-decoration-underline">Contact Details</h6>
               <div className="title-font py-2">
                 ADDRESS: Master Tubes,Madurai 625005,Tamilnadu ,India
               </div>

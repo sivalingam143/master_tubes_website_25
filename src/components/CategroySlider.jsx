@@ -7,22 +7,21 @@ import { useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
+import "./categoryslider.css";
 
 export default function HeroSlider() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  
 
   useEffect(() => {
     const fetchCategories = async () => {
-       try {
+      try {
         const response = await fetch(`${API_DOMAIN}/category.php`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-           
-           search_text: "",
+            search_text: "",
           }),
         });
         const data = await response.json();
@@ -46,8 +45,8 @@ export default function HeroSlider() {
   }, []);
 
   const handleCategoryClick = (categoryId) => {
-  navigate(`/shop?category=${categoryId}`);
-};
+    navigate(`/shop?category=${categoryId}`);
+  };
   if (loading)
     return (
       <div style={{ textAlign: "center", padding: "20px" }}>Loading...</div>
@@ -59,24 +58,23 @@ export default function HeroSlider() {
         effect={"coverflow"}
         grabCursor={true}
         centeredSlides={true}
-        // Essential fix for 3 images:
+        slideToClickedSlide={true} // IMPORTANT: This makes side slides clickable
         loop={categories.length >= 3}
-        slidesPerView={1} // Default for mobile
+        slidesPerView={1}
         breakpoints={{
-          // On larger screens, show roughly 3 slides to see the one on the right
           768: {
             slidesPerView: 3,
           },
         }}
         coverflowEffect={{
-          rotate: 30, // Reduced rotation to prevent clipping
+          rotate: 20, // Reduced from 30 to prevent clipping
           stretch: 0,
           depth: 100,
           modifier: 1,
-          slideShadows: true, // Turn off shadows if clipping occurs
+          slideShadows: false, // Disabling shadows can sometimes fix overlap issues
         }}
         autoplay={{
-          delay: 1000,
+          delay: 3000, // Increased delay to make it easier to click
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
@@ -85,22 +83,27 @@ export default function HeroSlider() {
         className="mySwiper"
       >
         {categories.map((item) => (
-          <SwiperSlide 
-            key={item.category_id} 
+          <SwiperSlide
+            key={item.category_id}
             className="custom-swiper-slide"
-            style={{ cursor: 'pointer' }} // Make it look clickable
-            onClick={() => handleCategoryClick(item.category_id)}// Trigger navigation
+            style={{ cursor: "pointer" }}
+            onClick={() => handleCategoryClick(item.category_id)}
           >
             <div className="slider-image-wrapper1">
               <img
                 src={item.category_img_url || "https://via.placeholder.com/150"}
                 alt={item.category_name}
                 className="slider-image"
+                style={{ width: "90%", height: "90%", objectFit: "contain" }}
               />
             </div>
             <p
               className="slider-name1"
-              style={{ background: "red", color: "#fff", textAlign: "center" }}
+              style={{
+                background: "linear-gradient(90deg, #fc9f2e, #f8de73)", // Matching your site's theme
+                color: "#000",
+                textAlign: "center",
+              }}
             >
               {item.category_name}
             </p>

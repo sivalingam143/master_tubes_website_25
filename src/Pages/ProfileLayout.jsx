@@ -56,19 +56,19 @@ const ProfileLayout = () => {
       name: "Delivery address",
       path: "/profile/address",
       icon: <FaMapMarkerAlt />,
-      badge: 1,
+      // badge: 1,
     },
     {
       name: "Order history",
       path: "/profile/orders",
       icon: <FaHistory />,
-      badge: 1,
+      // badge: 1,
     },
     {
       name: "My wishlist",
       path: "/profile/wishlist",
       icon: <FaHeart />,
-      badge: 0,
+      // badge: 0,
     },
   ];
 

@@ -1,12 +1,7 @@
 /* home css start */
 .category-bg {
-  /* background: url("../src/assets/images/category/cat.jpg"); */
-  background: linear-gradient(135deg, #fc9f2e 0%, #f8de73 50%, #fbff19 100%);
-
-
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  background: #ffffff !important;
+  padding: 60px 0;
 }
 .shop-category{
   font-size: 150%;

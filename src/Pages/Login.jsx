@@ -140,7 +140,7 @@ const handleVerifyOtp = async () => {
 
   } else if (result.head.code === 400) {
     // NEW USER: Move to Step 3 (Profile details page)
-    toast.info("Welcome! Please complete your profile.");
+    // toast.info("Welcome! Please complete your profile.");
     setCurrentStep(3);
     
   } else {

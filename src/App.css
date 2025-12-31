@@ -663,3 +663,23 @@ border-radius: 5px;
 .quantity-input {
     text-align: center !important;
 }
+
+
+/* App.css */
+
+/* This targets the background color of the success toast */
+.Toastify__toast--success {
+    background-color: #eee9e9 !important; /* Your Logo Red */
+    color: #160e0e !important;
+}
+
+/* This targets the progress bar at the bottom of the success toast */
+.Toastify__toast-theme--colored.Toastify__toast--success .Toastify__progress-bar,
+.Toastify__progress-bar--success {
+    background: linear-gradient(90deg, #030241 0%, #f8de73 50%, #80b3e2 100%) !important;
+}
+
+/* This targets the checkmark icon color */
+.Toastify__toast--success .Toastify__toast-icon svg {
+    fill: #ffffff !important;
+}

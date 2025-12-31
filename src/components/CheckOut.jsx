@@ -140,8 +140,9 @@ useEffect(() => {
     setLoading(true);
     setError(null);
 
-    const shippingAddress = `FirstName:${addressForm.first_name}, LastName:${addressForm.last_name}, Address1:${addressForm.address_line1}, Address2:${addressForm.address_line2}, City:${addressForm.city}, State:${addressForm.state}, Pincode:${addressForm.pin_code}, Country:${addressForm.country}, PhoneNumber:${addressForm.phone}`;
-
+    // const shippingAddress = `FirstName:${addressForm.first_name}, LastName:${addressForm.last_name}, Address1:${addressForm.address_line1}, Address2:${addressForm.address_line2}, City:${addressForm.city}, State:${addressForm.state}, Pincode:${addressForm.pin_code}, Country:${addressForm.country}, PhoneNumber:${addressForm.phone}`;
+// Clean version without labels
+const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${addressForm.address_line1}, ${addressForm.address_line2 ? addressForm.address_line2 + ', ' : ''}${addressForm.city}, ${addressForm.state} - ${addressForm.pin_code}, ${addressForm.phone}`;
     const payload = {
       customer_id: customer.customer_id,
       product_details: cartItems.map((item) => ({

@@ -215,11 +215,7 @@ const statesInIndia = State.getStatesOfCountry("IN");  // Add this inside the co
         >
           Delivery address
         </h5>
-        <button
-          type="button"
-          className="btn-close"
-          onClick={() => setIsEditing(false)}
-        ></button>
+       
       </div>
       <Form>
         <Row className="mb-3">
@@ -375,6 +371,14 @@ const statesInIndia = State.getStatesOfCountry("IN");  // Add this inside the co
           >
             Save
           </Button>
+             <Button
+                          // variant="link"
+          
+                          className=" ms-3 cancel1 "
+                          onClick={() => setIsEditing(false)}
+                        >
+                          Cancel
+                        </Button>
         </div>
       </Form>
     </Card>
@@ -399,15 +403,7 @@ const statesInIndia = State.getStatesOfCountry("IN");  // Add this inside the co
             onClick={() => parseAddressForEditing(userData.delivery_address)}
             size={20}
           />
-          <button
-            type="button"
-            className="btn-close"
-            onClick={() => {
-              const updated = { ...userData, delivery_address: "" };
-              setUserData(updated);
-              localStorage.setItem("customer", JSON.stringify(updated));
-            }}
-          ></button>
+          
         </div>
       </div>
       <div className="px-2">

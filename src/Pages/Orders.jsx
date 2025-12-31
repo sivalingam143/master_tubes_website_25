@@ -187,23 +187,6 @@ const Orders = () => {
                   {/* Address & Status */}
                   <div className="mt-3 pt-3 border-top d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
                     <div className="small">
-<<<<<<< HEAD
-                      <span className="text-muted fw-bold">Shipping Address: </span>
-                      {/* <span className="text-muted">{order.shipping_address}</span>
-                       */}
-                     
-<span className="text-muted">
-  {order.shipping_address.replace(/(FirstName:|LastName:|Address1:|Address2:|City:|State:|Pincode:|Country:|PhoneNumber:)/g, "")}
-</span>
-                    </div>
-                    <Badge 
-  bg={order.status === 0 ? "danger" : order.status === 1 ? "warning" : "success"} 
-  text={order.status === 1 ? "dark" : "white"}
-  className="p-2 px-3 rounded-pill"
->
-  {order.status === 0 ? "Placed" : order.status === 1 ? "Shipped" : "Delivered"}
-</Badge>
-=======
                       <span className="text-muted fw-bold">
                         Shipping Address:{" "}
                       </span>
@@ -231,7 +214,6 @@ const Orders = () => {
                         ? "Shipped"
                         : "Delivered"}
                     </Badge>
->>>>>>> 4ee17740e2b5c9c7f0f0583b50e8aec198332d81
                   </div>
                 </Card.Body>
               </div>

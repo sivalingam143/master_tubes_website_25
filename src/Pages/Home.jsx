@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import BannerCarousel from "../components/BannerSlider";
@@ -19,35 +19,52 @@ import { MdAddShoppingCart } from "react-icons/md";
 import { BiSupport } from "react-icons/bi";
 import Testimonial from "../components/Testimonial";
 import API_DOMAIN from "../config/config";
-
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { useCart } from "../components/CartContext";
 
 const Home = () => {
-  const [topProduct, setTopProduct] = useState(null);
- const {addToDetails } = useCart();
-  
+  const [topProducts, setTopProducts] = useState([]);     // ← empty array instead of null
+  const { addToDetails } = useCart();
+
+
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1, // Crucial: This makes it look like the first design
+    slidesToScroll: 1,
+    arrows: true,
+    autoplay: true,
+    autoplaySpeed: 3000,
+  };
   useEffect(() => {
-   
+
     // Fetch Top Selling Product
-    const fetchTopProduct = async () => {
+    const fetchTopProducts = async () => {
       try {
-     const response = await fetch(`${API_DOMAIN}/top_selling.php`, {
+        const response = await fetch(`${API_DOMAIN}/product.php`, {  // ← use product.php
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ search_text: "" }), 
+          body: JSON.stringify({ search_text: "" }),
         });
+
         const data = await response.json();
+
         if (data.head.code === 200) {
-          setTopProduct(data.body.top_product);
+          // Filter only top selling products
+          const filtered = data.body.products.filter(p => p.top_selling === 1);
+          setTopProducts(filtered);
         }
       } catch (error) {
-        console.error("Error fetching top product:", error);
+        console.error("Error fetching top products:", error);
       }
-    };
+    }
 
-    fetchTopProduct();
+    fetchTopProducts();
     AOS.init({
       duration: 1000,
       once: true,
@@ -63,8 +80,8 @@ const Home = () => {
       AOS.refresh();
     }, 100);
   }, []);
-   
- 
+
+
   return (
     <>
       <BannerCarousel />
@@ -155,31 +172,51 @@ const Home = () => {
       </section> */}
 
       {/* Section 2: Top Selling Products */}
-     <section id="top-selling-section" className="py-5 top_sell overflow-hidden">
+      <section id="top-selling-section" className="py-5 top_sell overflow-hidden">
         <Container>
-          {topProduct ? (
-            <Row>
-              <Col lg="6" className="text-center" data-aos="zoom-in">
-                <img
-                  src={topProduct.product_img_url}
-                  className="img-fluid w-75"
-                  alt={topProduct.product_name}
-                />
-              </Col>
-              <Col lg="6" className="align-content-center body-font" data-aos="fade-up">
-                <h2>TOP SELLING PRODUCTS</h2>
-                <h4>{topProduct.product_name}</h4>
-                <p>
-                  <span className="old-price">Rs. {topProduct.product_price}</span>{" "}
-                  <span className="new-price">Rs. {topProduct.product_with_discount_price}</span>
-                </p>
-                <p className="title-font">{topProduct.product_details}</p>
-                <button className="shop_now" onClick={() => addToDetails(topProduct, 1)}>Add to Cart</button>
-              </Col>
-            </Row>
-          ) : (
-            <div className="text-center">Loading featured product...</div>
-          )}
+          <div className="text-center mb-5" data-aos="fade-up">
+            <h2 className="body-font">TOP SELLING PRODUCTS</h2>
+          </div>
+
+          {/* Wrap the map in the Slider component */}
+          <Slider {...sliderSettings}>
+            {topProducts.map((product) => (
+              <div key={product.product_id} className="px-2">
+                <div className="top-selling-wrapper">
+                  <Row className="align-items-center">
+                    {/* Left Side: Product Image */}
+                    <Col md={6} className="text-center">
+                      <div className="product-img-container">
+                        <img
+                          src={product.product_img_url}
+                          alt={product.product_name}
+                          className="img-fluid main-product-img"
+                        />
+                      </div>
+                    </Col>
+
+                    {/* Right Side: Product Details */}
+                    <Col md={6} className="product-details-content text-start">
+                      <h2 className="product-title body-font">{product.product_name}</h2>
+                      <div className="price-section mb-3">
+                        <span className="old-price">Rs. {product.old_price || '300.00'}</span>
+                        <span className="new-price ml-2">Rs. {product.price || '64.00'}</span>
+                      </div>
+                      <p className="product-description title-font">
+                        {product.description || "Start the New Year with smart savings and positive habits!"}
+                      </p>
+                      <button
+                        className="shop_now_btn body-font"
+                        onClick={() => addToDetails(product, 1)}
+                      >
+                        Add To Cart
+                      </button>
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+            ))}
+          </Slider>
         </Container>
       </section>
 

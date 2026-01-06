@@ -165,7 +165,7 @@ useEffect(() => {
           <Row>
             <Col lg="12" className="py-1">
               <p className="d-flex justify-content-center mb-0 title-font text-white">
-                Developed By <Nav.Link className="mx-2"> Zentexus</Nav.Link>
+                Developed By <Nav.Link className="mx-2"> Zentexus Technolgies</Nav.Link>
               </p>
             </Col>
           </Row>

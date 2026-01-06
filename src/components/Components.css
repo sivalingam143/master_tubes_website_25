@@ -262,16 +262,25 @@ textarea.form-control {
   max-height: 600px;  
   overflow: hidden;
 }
+@media (max-width: 768px) {
+  .fade-carousel {
+    height: auto;
+    aspect-ratio: 16 / 9; /* Adjust this to match your image's actual ratio */
+    min-height: unset;
+      background-size: contain; 
+  }
+}
 
 /* Each slide stacked on top */
-  .fade-slide {
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    /* transition: opacity 1s ease-in-out; */
-  }
+.fade-slide {
+  position: absolute;
+  inset: 0;
+  /* Change cover to contain */
+  background-size: cover; 
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0;
+}
 
 /* Active slide */
 .fade-slide.active {
@@ -401,3 +410,25 @@ border: none !important;
 padding: 0;
 }
 /* cart end */
+
+/* loader-container overlay */
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(221, 217, 217, 0.9); /* Slight transparency */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure it stays above everything */
+}
+
+/* Optional: Match your branding colors */
+.loader-container .spinner-border {
+  width: 3rem;
+  height: 3rem;
+  color: #d9534f; /* Match the red in your Holiday Sale banner */
+}

@@ -20,8 +20,11 @@ import { BiSupport } from "react-icons/bi";
 import Testimonial from "../components/Testimonial";
 import API_DOMAIN from "../config/config";
 
+import { useCart } from "../components/CartContext";
+
 const Home = () => {
   const [topProduct, setTopProduct] = useState(null);
+ const {addToDetails } = useCart();
   
   useEffect(() => {
    
@@ -171,7 +174,7 @@ const Home = () => {
                   <span className="new-price">Rs. {topProduct.product_with_discount_price}</span>
                 </p>
                 <p className="title-font">{topProduct.product_details}</p>
-                <button className="shop_now">Add to Cart</button>
+                <button className="shop_now" onClick={() => addToDetails(topProduct, 1)}>Add to Cart</button>
               </Col>
             </Row>
           ) : (

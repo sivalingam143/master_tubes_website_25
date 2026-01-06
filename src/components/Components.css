@@ -281,7 +281,14 @@ textarea.form-control {
   background-position: center;
   opacity: 0;
 }
-
+@media (max-width: 768px) {
+  .fade-slide {
+    height: auto;
+    aspect-ratio: 16 / 9; /* Adjust this to match your image's actual ratio */
+    min-height: unset;
+      background-size: contain; 
+  }
+}
 /* Active slide */
 .fade-slide.active {
   opacity: 1;

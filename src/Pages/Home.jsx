@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import BannerCarousel from "../components/BannerSlider";
@@ -18,10 +18,33 @@ import { TbCirclePercentage } from "react-icons/tb";
 import { MdAddShoppingCart } from "react-icons/md";
 import { BiSupport } from "react-icons/bi";
 import Testimonial from "../components/Testimonial";
+import API_DOMAIN from "../config/config";
 
 const Home = () => {
+  const [topProduct, setTopProduct] = useState(null);
   
   useEffect(() => {
+   
+    // Fetch Top Selling Product
+    const fetchTopProduct = async () => {
+      try {
+     const response = await fetch(`${API_DOMAIN}/top_selling.php`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ search_text: "" }), 
+        });
+        const data = await response.json();
+        if (data.head.code === 200) {
+          setTopProduct(data.body.top_product);
+        }
+      } catch (error) {
+        console.error("Error fetching top product:", error);
+      }
+    };
+
+    fetchTopProduct();
     AOS.init({
       duration: 1000,
       once: true,
@@ -37,6 +60,8 @@ const Home = () => {
       AOS.refresh();
     }, 100);
   }, []);
+   
+ 
   return (
     <>
       <BannerCarousel />
@@ -127,53 +152,31 @@ const Home = () => {
       </section> */}
 
       {/* Section 2: Top Selling Products */}
-      <section
-        id="top-selling-section"
-        className="py-5 top_sell overflow-hidden"
-      >
+     <section id="top-selling-section" className="py-5 top_sell overflow-hidden">
         <Container>
-          <Row>
-            <Col
-              lg="6"
-              className="text-center"
-              data-aos="zoom-in"
-              // This tells AOS: Don't start until the #top-selling-section is well into view
-              data-aos-anchor="#top-selling-section"
-            >
-              <img
-                src={TopSell}
-                className="img-fluid w-75"
-                alt="Top Selling Product"
-              />
-            </Col>
-            <Col
-              lg="6"
-              className="align-content-center body-font"
-              data-aos="fade-up"
-              data-aos-delay="400"
-              data-aos-anchor="#top-selling-section"
-            >
-              <h2>TOP SELLING PRODUCTS</h2>
-              <h4>Royal Red Piggy Bank</h4>
-              <p>
-                <span className="old-price">Rs. 300.00</span>{" "}
-                <span className="new-price">Rs. 64.00</span>
-              </p>
-              <p className="title-font">
-                Start the New Year with smart savings and positive habits! This
-                elegant royal red metal piggy bank is perfect for setting new
-                goals and building better money habits. Strong, stylish, and
-                inspiring, it’s a beautiful reminder that every coin saved
-                brings you closer to your dreams.
-              </p>
-              {/* <button
-                className="shop_now"
-                onClick={() => addToDetails(topSellProduct, 1)}
-              >
-                Add to Cart
-              </button> */}
-            </Col>
-          </Row>
+          {topProduct ? (
+            <Row>
+              <Col lg="6" className="text-center" data-aos="zoom-in">
+                <img
+                  src={topProduct.product_img_url}
+                  className="img-fluid w-75"
+                  alt={topProduct.product_name}
+                />
+              </Col>
+              <Col lg="6" className="align-content-center body-font" data-aos="fade-up">
+                <h2>TOP SELLING PRODUCTS</h2>
+                <h4>{topProduct.product_name}</h4>
+                <p>
+                  <span className="old-price">Rs. {topProduct.product_price}</span>{" "}
+                  <span className="new-price">Rs. {topProduct.product_with_discount_price}</span>
+                </p>
+                <p className="title-font">{topProduct.product_details}</p>
+                <button className="shop_now">Add to Cart</button>
+              </Col>
+            </Row>
+          ) : (
+            <div className="text-center">Loading featured product...</div>
+          )}
         </Container>
       </section>
 

@@ -117,33 +117,38 @@ const Login = () => {
       toast.warning(result.head.msg);
     }
   };
+const handleVerifyOtp = async () => {
+    let finalOtp = otp.toString();
 
-  const handleVerifyOtp = async () => {
-    if (!otp || otp.length !== 4 || !/^\d{4}$/.test(otp)) {
-      alert("Please enter a valid 4-digit OTP.");
-      return;
+    // Condition: If it is exactly 3 digits, add '0' before it and show a toaster
+    if (finalOtp.length === 3) {
+        finalOtp = "0" + finalOtp; // Prepends the 0
+        toast.info(`Leading zero added: ${finalOtp}`);
+    }
+
+    // Final Validation: Must be 4 digits to proceed to the API call
+    if (!finalOtp || finalOtp.length !== 4 || !/^\d{4}$/.test(finalOtp)) {
+        toast.error("Please enter a valid 4-digit OTP.");
+        return;
     }
 
     const result = await apiCall({
-      action: "verify_otp",
-      email_id: email,
-      otp,
+        action: "verify_otp",
+        email_id: email,
+        otp: finalOtp,
     });
 
     if (result.head.code === 200) {
-      localStorage.setItem("customer", JSON.stringify(result.body.customer));
-      toast.success("Login successful!");
-      const redirectTo = location.state?.redirectTo || "/home";
-      navigate(redirectTo, { replace: true });
+        localStorage.setItem("customer", JSON.stringify(result.body.customer));
+        toast.success("Login successful!");
+        const redirectTo = location.state?.redirectTo || "/home";
+        navigate(redirectTo, { replace: true });
     } else if (result.head.code === 400) {
-      // NEW USER: Move to Step 3 (Profile details page)
-      // toast.info("Welcome! Please complete your profile.");
-      setCurrentStep(3);
+        setCurrentStep(3);
     } else {
-      // WRONG OTP: Show error message
-      toast.error(result.head.msg || "Invalid OTP");
+        toast.error(result.head.msg || "Invalid OTP");
     }
-  };
+};
 
   const handleUpdateProfile = async () => {
     // 1. Validation
@@ -253,7 +258,7 @@ const Login = () => {
                   <>
                     <h3 className="body-font fw-bold mb-4">Enter OTP</h3>
                     <p className="title-font text-muted mb-4">
-                      We sent a 4-digit code to {email}
+                      We sent a OTP code to {email}
                     </p>
                     <div
                       className="mb-4 fw-bold text-danger"
@@ -264,7 +269,7 @@ const Login = () => {
 
                     <div className="mb-3">
                       <Forms
-                        PlaceHolder="Enter 4-digit OTP"
+                        PlaceHolder="Enter OTP Code"
                         type="text"
                         value={otp}
                         onChange={(e) =>

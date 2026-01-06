@@ -21,8 +21,8 @@ export default function FadeBannerCarousel() {
 
         const data = await response.json();
 
-        if (data.head.code === 200 && data.body.banner_one) {
-          setBanners(data.body.banner_one);
+        if (data.head.code === 200 && data.body.banner) {
+          setBanners(data.body.banner);
         }
       } catch (error) {
         console.error("Error fetching banners:", error);

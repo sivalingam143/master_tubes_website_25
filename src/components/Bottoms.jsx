@@ -50,7 +50,7 @@ function Bottoms() {
 
       <section className="bottoms">
         <Container>
-          <Row>
+          <Row className="justify-content-start">
             {/* Reduced py-3/4 to py-1 or py-2 throughout */}
             <Col lg="4" className="py-1">
               <div className="d-flex">
@@ -102,7 +102,7 @@ function Bottoms() {
               </div>
             </Col>
 
-            <Col lg="4" className="py-1"> {/* Reduced from py-3 */}
+            <Col lg="4" className="py-2 ps-lg-5 "> {/* Reduced from py-3 */}
               <h4 className="body-font text-decoration-underline mb-1">My Accounts</h4>
               <div className="title-font">
                 <Nav.Link as={NavLink} to="/home" className="py-1">Home</Nav.Link>

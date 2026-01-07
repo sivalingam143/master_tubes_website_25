@@ -37,35 +37,53 @@ export default function HeroSlider() {
     navigate(`/shop?category=${categoryId}`);
   };
   const settings = {
-    // dots: true,
-    infinite: categories.length >= 4,
+    infinite: categories.length >= 2,
     speed: 1500,
     slidesToShow: 4,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 4500,
-    // pauseOnHover: true,
     arrows: true,
+    swipeToSlide: true,
     responsive: [
       {
         breakpoint: 1024,
-        settings: { slidesToShow: 3 },
+        settings: { slidesToShow: 3, slidesToScroll: 1 },
       },
       {
         breakpoint: 768,
         settings: {
           slidesToShow: 2,
-          centerMode: false // Standard grid for tablets
+          slidesToScroll: 1,
+          centerMode: false,
+        },
+      },
+      {
+        breakpoint: 500,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          centerMode: true,
+          centerPadding: "0%",
+          variableWidth: false,
+          arrows: false,
+          autoplaySpeed: 3000,
+          swipeToSlide: true,
+          touchThreshold: 10,
         },
       },
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: 1,      // Show 1 full card
-          centerMode: true,     // Enable centering
-          centerPadding: "0px", // Shows 40px of the next/previous cards
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          centerMode: true,
+          centerPadding: "0%",
+          variableWidth: false,
           arrows: false,
-          autoplaySpeed: 3000
+          autoplaySpeed: 3000,
+          swipeToSlide: true,
+          touchThreshold: 10,
         },
       },
     ],
@@ -83,7 +101,10 @@ export default function HeroSlider() {
             >
               <div className="slider-image-wrapper1">
                 <img
-                  src={item.category_img_url || "https://via.placeholder.com/300x300"}
+                  src={
+                    item.category_img_url ||
+                    "https://via.placeholder.com/300x300"
+                  }
                   alt={item.category_name}
                   className="slider-image"
                 />

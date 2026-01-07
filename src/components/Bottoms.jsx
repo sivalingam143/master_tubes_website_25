@@ -47,10 +47,12 @@ function Bottoms() {
   }, []);
   return (
     <>
+
       <section className="bottoms">
         <Container>
           <Row>
-            <Col lg="3" className="py-3">
+            {/* Reduced py-3/4 to py-1 or py-2 throughout */}
+            <Col lg="4" className="py-1">
               <div className="d-flex">
                 {/* Facebook */}
                 <a
@@ -95,92 +97,47 @@ function Bottoms() {
                 </a>
               </div>
 
-              <div className="py-3">
-                <img src={StoreLogo} alt="Logo" className="img-fluid logo" />
+              <div className="py-1"> {/* Reduced from py-3 */}
+                <img src={StoreLogo} alt="Logo" className="img-fluid logo" style={{ maxHeight: '70px' }} />
               </div>
             </Col>
-            <Col lg="2" className="py-3">
-              <h6 className="body-font text-decoration-underline">My Accounts</h6>
-              <div className="title-font">
-                <Nav.Link as={NavLink} to="/home" className="py-2">
-                  Home
-                </Nav.Link>
-                <Nav.Link as={NavLink} to="/shop" className="py-2">
-                  Shop
-                </Nav.Link>
-                <Nav.Link as={NavLink} to="/about" className="py-2">
-                  About us
-                </Nav.Link>
 
-                <Nav.Link as={NavLink} to="/contact" className="py-2">
-                  Contact Us
-                </Nav.Link>
+            <Col lg="4" className="py-1"> {/* Reduced from py-3 */}
+              <h4 className="body-font text-decoration-underline mb-1">My Accounts</h4>
+              <div className="title-font">
+                <Nav.Link as={NavLink} to="/home" className="py-1">Home</Nav.Link>
+                <Nav.Link as={NavLink} to="/shop" className="py-1">Shop</Nav.Link>
+                <Nav.Link as={NavLink} to="/about" className="py-1">About us</Nav.Link>
+                <Nav.Link as={NavLink} to="/contact" className="py-1">Contact Us</Nav.Link>
               </div>
             </Col>
-            {/* <Col lg="3" className="py-3">
-              <h6 className="body-font text-decoration-underline">Customer Service</h6>
-              <div className="title-font">
-                <Nav.Link as={NavLink} to="/profile" className="py-2">
-                  {" "}
-                  My Account
-                </Nav.Link>
-                <Nav.Link as={NavLink} to="/profile/orders" className="py-2">
-                  Order History{" "}
-                </Nav.Link>
-                <Nav.Link
-                  className="py-2"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setShowCart(true)}
-                >
-                  Shopping cart
-                </Nav.Link>
-                <Nav.Link as={NavLink} to="/profile/wishlist" className="py-2">
-                  {" "}
-                  Wishing Cart
-                </Nav.Link>
+
+            <Col lg="4" className="py-1"> {/* Reduced from py-3 */}
+              <h4 className="body-font text-decoration-underline mb-1">Contact Details</h4>
+              <div className="title-font py-1">
+                ADDRESS: Master Tubes, Madurai 625005, Tamilnadu, India
               </div>
-            </Col> */}
-            <Col lg="4" className="py-3">
-              <h6 className="body-font text-decoration-underline">Contact Details</h6>
-              <div className="title-font py-2">
-                ADDRESS: Master Tubes,Madurai 625005,Tamilnadu ,India
-              </div>
-              <div className="title-font py-2">
+              <div className="title-font py-1">
                 EMAIL: saipackagingproducts@gmail.com
               </div>
             </Col>
-            <Col lg="3" md="6" className="py-3 d-flex align-items-center">
-              <div className="modern-quote-card">
-                <div className="quote-accent-bar"></div>
-                <div className="quote-content">
-                  <FaQuoteLeft className="quote-icon-top" />
-                  <p className="quote-text-main">
-                    Save money today—<br />
-                    <span>Live better tomorrow</span>
-                  </p>
-                </div>
-              </div>
-            </Col>
-            <Col lg="6" className="py-4">
+
+            <Col lg="6" className="py-2"> {/* Reduced from py-4 */}
               <div className="title-font">
                 Copyright © 2025, mastertubes.com All Rights Reserved.
               </div>
             </Col>
-            <Col lg="6" className="py-4 text-lg-end text-left">
-              {/* <div className="upi">
-                {" "}
-                <img src={UPI} alt="Logo" className="img-fluid logo" />
-              </div> */}
-            </Col>
           </Row>
         </Container>
       </section>
+
       <section className="foot-conts">
         <Container>
           <Row>
+            {/* Changed from py-1 to py-0 if you want it very thin */}
             <Col lg="12" className="py-1">
               <p className="d-flex justify-content-center mb-0 title-font text-white">
-                Developed By <Nav.Link className="mx-2"> Zentexus Technolgies</Nav.Link>
+                Developed By <Nav.Link className="mx-2 p-0"> Zentexus Technolgies</Nav.Link>
               </p>
             </Col>
           </Row>

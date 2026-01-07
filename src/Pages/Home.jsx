@@ -67,9 +67,10 @@ const Home = () => {
       {
         breakpoint: 576,
         settings: {
-          slidesToShow: 1,           // most important for vertical videos
-          centerMode: true,
-          centerPadding: '12px',
+          slidesToShow: 1, // Fix: Show only 1 video on mobile
+        centerMode: true,
+        centerPadding: '30px',
+          
           arrows: false
         }
       }
@@ -410,51 +411,70 @@ const Home = () => {
 
           {/* Use the new settings here */}
           <Slider {...videoSliderSettings}>
-            {videos.map((video) => {
-              const getEmbedUrl = (link) => {
-                // your existing function to get clean embed URL
-                if (!link) return "";
-                let videoId = "";
-                if (link.includes("shorts/")) {
-                  videoId = link.split("shorts/")[1]?.split("?")[0];
-                } else if (link.includes("v=")) {
-                  videoId = link.split("v=")[1]?.split("&")[0];
-                } else if (link.includes("youtu.be/")) {
-                  videoId = link.split("youtu.be/")[1]?.split("?")[0];
-                }
-                return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&showinfo=0`;
-              };
+{videos.map((video) => {
+  const getEmbedUrl = (link) => {
+    if (!link) return "";
+    let videoId = "";
+    if (link.includes("shorts/")) {
+      videoId = link.split("shorts/")[1]?.split("?")[0];
+    } else if (link.includes("v=")) {
+      videoId = link.split("v=")[1]?.split("&")[0];
+    } else if (link.includes("youtu.be/")) {
+      videoId = link.split("youtu.be/")[1]?.split("?")[0];
+    }
+    // playsinline=1 is mandatory for iOS/Android in-browser playback
+    return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&playsinline=1`;
+  };
 
-              return (
-                <div key={video.id} className="px-2">
-                  <div className="video-card shadow-sm position-relative">
-                    {/* Use conditional class for mobile */}
-                    <div
-                      className={`ratio ${window.innerWidth <= 767 ? "video-container-mobile" : "ratio-4x3"
-                        }`}
-                    >
-                      <iframe
-                        src={getEmbedUrl(video.video_link)}
-                        title={`Featured video ${video.id}`}
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      />
-                    </div>
+  return (
+    <div key={video.id} className="px-2">
+      <div className="video-card shadow-sm position-relative" style={{ borderRadius: '15px', overflow: 'hidden', background: '#000' }}>
+        <div 
+          className="ratio" 
+          style={{ 
+            // This forces the taller "Shorts" look on mobile
+            aspectRatio: window.innerWidth <= 576 ? '9/16' : '4/3', 
+            width: '100%' 
+          }}
+        >
+          <iframe
+            src={getEmbedUrl(video.video_link)}
+            title={`Featured video ${video.id}`}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            style={{ width: '100%', height: '100%' }}
+          />
+        </div>
 
-                    {/* Desktop only overlay */}
-                    <div className="video-hover-overlay d-flex align-items-end justify-content-center pb-4">
-                      <button
-                        className="shop_now_btn body-font"
-                        onClick={() => navigate("/shop")}
-                      >
-                        Shop Now
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+        {/* This overlay is likely blocking your clicks. pointerEvents: 'none' fixes this */}
+        <div 
+          className="video-hover-overlay d-flex align-items-end justify-content-center pb-4"
+          style={{ 
+            position: 'absolute', 
+            top: 0, 
+            left: 0, 
+            width: '100%', 
+            height: '100%', 
+            pointerEvents: 'none', 
+            background: 'transparent' 
+          }}
+        >
+          <button
+            className="shop_now_btn body-font"
+            style={{ pointerEvents: 'auto' }} // Only the button catches clicks
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate("/shop");
+            }}
+          >
+            Shop Now
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+})}
           </Slider>
         </Container>
       </section>

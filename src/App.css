@@ -900,7 +900,18 @@ html {
     display: none !important;
   }
 }
-
+@media (max-width: 767px) {
+  /* Ensure the slider item doesn't collapse */
+  .video-section .slick-slide > div {
+    margin: 10px 5px;
+  }
+  
+  /* Make the heading and spacing more mobile-friendly */
+  .video-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px !important;
+  }
+}
 /* Bottom quote */
 .modern-quote-card {
   position: relative;

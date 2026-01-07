@@ -221,7 +221,7 @@
     align-items: center !important;
     margin: 0 !important;
     width: 100% !important;
-    transform: none !important; /* Reset any slick transforms */
+  
   }
 
   .category-slick-slider .slick-slide {
@@ -258,7 +258,7 @@
 
   /* Image Wrapper: Scales to card width */
   .slider-image-wrapper1 {
-    width: 95vw; /* 95% to leave tiny edge room */
+    width: 95vw; 
     height: auto;
     min-height: 260px;
     max-height: 280px;
@@ -281,7 +281,7 @@
     position: relative !important;
     bottom: auto !important;
     left: auto !important;
-    transform: none !important;
+    /* transform: none !important; */
     margin: 0 auto;
     font-size: 12px;
     padding: 8px 12px;
@@ -295,5 +295,14 @@
   .custom-category-card:hover .slider-image,
   .custom-category-card:hover .slider-name1 {
     transform: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .slider-image-wrapper1,
+  .slider-image,
+  .slider-name1,
+  .custom-category-card {
+    transition: none !important;  /* Or just 'transform 0.2s ease' */
   }
 }

@@ -38,11 +38,11 @@ export default function HeroSlider() {
   };
   const settings = {
     infinite: categories.length >= 2,
-    speed: 1500,
+    speed: 800,
     slidesToShow: 4,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 4500,
+    autoplaySpeed: 3000,
     arrows: true,
     swipeToSlide: true,
     responsive: [
@@ -55,6 +55,7 @@ export default function HeroSlider() {
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
+          speed: 400,
           centerMode: false,
         },
       },
@@ -64,12 +65,14 @@ export default function HeroSlider() {
           slidesToShow: 1,
           slidesToScroll: 1,
           centerMode: true,
-          centerPadding: "0%",
+          centerPadding: "40px",
           variableWidth: false,
           arrows: false,
-          autoplaySpeed: 3000,
+          speed: 300,
+          autoplaySpeed: 1500,
           swipeToSlide: true,
           touchThreshold: 10,
+          cssEase: "ease-out"
         },
       },
       {

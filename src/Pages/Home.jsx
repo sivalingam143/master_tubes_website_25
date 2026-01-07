@@ -23,10 +23,13 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useCart } from "../components/CartContext";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [topProducts, setTopProducts] = useState([]);     // ← empty array instead of null
   const { addToDetails } = useCart();
+  const [videos, setVideos] = useState([]);
+  const navigate = useNavigate();
 
 
   const sliderSettings = {
@@ -39,9 +42,50 @@ const Home = () => {
     autoplay: true,
     autoplaySpeed: 3000,
   };
+
+
+  const videoSliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 800,           // Transition speed in ms
+    slidesToShow: 4,      // Number of reels to show
+    slidesToScroll: 1,
+    autoplay: true,       // Enables automatic movement
+    autoplaySpeed: 3000,  // Moves every 3 seconds
+    arrows: true,
+    pauseOnHover: true,   // Stops sliding when user hovers
+    responsive: [
+      { breakpoint: 1024, settings: { slidesToShow: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 2 } },
+      { breakpoint: 480, settings: { slidesToShow: 1 } }
+    ]
+  };
+
   useEffect(() => {
 
-    // Fetch Top Selling Product
+    // Fetch Videos
+    const fetchVideos = async () => {
+      try {
+        const response = await fetch(`${API_DOMAIN}/banner_video.php`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ search_text: "" }),
+        });
+        const data = await response.json();
+        if (data.head.code === 200) {
+          setVideos(data.body.videos); // From your Postman output
+        }
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+      }
+    };
+
+    fetchVideos();
+  }, []);
+
+  useEffect(() => {
+
+    // Fetch Top Products
     const fetchTopProducts = async () => {
       try {
         const response = await fetch(`${API_DOMAIN}/product.php`, {  // ← use product.php
@@ -65,6 +109,7 @@ const Home = () => {
     }
 
     fetchTopProducts();
+
     AOS.init({
       duration: 1000,
       once: true,
@@ -340,6 +385,66 @@ const Home = () => {
           </Row>
         </Container>
       </section>
+
+      {/* Section: Video Reels Carousel */}
+      <section className="py-5 video-section overflow-hidden">
+        <Container>
+          <div className="text-center mb-5" data-aos="fade-up">
+            <h2 className="body-font">FEATURED VIDEOS</h2>
+          </div>
+
+          {/* Use the new settings here */}
+          <Slider {...videoSliderSettings}>
+            {videos.map((video) => {
+              // Function to ensure links work in iframes
+              const getEmbedUrl = (link) => {
+                if (!link) return "";
+                let videoId = "";
+                if (link.includes("shorts/")) {
+                  videoId = link.split("shorts/")[1].split("?")[0];
+                } else if (link.includes("v=")) {
+                  videoId = link.split("v=")[1].split("&")[0];
+                } else if (link.includes("youtu.be/")) {
+                  videoId = link.split("youtu.be/")[1].split("?")[0];
+                }
+                return `https://www.youtube.com/embed/${videoId}`;
+              };
+
+              return (
+
+                <div key={video.id} className="px-2">
+                  <div className="video-card shadow-sm position-relative">
+                    <div className="ratio ratio-4x3">
+                      <iframe
+                        src={getEmbedUrl(video.video_link)}
+                        title={`Video ${video.id}`}
+                        frameBorder="0"
+                        allowFullScreen
+                        style={{ pointerEvents: 'none' }} // This allows the overlay to catch the tap
+                      />
+                    </div>
+
+                    {/* Overlay container with bottom alignment */}
+                    <div className="video-hover-overlay d-flex align-items-end justify-content-center pb-4">
+                      <button
+                        className="shop_now_btn body-font"
+                        onClick={() => navigate("/shop")}
+                      >
+                        Shop Now
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </Slider>
+        </Container>
+      </section>
+
+      {/* Section: Video Reels Carousel */}
+
+
+
       <section className="feed-back">
         <Container>
           <Row>

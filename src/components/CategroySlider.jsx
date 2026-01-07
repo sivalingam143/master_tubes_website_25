@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Autoplay } from "swiper/modules";
+import React, { useEffect, useState } from "react";
+import Slider from "react-slick";
 import API_DOMAIN from "../config/config";
 import { useNavigate } from "react-router-dom";
-import "swiper/css";
-import "swiper/css/pagination";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import "./categoryslider.css";
 
 export default function HeroSlider() {
@@ -18,19 +17,12 @@ export default function HeroSlider() {
         const response = await fetch(`${API_DOMAIN}/category.php`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            search_text: "",
-          }),
+          body: JSON.stringify({ search_text: "" }),
         });
         const data = await response.json();
 
         if (data.head && data.head.code === 200) {
           setCategories(data.body.categories);
-        } else {
-          console.error(
-            "API Error:",
-            data.head ? data.head.msg : "No response head"
-          );
         }
       } catch (error) {
         console.error("Fetch Error:", error);
@@ -38,80 +30,69 @@ export default function HeroSlider() {
         setLoading(false);
       }
     };
-
     fetchCategories();
   }, []);
 
   const handleCategoryClick = (categoryId) => {
     navigate(`/shop?category=${categoryId}`);
   };
-
-  if (loading)
-    return (
-      <div style={{ textAlign: "center", padding: "20px" }}>Loading...</div>
-    );
+  const settings = {
+    // dots: true,
+    infinite: categories.length >= 4,
+    speed: 1500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 4500,
+    // pauseOnHover: true,
+    arrows: true,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: { slidesToShow: 3 },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2,
+          centerMode: false // Standard grid for tablets
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,      // Show 1 full card
+          centerMode: true,     // Enable centering
+          centerPadding: "0px", // Shows 40px of the next/previous cards
+          arrows: false,
+          autoplaySpeed: 3000
+        },
+      },
+    ],
+  };
+  if (loading) return <div className="text-center py-4">Loading...</div>;
 
   return (
     <section className="slider-wrapper1">
-      <Swiper
-        effect="slide"
-        watchSlidesProgress={true}
-        preloadImages={false}
-        lazy={true}
-        /* Touch smoothing */
-        touchStartPreventDefault={false}
-
-
-        grabCursor={true}
-        spaceBetween={24}
-
-        loop={categories.length >= 4}
-        slidesPerView={1.2}
-        breakpoints={{
-          480: {
-            slidesPerView: 2,
-          },
-          768: {
-            slidesPerView: 3,
-          },
-          1024: {
-            slidesPerView: 4,
-          },
-        }}
-        autoplay={{
-          delay: 3500,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
-        }}
-        pagination={{
-          clickable: true,
-          dynamicBullets: true,
-        }}
-        modules={[Pagination, Autoplay]}
-        className="mySwiper"
-      >
+      <Slider {...settings} className="category-slick-slider">
         {categories.map((item) => (
-          <SwiperSlide
-            key={item.category_id}
-            className="custom-swiper-slide"
-            onClick={() => handleCategoryClick(item.category_id)}
-          >
-            <div className="slider-image-wrapper1">
-              <img
-                src={
-                  item.category_img_url ||
-                  "https://via.placeholder.com/300x300/ffffff/cccccc?text=No+Image"
-                }
-                alt={item.category_name}
-                className="slider-image"
-                loading="lazy"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
+          <div key={item.category_id} className="slick-item-padding">
+            <div
+              className="custom-category-card"
+              onClick={() => handleCategoryClick(item.category_id)}
+            >
+              <div className="slider-image-wrapper1">
+                <img
+                  src={item.category_img_url || "https://via.placeholder.com/300x300"}
+                  alt={item.category_name}
+                  className="slider-image"
+                />
+              </div>
+              <p className="slider-name1">{item.category_name}</p>
             </div>
-            <p className="slider-name1">{item.category_name}</p>
-          </SwiperSlide>
+          </div>
         ))}
-      </Swiper>
+      </Slider>
     </section>
   );
 }

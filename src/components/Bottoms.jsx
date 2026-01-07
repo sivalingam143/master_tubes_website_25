@@ -4,7 +4,7 @@ import {
   FaFacebookF,
   FaInstagram,
   FaYoutube,
-  FaWhatsapp,
+  FaWhatsapp, FaQuoteLeft,
 } from "react-icons/fa";
 import StoreLogo from "../assets/images/category/Logo2.png";
 import { NavLink, useLocation } from "react-router-dom";
@@ -99,7 +99,7 @@ function Bottoms() {
                 <img src={StoreLogo} alt="Logo" className="img-fluid logo" />
               </div>
             </Col>
-            <Col lg="3" className="py-3">
+            <Col lg="2" className="py-3">
               <h6 className="body-font text-decoration-underline">My Accounts</h6>
               <div className="title-font">
                 <Nav.Link as={NavLink} to="/home" className="py-2">
@@ -140,13 +140,25 @@ function Bottoms() {
                 </Nav.Link>
               </div>
             </Col> */}
-            <Col lg="3" className="py-3">
+            <Col lg="4" className="py-3">
               <h6 className="body-font text-decoration-underline">Contact Details</h6>
               <div className="title-font py-2">
                 ADDRESS: Master Tubes,Madurai 625005,Tamilnadu ,India
               </div>
               <div className="title-font py-2">
                 EMAIL: saipackagingproducts@gmail.com
+              </div>
+            </Col>
+            <Col lg="3" md="6" className="py-3 d-flex align-items-center">
+              <div className="modern-quote-card">
+                <div className="quote-accent-bar"></div>
+                <div className="quote-content">
+                  <FaQuoteLeft className="quote-icon-top" />
+                  <p className="quote-text-main">
+                    Save money today—<br />
+                    <span>Live better tomorrow</span>
+                  </p>
+                </div>
               </div>
             </Col>
             <Col lg="6" className="py-4">

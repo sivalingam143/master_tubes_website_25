@@ -1,19 +1,25 @@
-.custom-swiper-slide {
-  width: auto;
+/* Container padding to prevent shadow clipping */
+.slider-wrapper1 {
+  padding: 20px 0 40px 0;
+}
+
+/* Slick adds extra wrappers, so we target our inner card */
+.slick-item-padding {
+  padding: 10px; /* Gap between slides */
+}
+
+.custom-category-card {
   height: 380px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 8px;
-  transition: transform 0.3s ease;
   cursor: pointer;
   position: relative;
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  transition: transform 0.3s ease;
+  outline: none;
 }
 
-.custom-swiper-slide:hover {
+.custom-category-card:hover {
   transform: scale(1.01);
 }
 
@@ -24,37 +30,33 @@
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 20px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   position: relative;
- transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-  /* Hardware acceleration */
-  transform: translateZ(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-.custom-swiper-slide:hover .slider-image-wrapper1 {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15),
-    0 10px 10px -5px rgba(252, 159, 46, 0.1);
+.custom-category-card:hover .slider-image-wrapper1 {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
   border-color: #fc9f2e;
 }
 
 .slider-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 18px;
-  height: 100%; /* Full height now */
-  will-change: transform;
-  /* Change 'all' to specific transform */
   transition: transform 0.3s ease;
 }
 
-.custom-swiper-slide:hover .slider-image {
+.custom-category-card:hover .slider-image {
   transform: scale(1.05);
 }
 
-/* Button: Absolute overlay on image bottom—no hiding! */
+/* Orange Button Style */
 .slider-name1 {
   position: absolute;
-  bottom: 12px;
+  bottom: 30px; /* Adjusted for slick container */
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
@@ -63,45 +65,103 @@
   font-weight: 600;
   font-size: 14px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
   color: #ffffff;
   background-color: #fc9f2e;
   box-shadow: 0 4px 12px rgba(252, 159, 46, 0.3);
   z-index: 10;
   white-space: nowrap;
-  text-align: center;
-  transition: transform 0.3s ease, background-color 0.3s ease, bottom 0.3s ease;
-  /* Crucial for mobile performance */
+  transition: all 0.3s ease;
   pointer-events: none;
 }
 
-.custom-swiper-slide:hover .slider-name1 {
+.custom-category-card:hover .slider-name1 {
   background-color: #e68a00;
-  bottom: 16px;
+  bottom: 35px;
   transform: translateX(-50%) scale(1.05);
 }
 
-.mySwiper .swiper-wrapper {
-  overflow: visible;
-}
 
-/* Mobile: Adjust heights */
+
+/* Remove the margin-left that was causing the offset */
 @media (max-width: 768px) {
   .slider-wrapper1 {
-    padding: 40px 10px 60px 10px;
+    padding: 20px 0 40px 0;
   }
 
-  .custom-swiper-slide {
+  /* Ensure Slick's track doesn't have inherited margins */
+  .category-slick-slider .slick-track {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    display: flex !important;
+    align-items: center;
+  }
+
+  /* Center the individual slide content */
+  .slick-slide > div {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .custom-category-card {
     height: 340px;
+    width: 100%; /* Take full width of the centered slide */
+    max-width: 260px; /* Adjust based on your image size */
   }
 
   .slider-image-wrapper1 {
     height: 280px;
+    width: 220px; /* Keep consistent width */
   }
 
   .slider-name1 {
     font-size: 13px;
     padding: 8px 16px;
-    bottom: 10px;
+    bottom: 45px;
+  }
+}
+
+/* Update your mobile media query in categoryslider.css */
+@media (max-width: 480px) {
+  .slider-wrapper1 {
+    padding: 20px 0 40px 0;
+    overflow: hidden; /* Prevents horizontal scroll on the parent */
+  }
+
+  .category-slick-slider {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Reset Slick List and Track to ensure no hidden offsets */
+  .category-slick-slider .slick-list {
+    padding: 0 !important; /* Forces 0 padding if centerMode is buggy */
+    margin: 0 !important;
+  }
+
+  .category-slick-slider .slick-track {
+    display: flex !important;
+    justify-content: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Center the inner slide content precisely */
+  .category-slick-slider .slick-slide {
+    display: flex !important;
+    justify-content: center !important;
+    outline: none;
+  }
+
+  .category-slick-slider .slick-slide > div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Adjusted dimensions for the card to fit center screen */
+  .custom-category-card {
+    width: 280px; /* Specific width for mobile centering */
+    margin: 0 auto;
   }
 }

@@ -707,12 +707,10 @@ html {
   }
 }
 
-/* Targets the input field inside your custom quantity button */
+/* quantity button  for shop page */
 .do-button1 {
   text-align: center !important;
-  /* display: flex; */
   align-items: center !important;
-  /* justify-content: center !important;   */
   width: 200px !important;
 }
 
@@ -720,11 +718,9 @@ html {
   text-align: center !important;
 }
 
-/* App.css */
-
-/* This targets the background color of the success toast */
+/* this is  for success toaster */
 .Toastify__toast--success {
-  background-color: #eeeeee !important; /* Your Logo Red */
+  background-color: #eeeeee !important;
   color: #160e0e !important;
 }
 
@@ -745,6 +741,8 @@ html {
   fill: #ffffff !important;
 }
 
+
+ /* Top selling .brands-container */
 .do-button-container input,
 .pt-2 input {
   text-align: center !important;
@@ -752,15 +750,11 @@ html {
   align-items: center;
   justify-content: center;
 }
-.top-selling-wrapper {
-  padding: 40px 20px;
-  background: transparent;
-}
+
 
 .main-product-img {
   max-height: 450px;
   object-fit: contain;
-  /* Add shadow if desired to match the product photo style */
 }
 
 .product-title {
@@ -778,7 +772,7 @@ html {
 }
 
 .new-price {
-  color: #d9534f; /* Red color from your design */
+  color: #d9534f; 
   font-weight: bold;
   font-size: 1.4rem;
 }
@@ -802,30 +796,63 @@ html {
 .shop_now_btn:hover {
   background-color: #b52b27;
 }
+
+
 .top_sell {
-  /* Ensure the background image path is correct relative to the CSS file */
   background: url("./assets/images/home/top_sell.webp") no-repeat center center;
   background-size: cover;
-  min-height: 600px; /* Gives the section enough height to show the background */
+  min-height: 600px; 
   display: block;
 }
 
-/* Fix for Slick Dots visibility on custom backgrounds */
 .slick-dots li button:before {
-  color: #d9534f !important; /* Makes dots match your red theme */
+  color: #d9534f !important;
 }
 
 .top-selling-wrapper {
   padding: 60px 20px;
-  background: transparent; /* Allows section background to show through */
+  background: transparent;
 }
 
 
 
+/* Mobile Specific Styles (Max-width 767px) */
+@media (max-width: 767px) {
+  #top-selling-section .top-selling-wrapper {
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+    margin: 10px 5px;
+  }
+
+  #top-selling-section .product-img-container {
+    background-color: #f8f9fa; 
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 250px; /* Fixed height for consistency on mobile */
+  }
+
+  #top-selling-section .main-product-img {
+    max-height: 100%;
+    object-fit: contain; /* Ensures the product isn't cropped */
+  }
+
+  #top-selling-section .product-details-content {
+    text-align: center !important; /* Optional: Centers text for better mobile look */
+  }
+}
+
+
+/* bannner video */
 .reel-video {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures video fills the tall container */
+    object-fit: cover; 
     cursor: pointer;
     transition: transform 0.3s ease;
 }
@@ -871,10 +898,6 @@ html {
   width: 100%;
 }
 
-
-
-
-/* Container for the video and overlay */
 .video-card {
     position: relative;
     border-radius: 15px;
@@ -932,4 +955,69 @@ html {
 
 .video-card:hover .shop_now_btn {
     transform: translateY(0);
+}
+
+
+/* Container for the quote card */
+.modern-quote-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* Soft shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+.modern-quote-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(252, 159, 46, 0.1);
+}
+
+/* Vertical Orange Bar */
+.quote-accent-bar {
+  width: 4px;
+  background: #fc9f2e; /* Brand Orange */
+  border-radius: 4px;
+  margin-right: 15px;
+}
+
+/* Quote Icon */
+.quote-icon-top {
+  color: #fc9f2e;
+  font-size: 18px;
+  opacity: 0.4;
+  margin-bottom: 8px;
+}
+
+/* Main Text Styling */
+.quote-text-main {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #333;
+  margin: 0;
+  font-style: italic;
+}
+
+.quote-text-main span {
+  color: #504eb6;
+  font-weight: 700;
+  font-style: normal;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  display: block;
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive adjustment */
+@media (max-width: 991px) {
+  .modern-quote-card {
+    margin: 20px auto;
+    max-width: 300px;
+  }
 }

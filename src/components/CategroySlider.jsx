@@ -55,8 +55,16 @@ export default function HeroSlider() {
     <section className="slider-wrapper1">
       <Swiper
         effect="slide"
+        watchSlidesProgress={true}
+        preloadImages={false}
+        lazy={true}
+        /* Touch smoothing */
+        touchStartPreventDefault={false}
+
+
         grabCursor={true}
         spaceBetween={24}
+
         loop={categories.length >= 4}
         slidesPerView={1.2}
         breakpoints={{

@@ -122,9 +122,9 @@ const handlePlaceOrder = () => {
                 ))}
               </Nav>
 
-              <hr className="mx-3" />
+              {/* <hr className="mx-3" /> */}
 
-              <Nav className="flex-column px-3 py-2">
+              {/* <Nav className="flex-column px-3 py-2">
                 {iconLinks.map((item, i) => (
                   <Nav.Link
                     key={i}
@@ -136,10 +136,10 @@ const handlePlaceOrder = () => {
                     <span className="me-3">{item.icon}</span>
                     <span>Wishlist</span>
                   </Nav.Link>
-                ))}
+                ))} */}
 
                 {/* User Link */}
-                <Nav.Link
+                {/* <Nav.Link
                   as={NavLink}
                   to={userIconLink.path}
                   onClick={() => setShow(false)}
@@ -147,10 +147,10 @@ const handlePlaceOrder = () => {
                 >
                   <span className="me-3">{userIconLink.icon}</span>
                   <span>{isLoggedIn ? "Profile" : "Login"}</span>
-                </Nav.Link>
+                </Nav.Link> */}
 
                 {/* Logout if Logged In */}
-                {isLoggedIn && (
+                {/* {isLoggedIn && (
                   <Nav.Link
                     onClick={handleLogout}
                     className="d-flex align-items-center py-3 px-2 rounded mobile-menu-item text-danger"
@@ -158,8 +158,8 @@ const handlePlaceOrder = () => {
                     <IoLogOutOutline size={24} className="me-3" />
                     <span>Logout</span>
                   </Nav.Link>
-                )}
-              </Nav>
+                )} */}
+              {/* </Nav> */}
             </Offcanvas.Body>
           </Navbar.Offcanvas>
         </Container>

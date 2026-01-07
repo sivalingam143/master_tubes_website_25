@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
+import React, { useState } from "react";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../components/CartContext";
 import API_DOMAIN from "../config/config";
@@ -9,9 +9,9 @@ import { State } from "country-state-city";
 const Checkout = () => {
   const { cartItems, clearCart, setShowCart } = useCart();
   const navigate = useNavigate();
-  const [customer, setCustomer] = useState(null);
   const statesInIndia = State.getStatesOfCountry("IN");
-  
+
+  // State for manual address entry
   const [addressForm, setAddressForm] = useState({
     first_name: "",
     last_name: "",
@@ -24,93 +24,18 @@ const Checkout = () => {
     country: "India",
   });
 
-  const [shippingCharges, setShippingCharges] = useState(50);
-  const [error, setError] = useState(null);
+  const [shippingCharges] = useState(50);
   const [loading, setLoading] = useState(false);
-
-useEffect(() => {
-  const storedCustomer = localStorage.getItem("customer");
-  if (!storedCustomer) {
-    navigate("/login", { state: { redirectTo: "/checkout" } });
-    return;
-  }
-
-  let parsedCustomer;
-  try {
-    parsedCustomer = JSON.parse(storedCustomer);
-  } catch (err) {
-    console.error("Failed to parse customer from localStorage");
-    navigate("/login", { state: { redirectTo: "/checkout" } });
-    return;
-  }
-
-  setCustomer(parsedCustomer);
-
-  // === EXTRACT AND PARSE DELIVERY ADDRESS FROM CUSTOMER OBJECT ===
-  const deliveryAddressString = parsedCustomer.delivery_address;
-
-  if (deliveryAddressString) {
-    try {
-      const addr = JSON.parse(deliveryAddressString);
-
-      setAddressForm({
-        first_name: addr.firstName || "",
-        last_name: addr.lastName || "",
-        address_line1: addr.address1 || "",
-        address_line2: addr.address2 || "",
-        city: addr.city || "",
-        state: addr.state || "",
-        pin_code: addr.zipCode || "",
-        phone: addr.contactNumber || "",
-        country: addr.country || "India",
-      });
-
-      console.log("✅ Delivery address auto-filled from customer.delivery_address:", addr);
-    } catch (err) {
-      console.error("Failed to parse delivery_address JSON string:", err);
-      console.error("Raw string:", deliveryAddressString);
-      // Fall back to blank form
-      setAddressForm({
-        first_name: "",
-        last_name: "",
-        address_line1: "",
-        address_line2: "",
-        city: "",
-        state: "",
-        pin_code: "",
-        phone: "",
-        country: "India",
-      });
-    }
-  } else {
-    console.log("No delivery_address field in customer object – form remains blank");
-    // Optional: blank form if no saved address
-    setAddressForm({
-      first_name: "",
-      last_name: "",
-      address_line1: "",
-      address_line2: "",
-      city: "",
-      state: "",
-      pin_code: "",
-      phone: "",
-      country: "India",
-    });
-  }
-}, [navigate]);
 
   // Compute totals
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const subTotal = cartItems.reduce(
-    (acc, item) =>
-      acc + Number(item.product_with_discount_price) * item.quantity,
+    (acc, item) => acc + Number(item.product_with_discount_price) * item.quantity,
     0
   );
   const discount = cartItems.reduce(
     (acc, item) =>
-      acc +
-      (Number(item.product_price) - Number(item.product_with_discount_price)) *
-        item.quantity,
+      acc + (Number(item.product_price) - Number(item.product_with_discount_price)) * item.quantity,
     0
   );
   const grandTotal = subTotal + shippingCharges;
@@ -122,12 +47,9 @@ useEffect(() => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      !addressForm.address_line1 ||
-      !addressForm.city ||
-      !addressForm.pin_code ||
-      !addressForm.phone
-    ) {
+
+    // Basic Validation
+    if (!addressForm.address_line1 || !addressForm.city || !addressForm.pin_code || !addressForm.phone) {
       toast.error("Please fill all required fields");
       return;
     }
@@ -138,13 +60,12 @@ useEffect(() => {
     }
 
     setLoading(true);
-    setError(null);
 
-    // const shippingAddress = `FirstName:${addressForm.first_name}, LastName:${addressForm.last_name}, Address1:${addressForm.address_line1}, Address2:${addressForm.address_line2}, City:${addressForm.city}, State:${addressForm.state}, Pincode:${addressForm.pin_code}, Country:${addressForm.country}, PhoneNumber:${addressForm.phone}`;
-// Clean version without labels
-const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${addressForm.address_line1}, ${addressForm.address_line2 ? addressForm.address_line2 + ', ' : ''}${addressForm.city}, ${addressForm.state} - ${addressForm.pin_code}, ${addressForm.phone}`;
+    // Format the address string for the backend
+    const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${addressForm.address_line1}, ${addressForm.address_line2 ? addressForm.address_line2 + ', ' : ''}${addressForm.city}, ${addressForm.state} - ${addressForm.pin_code}, ${addressForm.phone}`;
+
+    // Payload WITHOUT customer_id
     const payload = {
-      customer_id: customer.customer_id,
       product_details: cartItems.map((item) => ({
         product_id: item.product_id,
         product_name: item.product_name,
@@ -167,24 +88,20 @@ const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${a
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        throw new Error("Server responded with an error");
-      }
+      if (!response.ok) throw new Error("Server Error");
 
       const result = await response.json();
 
       if (result.head && result.head.code === 200) {
         toast.success(result.head.msg || "Order placed successfully!");
-        if (typeof clearCart === "function") {
-          clearCart();
-        }
-        navigate("/profile/orders");
+        clearCart();
+        navigate("/shop");
       } else {
         toast.error(result.head?.msg || "Order failed. Please try again.");
       }
     } catch (err) {
       console.error("Order Error:", err);
-      toast.error("Network error. Please check your connection and try again.");
+      toast.error("Network error. Please check your connection.");
     } finally {
       setLoading(false);
     }
@@ -199,6 +116,7 @@ const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${a
     <section className="py-5">
       <Container>
         <Row>
+          {/* Left Side: Manual Address Form */}
           <Col lg={7}>
             <h3 className="mb-4">Shipping Address</h3>
             <Form onSubmit={handleSubmit}>
@@ -228,6 +146,7 @@ const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${a
                   </Form.Group>
                 </Col>
               </Row>
+
               <Form.Group className="mb-3">
                 <Form.Label>Address *</Form.Label>
                 <Form.Control
@@ -241,6 +160,7 @@ const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${a
                   style={{ resize: "none" }}
                 />
               </Form.Group>
+
               <Form.Group className="mb-3">
                 <Form.Label>Apartment, suite, etc. (optional)</Form.Label>
                 <Form.Control
@@ -250,6 +170,7 @@ const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${a
                   onChange={handleInputChange}
                 />
               </Form.Group>
+
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
@@ -294,6 +215,7 @@ const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${a
                   </Form.Group>
                 </Col>
               </Row>
+
               <Form.Group className="mb-3">
                 <Form.Label>Phone *</Form.Label>
                 <Form.Control
@@ -304,41 +226,35 @@ const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${a
                   required
                 />
               </Form.Group>
-              <Button variant="secondary" onClick={handleReturnToCart} className="me-2">
-                Return to Cart
-              </Button>
-              <Button
-                variant="danger"
-                type="submit"
-                disabled={loading || cartItems.length === 0}
-              >
-                {loading ? "Processing..." : "Confirm Order"}
-              </Button>
+
+              <div className="mt-4">
+                <Button variant="secondary" onClick={handleReturnToCart} className="me-2">
+                  Return to Cart
+                </Button>
+                <Button
+                  variant="danger"
+                  type="submit"
+                  disabled={loading || cartItems.length === 0}
+                >
+                  {loading ? "Processing..." : "Confirm Order"}
+                </Button>
+              </div>
             </Form>
           </Col>
 
+          {/* Right Side: Order Summary */}
           <Col lg={5}>
             <h5 className="mb-3">Order Summary</h5>
-            <div className="border p-3 rounded">
+            <div className="border p-3 rounded bg-light">
               {cartItems.map((item) => (
-                <div
-                  key={item.product_id}
-                  className="d-flex justify-content-between mb-2"
-                >
-                  <span>
-                    {item.product_name} (x{item.quantity})
-                  </span>
-                  <span>
-                    ₹
-                    {(
-                      Number(item.product_with_discount_price) * item.quantity
-                    ).toFixed(2)}
-                  </span>
+                <div key={item.product_id} className="d-flex justify-content-between mb-2">
+                  <span>{item.product_name} (x{item.quantity})</span>
+                  <span>₹{(Number(item.product_with_discount_price) * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
               <hr />
               <div className="d-flex justify-content-between mb-2">
-                <span>Subtotal ({totalItems} items)</span>
+                <span>Subtotal</span>
                 <span>₹{subTotal.toFixed(2)}</span>
               </div>
               <div className="d-flex justify-content-between mb-2 text-success">
@@ -353,9 +269,6 @@ const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${a
               <div className="d-flex justify-content-between fw-bold fs-5">
                 <span>Total</span>
                 <span>₹{grandTotal.toFixed(2)}</span>
-              </div>
-              <div className="d-flex justify-content-between text-success small">
-                <span>You save ₹{discount.toFixed(2)}</span>
               </div>
             </div>
           </Col>

@@ -67,30 +67,20 @@ const Shop = () => {
     }
   };
   const handleQuantityChange = (product, newQuantity) => {
-    // Allow empty string while user is typing (this is the key fix)
-    if (newQuantity === "" || newQuantity === 0) {
-      setQuantities((prev) => ({
-        ...prev,
-        [product.product_id]: 0,
-      }));
-      return;
-    }
+  // 1. Update the local input state immediately for smooth typing
+  const valToStore = newQuantity === "" ? 0 : newQuantity;
 
-    // Only process if it's a valid number
-    if (typeof newQuantity === "number" && !isNaN(newQuantity)) {
-      const currentQty = quantities[product.product_id] || 0;
-      const diff = newQuantity - currentQty;
+  setQuantities((prev) => ({
+    ...prev,
+    [product.product_id]: valToStore,
+  }));
 
-      setQuantities((prev) => ({
-        ...prev,
-        [product.product_id]: newQuantity,
-      }));
-
-      if (diff > 0) {
-        addToDetails(product, diff);
-      }
-    }
-  };
+  // 2. Sync with the Cart Context
+  // Pass the ACTUAL new quantity, not the difference
+  if (newQuantity !== "") {
+    addToDetails(product, Number(newQuantity));
+  }
+};
   return (
     <>
       <section className="py-5">
@@ -171,47 +161,47 @@ const Shop = () => {
                         key={item.product_id}
                         className="mb-4"
                       >
-<div className="product-box border rounded p-2 h-100 position-relative overflow-hidden">
-  {Number(item.product_stock) <= 0 && (
-    <div 
-      className="position-absolute top-0 start-0 end-0 w-100 h-100 d-flex align-items-center justify-content-center" 
-      style={{ backgroundColor: "rgba(255, 255, 255, 0.6)", zIndex: 1 }}
-    >
-      <span className="badge bg-danger p-2 fs-6 w-100 shadow">Out of Stock</span>
-    </div>
-  )}
-  
-  <div className="img-content text-center">
-    <img
-      src={item.product_img_url || "https://via.placeholder.com/150"}
-      alt={item.product_name}
-      className="img-fluid"
-      style={{
-        maxHeight: "180px",
-        objectFit: "contain",
-        filter: Number(item.product_stock) <= 0 ? "grayscale(100%)" : "none"
-      }}
-      onClick={() => Number(item.product_stock) > 0 && navigate(`/prdt/${item.product_id}`)}
-    />
-  </div>
+                        <div className="product-box border rounded p-2 h-100 position-relative overflow-hidden">
+                          {Number(item.product_stock) <= 0 && (
+                            <div
+                              className="position-absolute top-0 start-0 end-0 w-100 h-100 d-flex align-items-center justify-content-center"
+                              style={{ backgroundColor: "rgba(255, 255, 255, 0.6)", zIndex: 1 }}
+                            >
+                              <span className="badge bg-danger p-2 fs-6 w-100 shadow">Out of Stock</span>
+                            </div>
+                          )}
+
+                          <div className="img-content text-center">
+                            <img
+                              src={item.product_img_url || "https://via.placeholder.com/150"}
+                              alt={item.product_name}
+                              className="img-fluid"
+                              style={{
+                                maxHeight: "180px",
+                                objectFit: "contain",
+                                filter: Number(item.product_stock) <= 0 ? "grayscale(100%)" : "none"
+                              }}
+                              onClick={() => Number(item.product_stock) > 0 && navigate(`/prdt/${item.product_id}`)}
+                            />
+                          </div>
                           <div className="product-content mt-2">
                             <div className="body-font fw-bold">
                               {item.product_name}
                             </div>
-                          <div className="price-content d-flex align-items-center mt-1">
-  {Number(item.discount_lock) === 1 ? (
-    <span className="text-dark fw-bold">Rs. {item.product_price}</span>
-  ) : (
-    <>
-      <span className="text-muted text-decoration-line-through small">
-        RS. {item.product_price}
-      </span>
-      <span className="text-danger fw-bold ms-2">
-        RS. {item.product_with_discount_price}
-      </span>
-    </>
-  )}
-</div>
+                            <div className="price-content d-flex align-items-center mt-1">
+                              {Number(item.discount_lock) === 1 ? (
+                                <span className="text-dark fw-bold">Rs. {item.product_price}</span>
+                              ) : (
+                                <>
+                                  <span className="text-muted text-decoration-line-through small">
+                                    RS. {item.product_price}
+                                  </span>
+                                  <span className="text-danger fw-bold ms-2">
+                                    RS. {item.product_with_discount_price}
+                                  </span>
+                                </>
+                              )}
+                            </div>
                             <div className="pt-2">
                               <div className="pt-2">
                                 <DoButton

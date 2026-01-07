@@ -39,8 +39,8 @@ function AppBar() {
   const { cartItems, showCart, setShowCart } = useCart();
   const [show, setShow] = useState(false);
   const cartContext = useCart();
-  const removeFromCart = cartContext ? cartContext.removeFromCart : () => {};
-  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const removeFromCart = cartContext ? cartContext.removeFromCart : () => { };
+  const totalItems = cartItems.length;
   const totalOriginalPrice = cartItems.reduce(
     (acc, item) => acc + Number(item.product_price) * item.quantity,
     0
@@ -61,13 +61,9 @@ function AppBar() {
 
   // Handle place order click
   const handlePlaceOrder = () => {
-    if (isLoggedIn) {
-      navigate("/checkout");
-      setShowCart(false);
-    } else {
-      navigate("/login", { state: { redirectTo: "/checkout" } });
-      setShowCart(false);
-    }
+    // Directly navigate without checking any conditions
+    navigate("/checkout");
+    setShowCart(false);
   };
 
   // Handle logout
@@ -126,9 +122,9 @@ function AppBar() {
                 ))}
               </Nav>
 
-              <hr className="mx-3" />
+              {/* <hr className="mx-3" /> */}
 
-              <Nav className="flex-column px-3 py-2">
+              {/* <Nav className="flex-column px-3 py-2">
                 {iconLinks.map((item, i) => (
                   <Nav.Link
                     key={i}
@@ -140,10 +136,10 @@ function AppBar() {
                     <span className="me-3">{item.icon}</span>
                     <span>Wishlist</span>
                   </Nav.Link>
-                ))}
+                ))} */}
 
-                {/* User Link */}
-                <Nav.Link
+              {/* User Link */}
+              {/* <Nav.Link
                   as={NavLink}
                   to={userIconLink.path}
                   onClick={() => setShow(false)}
@@ -151,10 +147,10 @@ function AppBar() {
                 >
                   <span className="me-3">{userIconLink.icon}</span>
                   <span>{isLoggedIn ? "Profile" : "Login"}</span>
-                </Nav.Link>
+                </Nav.Link> */}
 
-                {/* Logout if Logged In */}
-                {isLoggedIn && (
+              {/* Logout if Logged In */}
+              {/* {isLoggedIn && (
                   <Nav.Link
                     onClick={handleLogout}
                     className="d-flex align-items-center py-3 px-2 rounded mobile-menu-item text-danger"
@@ -162,8 +158,8 @@ function AppBar() {
                     <IoLogOutOutline size={24} className="me-3" />
                     <span>Logout</span>
                   </Nav.Link>
-                )}
-              </Nav>
+                )} */}
+              {/* </Nav> */}
             </Offcanvas.Body>
           </Navbar.Offcanvas>
         </Container>
@@ -181,15 +177,15 @@ function AppBar() {
           </div>
 
           <Nav className="ms-auto align-items-center gap-3">
-            {iconLinks.map((item, i) => (
+            {/* {iconLinks.map((item, i) => (
               <Nav.Link key={i} as={NavLink} to={item.path}>
                 {item.icon}
               </Nav.Link>
-            ))}
-
+            ))} */}
+            {/* 
             <Nav.Link as={NavLink} to={userIconLink.path}>
               {userIconLink.icon}
-            </Nav.Link>
+            </Nav.Link> */}
 
             <Nav.Link
               onClick={() => setShowCart(true)}

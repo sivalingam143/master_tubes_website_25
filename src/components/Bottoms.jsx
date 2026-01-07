@@ -7,7 +7,7 @@ import {
   FaWhatsapp,
 } from "react-icons/fa";
 import StoreLogo from "../assets/images/category/Logo2.png";
-import { NavLink , useLocation} from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import UPI from "../assets/images/upi.webp";
 import { useCart } from "../components/CartContext";
 import { useEffect, useState } from "react";
@@ -16,35 +16,35 @@ import API_DOMAIN from "../config/config";
 function Bottoms() {
   const { setShowCart } = useCart();
   const [company, setCompany] = useState(null);
-const { pathname } = useLocation();
+  const { pathname } = useLocation();
 
   // 3. ADD THIS EFFECT TO HANDLE SCROLLING
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-useEffect(() => {
-  const fetchCompanyData = async () => {
-    try {
-      const response = await fetch(`${API_DOMAIN}/company.php`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          search_text: "" 
-        }),
-      });
-      
-      const data = await response.json();
-      if (data.head.code === 200 && data.body.company) {
-        const targetCompany = data.body.company[0]; 
-        setCompany(targetCompany);
+  useEffect(() => {
+    const fetchCompanyData = async () => {
+      try {
+        const response = await fetch(`${API_DOMAIN}/company.php`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            search_text: ""
+          }),
+        });
+
+        const data = await response.json();
+        if (data.head.code === 200 && data.body.company) {
+          const targetCompany = data.body.company[0];
+          setCompany(targetCompany);
+        }
+      } catch (error) {
+        console.error("Error fetching company data:", error);
       }
-    } catch (error) {
-      console.error("Error fetching company data:", error);
-    }
-  };
-  
-  fetchCompanyData();
-}, []);
+    };
+
+    fetchCompanyData();
+  }, []);
   return (
     <>
       <section className="bottoms">
@@ -102,6 +102,9 @@ useEffect(() => {
             <Col lg="3" className="py-3">
               <h6 className="body-font text-decoration-underline">My Accounts</h6>
               <div className="title-font">
+                <Nav.Link as={NavLink} to="/home" className="py-2">
+                  Home
+                </Nav.Link>
                 <Nav.Link as={NavLink} to="/shop" className="py-2">
                   Shop
                 </Nav.Link>
@@ -114,7 +117,7 @@ useEffect(() => {
                 </Nav.Link>
               </div>
             </Col>
-            <Col lg="3" className="py-3">
+            {/* <Col lg="3" className="py-3">
               <h6 className="body-font text-decoration-underline">Customer Service</h6>
               <div className="title-font">
                 <Nav.Link as={NavLink} to="/profile" className="py-2">
@@ -136,7 +139,7 @@ useEffect(() => {
                   Wishing Cart
                 </Nav.Link>
               </div>
-            </Col>
+            </Col> */}
             <Col lg="3" className="py-3">
               <h6 className="body-font text-decoration-underline">Contact Details</h6>
               <div className="title-font py-2">
@@ -165,7 +168,7 @@ useEffect(() => {
           <Row>
             <Col lg="12" className="py-1">
               <p className="d-flex justify-content-center mb-0 title-font text-white">
-                Developed By <Nav.Link className="mx-2"> Zentexus</Nav.Link>
+                Developed By <Nav.Link className="mx-2"> Zentexus Technolgies</Nav.Link>
               </p>
             </Col>
           </Row>

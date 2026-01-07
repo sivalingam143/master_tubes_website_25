@@ -1,26 +1,52 @@
 import { useEffect, useState } from "react";
-import banner1 from "../assets/images/category/banner_1.jpeg"
-import banner2 from "../assets/images/category/banner_2.jpeg"
-const banners = [
-  {
-    id: 1,
-    image:banner1,
-    // title: "Welcome to Our Website",
-    // subtitle: "Build modern apps with React",
-  }
-];
+import API_DOMAIN from "../config/config";
 
 export default function FadeBannerCarousel() {
-  const [current, setCurrent] = useState(1);
+  const [banners, setBanners] = useState([]);
+  const [current, setCurrent] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  // Auto play
+  // 1. Fetch Banners from API
   useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+            const response = await fetch(`${API_DOMAIN}/banner.php`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // Your PHP code looks for 'search_text' to return the banner list
+          body: JSON.stringify({ search_text: "" }), 
+        });
+
+        const data = await response.json();
+
+        if (data.head.code === 200 && data.body.banner) {
+          setBanners(data.body.banner);
+        }
+      } catch (error) {
+        console.error("Error fetching banners:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBanners();
+  }, []);
+
+  // 2. Auto play logic
+  useEffect(() => {
+    if (banners.length === 0) return;
+
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % banners.length);
-    }, 4000);
+    }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [banners]);
+
+  if (loading) return null; // Or a small inline spinner
+  if (banners.length === 0) return <p>No banners available.</p>;
 
   return (
     <section>
@@ -29,16 +55,19 @@ export default function FadeBannerCarousel() {
           <div
             key={item.id}
             className={`fade-slide ${index === current ? "active" : ""}`}
-            style={{ backgroundImage: `url(${item.image})` }}
+            style={{ 
+              backgroundImage: `url(${item.img})`, // Using 'img' from your PHP output
+              backgroundColor: '#cccccc' // Fallback color
+            }}
           >
             <div className="fade-content">
-              <h2>{item.title}</h2>
-              <p>{item.subtitle}</p>
+
+              <h2>{item.title || ""}</h2>
+              <p>{item.subtitle || ""}</p>
             </div>
           </div>
         ))}
 
-    
         <div className="fade-dots">
           {banners.map((_, index) => (
             <span

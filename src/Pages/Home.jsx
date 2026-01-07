@@ -219,7 +219,7 @@ const Home = () => {
       {/* Section 2: Top Selling Products */}
       <section id="top-selling-section" className="py-5 top_sell overflow-hidden">
         <Container>
-          <div className="text-center mb-5" data-aos="fade-up">
+          <div className="text-center mb-3" data-aos="fade-up">
             <h2 className="body-font">TOP SELLING PRODUCTS</h2>
           </div>
 

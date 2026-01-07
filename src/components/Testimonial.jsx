@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
-import { FaStar } from "react-icons/fa"; // Ensure react-icons is installed
+import { FaStar } from "react-icons/fa";
 import API_DOMAIN from "../config/config";
-import DefaultUser from "../assets/images/home/Ellipse_3.avif";
 
 export default function Testimonial() {
   const [customers, setCustomers] = useState([]);
@@ -13,21 +12,19 @@ export default function Testimonial() {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const response = await fetch(`${API_DOMAIN}/customer.php`, {
+        // 1. Changed endpoint to feedback.php
+        const response = await fetch(`${API_DOMAIN}/feedback.php`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ search_text: "" }),
+          // 2. Added action: "list" as required by your PHP code
+          body: JSON.stringify({ action: "list" }),
         });
+
         const data = await response.json();
-        if (
-          (data.head.code === 200 || data.head.code === 400) &&
-          data.body.customer
-        ) {
-          const filtered = data.body.customer.filter(
-            (c) =>
-              c.feedback && c.feedback.trim() !== "" && parseInt(c.rating) > 0
-          );
-          setCustomers(filtered);
+
+        // 3. Update logic to check for result.body.feedbacks
+        if (data.head.code === 200 && data.body.feedbacks) {
+          setCustomers(data.body.feedbacks);
         }
       } catch (error) {
         console.error("Error fetching testimonials:", error);
@@ -36,15 +33,6 @@ export default function Testimonial() {
 
     fetchTestimonials();
   }, []);
-  const getCityFromAddress = (addressString) => {
-    try {
-      if (!addressString || addressString === "") return "";
-      const addressObj = JSON.parse(addressString);
-      return addressObj.city || "";
-    } catch (error) {
-      return "";
-    }
-  };
 
   /* Responsive logic */
   useEffect(() => {
@@ -78,14 +66,10 @@ export default function Testimonial() {
     }
   }, [index, customers.length]);
 
-
   const sliderItems =
     customers.length > 0
       ? [...customers, ...customers.slice(0, itemsPerView)]
       : [];
-
-  // if (customers.length === 0)
-  //   return <p className="text-center">No feedback yet.</p>;
 
   return (
     <section className="slider-wrapper align-content-center m-0">
@@ -100,7 +84,7 @@ export default function Testimonial() {
           {sliderItems.map((item, i) => (
             <div key={i} className="slider-slide p-2">
               <div className="testimonial shadow-sm p-4 h-100 bg-white rounded border">
-                {/* 1. Star Icons First */}
+                {/* 1. Star Icons */}
                 <div className="mb-2">
                   {[...Array(5)].map((_, starIdx) => (
                     <FaStar
@@ -124,11 +108,11 @@ export default function Testimonial() {
                   </p>
                 </div>
 
-                {/* 3. Name and Place */}
+                {/* 3. Name and City - Updated to match new table fields */}
                 <div className="body-font fw-bold" style={{ color: "#e92e2e" }}>
-                  {item.first_name} {item.last_name || ""}
+                  {item.name}
                   <div className="small text-muted fw-normal">
-                    {getCityFromAddress(item.delivery_address)}
+                    {item.city || ""}
                   </div>
                 </div>
               </div>

@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 const Contact = () => {
   const navigate = useNavigate();
   const [showFeedback, setShowFeedback] = useState(false);
+  const [customerName, setCustomerName] = useState("");
+  const [customerCity, setCustomerCity] = useState("");
 
   // Feedback states
   const [rating, setRating] = useState(0);
@@ -57,47 +59,40 @@ const Contact = () => {
   };
 
   const handleSaveFeedback = async () => {
-    const user = JSON.parse(localStorage.getItem("customer"));
-
-    if (!user || !user.customer_id) {
-      toast.warning("Please login to submit feedback.");
-      return;
-    }
-
-    if (rating === 0) {
-      toast.error("Please select a star rating.");
-      return;
-    }
-
-    if (feedbackText.length > 500) {
-      toast.error("Feedback must be 500 characters or less.");
+    if (!customerName || !rating) {
+      toast.error("Please provide your name and a rating");
       return;
     }
 
     const payload = {
-      action: "save_feedback",
-      customer_id: user.customer_id,
-      feedback: feedbackText,
-      rating: String(rating), // Match ENUM string type
+      name: customerName,
+      rating: String(rating),
+      city: customerCity,
+      feedback: feedbackText
     };
 
     try {
-      const response = await fetch(`${API_DOMAIN}/customer.php`, {
+      const response = await fetch(`${API_DOMAIN}/feedback.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+
       const result = await response.json();
+
       if (result.head.code === 200) {
-        toast.success("Feedback saved! Thank you.");
+        toast.success(result.head.msg);
         setShowFeedback(false);
-        setFeedbackText("");
+        // Reset form
+        setCustomerName("");
+        setCustomerCity("");
         setRating(0);
+        setFeedbackText("");
       } else {
         toast.error(result.head.msg);
       }
     } catch (error) {
-      toast.error("Connection error. Try again.");
+      toast.error("Failed to submit feedback. Please try again.");
     }
   };
 
@@ -221,32 +216,36 @@ const Contact = () => {
           <Modal.Title className="body-font">Your Feedback</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="text-center mb-4">
-            <p className="fw-bold mb-2">Rate your experience</p>
-            {[...Array(5)].map((_, index) => {
-              const ratingValue = index + 1;
-              return (
-                <label key={index}>
-                  <input
-                    type="radio"
-                    name="rating"
-                    style={{ display: "none" }}
-                    value={ratingValue}
-                    onClick={() => setRating(ratingValue)}
-                  />
-                  <FaStar
-                    size={35}
-                    color={
-                      ratingValue <= (hover || rating) ? "#ffc107" : "#e4e5e9"
-                    }
-                    onMouseEnter={() => setHover(ratingValue)}
-                    onMouseLeave={() => setHover(0)}
-                    style={{ cursor: "pointer", transition: "color 200ms" }}
-                  />
-                </label>
-              );
-            })}
-          </div>
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label className="small fw-bold">Name *</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Your name"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  className="bg-light border-0"
+                  required
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              {/* --- Optional City Field --- */}
+              <Form.Group className="mb-3">
+                <Form.Label className="small fw-bold">City (Optional)</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Your city"
+                  value={customerCity}
+                  onChange={(e) => setCustomerCity(e.target.value)}
+                  className="bg-light border-0"
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+
+
           <Form.Group>
             <Form.Label className="small fw-bold">
               Comments (Max 500 chars)
@@ -264,6 +263,30 @@ const Contact = () => {
               {feedbackText.length}/500
             </div>
           </Form.Group>
+          <div className="text-center mb-4">
+            <p className="fw-bold mb-2">Rate your experience</p>
+            {[...Array(5)].map((_, index) => {
+              const ratingValue = index + 1;
+              return (
+                <label key={index}>
+                  <input
+                    type="radio"
+                    name="rating"
+                    style={{ display: "none" }}
+                    value={ratingValue}
+                    onClick={() => setRating(ratingValue)}
+                  />
+                  <FaStar
+                    size={35}
+                    color={ratingValue <= (hover || rating) ? "#ffc107" : "#e4e5e9"}
+                    onMouseEnter={() => setHover(ratingValue)}
+                    onMouseLeave={() => setHover(0)}
+                    style={{ cursor: "pointer", transition: "color 200ms" }}
+                  />
+                </label>
+              );
+            })}
+          </div>
         </Modal.Body>
         <Modal.Footer className="border-0">
           <Button

@@ -43,21 +43,36 @@ const Home = () => {
     autoplaySpeed: 3000,
   };
 
-
   const videoSliderSettings = {
     dots: true,
     infinite: true,
-    speed: 800,           // Transition speed in ms
-    slidesToShow: 4,      // Number of reels to show
+    speed: 600,
+    slidesToShow: 4,
     slidesToScroll: 1,
-    autoplay: true,       // Enables automatic movement
-    autoplaySpeed: 3000,  // Moves every 3 seconds
+    autoplay: false,               // better UX with vertical videos
     arrows: true,
-    pauseOnHover: true,   // Stops sliding when user hovers
+    pauseOnHover: true,
     responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 480, settings: { slidesToShow: 1 } }
+      {
+        breakpoint: 1024,
+        settings: { slidesToShow: 3 }
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2,
+          arrows: false
+        }
+      },
+      {
+        breakpoint: 576,
+        settings: {
+          slidesToShow: 1,           // most important for vertical videos
+          centerMode: true,
+          centerPadding: '12px',
+          arrows: false
+        }
+      }
     ]
   };
 
@@ -396,35 +411,38 @@ const Home = () => {
           {/* Use the new settings here */}
           <Slider {...videoSliderSettings}>
             {videos.map((video) => {
-              // Function to ensure links work in iframes
               const getEmbedUrl = (link) => {
+                // your existing function to get clean embed URL
                 if (!link) return "";
                 let videoId = "";
                 if (link.includes("shorts/")) {
-                  videoId = link.split("shorts/")[1].split("?")[0];
+                  videoId = link.split("shorts/")[1]?.split("?")[0];
                 } else if (link.includes("v=")) {
-                  videoId = link.split("v=")[1].split("&")[0];
+                  videoId = link.split("v=")[1]?.split("&")[0];
                 } else if (link.includes("youtu.be/")) {
-                  videoId = link.split("youtu.be/")[1].split("?")[0];
+                  videoId = link.split("youtu.be/")[1]?.split("?")[0];
                 }
-                return `https://www.youtube.com/embed/${videoId}`;
+                return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&showinfo=0`;
               };
 
               return (
-
                 <div key={video.id} className="px-2">
                   <div className="video-card shadow-sm position-relative">
-                    <div className="ratio ratio-4x3">
+                    {/* Use conditional class for mobile */}
+                    <div
+                      className={`ratio ${window.innerWidth <= 767 ? "video-container-mobile" : "ratio-4x3"
+                        }`}
+                    >
                       <iframe
                         src={getEmbedUrl(video.video_link)}
-                        title={`Video ${video.id}`}
+                        title={`Featured video ${video.id}`}
                         frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
-                        style={{ pointerEvents: 'none' }} // This allows the overlay to catch the tap
                       />
                     </div>
 
-                    {/* Overlay container with bottom alignment */}
+                    {/* Desktop only overlay */}
                     <div className="video-hover-overlay d-flex align-items-end justify-content-center pb-4">
                       <button
                         className="shop_now_btn body-font"

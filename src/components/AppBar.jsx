@@ -39,8 +39,8 @@ function AppBar() {
   const { cartItems, showCart, setShowCart } = useCart();
   const [show, setShow] = useState(false);
   const cartContext = useCart();
-  const removeFromCart = cartContext ? cartContext.removeFromCart : () => {};
-const totalItems = cartItems.length;
+  const removeFromCart = cartContext ? cartContext.removeFromCart : () => { };
+  const totalItems = cartItems.length;
   const totalOriginalPrice = cartItems.reduce(
     (acc, item) => acc + Number(item.product_price) * item.quantity,
     0
@@ -60,11 +60,11 @@ const totalItems = cartItems.length;
   const userPath = isLoggedIn ? "/profile" : "/login";
 
   // Handle place order click
-const handlePlaceOrder = () => {
-  // Directly navigate without checking any conditions
-  navigate("/checkout");
-  setShowCart(false);
-};
+  const handlePlaceOrder = () => {
+    // Directly navigate without checking any conditions
+    navigate("/checkout");
+    setShowCart(false);
+  };
 
   // Handle logout
   const handleLogout = () => {
@@ -138,8 +138,8 @@ const handlePlaceOrder = () => {
                   </Nav.Link>
                 ))} */}
 
-                {/* User Link */}
-                {/* <Nav.Link
+              {/* User Link */}
+              {/* <Nav.Link
                   as={NavLink}
                   to={userIconLink.path}
                   onClick={() => setShow(false)}
@@ -149,8 +149,8 @@ const handlePlaceOrder = () => {
                   <span>{isLoggedIn ? "Profile" : "Login"}</span>
                 </Nav.Link> */}
 
-                {/* Logout if Logged In */}
-                {/* {isLoggedIn && (
+              {/* Logout if Logged In */}
+              {/* {isLoggedIn && (
                   <Nav.Link
                     onClick={handleLogout}
                     className="d-flex align-items-center py-3 px-2 rounded mobile-menu-item text-danger"
@@ -182,7 +182,7 @@ const handlePlaceOrder = () => {
                 {item.icon}
               </Nav.Link>
             ))} */}
-{/* 
+            {/* 
             <Nav.Link as={NavLink} to={userIconLink.path}>
               {userIconLink.icon}
             </Nav.Link> */}

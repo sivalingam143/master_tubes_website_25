@@ -40,7 +40,7 @@ function AppBar() {
   const [show, setShow] = useState(false);
   const cartContext = useCart();
   const removeFromCart = cartContext ? cartContext.removeFromCart : () => {};
-  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+const totalItems = cartItems.length;
   const totalOriginalPrice = cartItems.reduce(
     (acc, item) => acc + Number(item.product_price) * item.quantity,
     0

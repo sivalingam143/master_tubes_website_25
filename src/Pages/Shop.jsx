@@ -67,30 +67,20 @@ const Shop = () => {
     }
   };
   const handleQuantityChange = (product, newQuantity) => {
-    // Allow empty string while user is typing (this is the key fix)
-    if (newQuantity === "" || newQuantity === 0) {
-      setQuantities((prev) => ({
-        ...prev,
-        [product.product_id]: 0,
-      }));
-      return;
-    }
+  // 1. Update the local input state immediately for smooth typing
+  const valToStore = newQuantity === "" ? 0 : newQuantity;
 
-    // Only process if it's a valid number
-    if (typeof newQuantity === "number" && !isNaN(newQuantity)) {
-      const currentQty = quantities[product.product_id] || 0;
-      const diff = newQuantity - currentQty;
+  setQuantities((prev) => ({
+    ...prev,
+    [product.product_id]: valToStore,
+  }));
 
-      setQuantities((prev) => ({
-        ...prev,
-        [product.product_id]: newQuantity,
-      }));
-
-      if (diff > 0) {
-        addToDetails(product, diff);
-      }
-    }
-  };
+  // 2. Sync with the Cart Context
+  // Pass the ACTUAL new quantity, not the difference
+  if (newQuantity !== "") {
+    addToDetails(product, Number(newQuantity));
+  }
+};
   return (
     <>
       <section className="py-5">

@@ -60,15 +60,11 @@ function AppBar() {
   const userPath = isLoggedIn ? "/profile" : "/login";
 
   // Handle place order click
-  const handlePlaceOrder = () => {
-    if (isLoggedIn) {
-      navigate("/checkout");
-      setShowCart(false);
-    } else {
-      navigate("/login", { state: { redirectTo: "/checkout" } });
-      setShowCart(false);
-    }
-  };
+const handlePlaceOrder = () => {
+  // Directly navigate without checking any conditions
+  navigate("/checkout");
+  setShowCart(false);
+};
 
   // Handle logout
   const handleLogout = () => {
@@ -181,15 +177,15 @@ function AppBar() {
           </div>
 
           <Nav className="ms-auto align-items-center gap-3">
-            {iconLinks.map((item, i) => (
+            {/* {iconLinks.map((item, i) => (
               <Nav.Link key={i} as={NavLink} to={item.path}>
                 {item.icon}
               </Nav.Link>
-            ))}
-
+            ))} */}
+{/* 
             <Nav.Link as={NavLink} to={userIconLink.path}>
               {userIconLink.icon}
-            </Nav.Link>
+            </Nav.Link> */}
 
             <Nav.Link
               onClick={() => setShowCart(true)}

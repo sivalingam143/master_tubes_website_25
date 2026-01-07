@@ -12,17 +12,13 @@ export default function Testimonial() {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        // 1. Changed endpoint to feedback.php
         const response = await fetch(`${API_DOMAIN}/feedback.php`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          // 2. Added action: "list" as required by your PHP code
           body: JSON.stringify({ action: "list" }),
         });
 
         const data = await response.json();
-
-        // 3. Update logic to check for result.body.feedbacks
         if (data.head.code === 200 && data.body.feedbacks) {
           setCustomers(data.body.feedbacks);
         }

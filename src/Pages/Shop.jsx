@@ -203,7 +203,7 @@ const Shop = () => {
                               )}
                             </div>
                             <div className="pt-2">
-                              <div className="pt-2">
+                              {/* <div className="pt-2">
                                 <DoButton
                                   value={quantities[item.product_id] || 0}
                                   onChange={(newVal) => {
@@ -215,7 +215,7 @@ const Shop = () => {
                                   }}
                                   min={0}
                                 />
-                              </div>
+                              </div> */}
                             </div>
                           </div>
                         </div>

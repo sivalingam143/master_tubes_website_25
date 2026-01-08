@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import { Container } from "react-bootstrap";
 import Slider from "react-slick";
 import API_DOMAIN from "../config/config";
@@ -9,6 +15,8 @@ import "./VideoReels.css";
 const VideoReels = () => {
   const [videos, setVideos] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
+  const sliderRef = useRef(null);
+  const playerRefs = useRef([]); // Track players by index for slide resumption
 
   useEffect(() => {
     const checkMobile = () => {
@@ -58,7 +66,88 @@ const VideoReels = () => {
     loadYouTubeAPI();
   }, [loadYouTubeAPI]);
 
-  const VideoItem = ({ video }) => {
+  // Dynamic slider settings based on video count
+  const videoSliderSettings = useMemo(() => {
+    const videoCount = videos.length;
+    const baseSlidesToShow = isMobile ? 1 : Math.min(4, videoCount);
+    const tabletSlidesToShow = Math.min(3, videoCount);
+    const mobileSlidesToShow = Math.min(1, videoCount);
+
+    const baseInfinite = !isMobile && videoCount > baseSlidesToShow;
+    const tabletInfinite = videoCount > tabletSlidesToShow;
+
+    return {
+      dots: false, // Disabled completely - no ellipsis/pagination
+      infinite: baseInfinite,
+      speed: 500,
+      slidesToShow: baseSlidesToShow,
+      slidesToScroll: 1,
+      autoplay: true,
+      autoplaySpeed: 3000,
+      pauseOnHover: true,
+      arrows: !isMobile,
+      afterChange: (current) => {
+        // Resume playback on current slide after transition (handles policy pauses)
+        const timeoutId = setTimeout(() => {
+          const player = playerRefs.current[current];
+          if (player && player.getPlayerState() !== 1) {
+            // Not playing
+            player.seekTo(0); // Ensure at start if needed
+            player.playVideo();
+          }
+        }, 100); // Debounce for smooth settle
+        return () => clearTimeout(timeoutId);
+      },
+      responsive: [
+        {
+          breakpoint: 1024,
+          settings: {
+            slidesToShow: tabletSlidesToShow,
+            autoplay: true,
+            infinite: tabletInfinite,
+            arrows: true,
+            dots: false, // No dots
+            afterChange: (current) => {
+              const timeoutId = setTimeout(() => {
+                const player = playerRefs.current[current];
+                if (player && player.getPlayerState() !== 1) {
+                  player.seekTo(0);
+                  player.playVideo();
+                }
+              }, 100);
+              return () => clearTimeout(timeoutId);
+            },
+          },
+        },
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: mobileSlidesToShow,
+            centerMode: true,
+            centerPadding: "10px",
+            arrows: false,
+            autoplay: true,
+            infinite: false, // Always false on mobile
+            swipeToSlide: true,
+            dots: false, // No dots
+            pauseOnHover: false,
+            afterChange: (current) => {
+              const timeoutId = setTimeout(() => {
+                const player = playerRefs.current[current];
+                if (player && player.getPlayerState() !== 1) {
+                  player.seekTo(0);
+                  player.playVideo();
+                }
+              }, 100);
+              return () => clearTimeout(timeoutId);
+            },
+          },
+        },
+      ],
+    };
+  }, [videos.length, isMobile]);
+
+  const VideoItem = ({ video, index }) => {
     const [isMuted, setIsMuted] = useState(true);
     const [isReady, setIsReady] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -112,6 +201,7 @@ const VideoReels = () => {
             modestbranding: 1,
             playsinline: 1,
             origin: window.location.origin,
+            widget_referrer: window.location.origin, // Stabilize embedding
             autoplay: 1,
             mute: 1,
             controls: 0,
@@ -119,14 +209,16 @@ const VideoReels = () => {
             fs: 0,
             loop: 1,
             playlist: videoId,
-            enablejsapi: 1, // Explicit for reliability
+            enablejsapi: 1,
             disablekb: 1,
           },
           events: {
             onReady: (event) => {
               clearTimeout(readyTimeoutRef.current);
-              event.target.mute(); // Reinforce initial mute
+              event.target.mute();
               playerRef.current = event.target;
+              // Register player in parent array
+              playerRefs.current[index] = event.target;
               setIsReady(true);
               setIsLoading(false);
               setHasError(false);
@@ -138,18 +230,20 @@ const VideoReels = () => {
               setHasError(true);
               setIsLoading(false);
               setIsReady(false);
-              // Common codes: 100 (private), 101 (no embed), 2 (invalid ID), 5 (HTML5 fail)
             },
             onStateChange: (event) => {
-              // Manual loop to prevent flash
               if (event.data === YT.PlayerState.ENDED) {
+                // Seamless loop: Seek to 0 first (no gap), then play
                 const p = playerRef.current;
-                if (p) p.playVideo();
+                if (p) {
+                  p.seekTo(0);
+                  const timeoutId = setTimeout(() => p.playVideo(), 10); // Micro-debounce for seek settle
+                  return () => clearTimeout(timeoutId);
+                }
               }
             },
             onAutoplayBlocked: (event) => {
               console.warn(`Autoplay blocked for video ${video.id}`);
-              // Optional: Pause or prompt user; here, just log (muted should prevent)
             },
           },
         });
@@ -160,8 +254,12 @@ const VideoReels = () => {
         if (player && typeof player.destroy === "function") {
           player.destroy();
         }
+        // Clean up ref
+        if (playerRefs.current[index]) {
+          playerRefs.current[index] = null;
+        }
       };
-    }, [video.id, videoId, loadYouTubeAPI, isReady, isLoading]);
+    }, [video.id, videoId, loadYouTubeAPI, isReady, isLoading, index]);
 
     const toggleMute = (e) => {
       e.preventDefault();
@@ -170,11 +268,9 @@ const VideoReels = () => {
       if (!player || !isReady) return;
 
       if (isMuted) {
-        // Unmute + resume play if needed (handles policy pauses)
         player.unMute();
         const state = player.getPlayerState();
         if (state !== 1) {
-          // Not playing
           player.playVideo();
         }
       } else {
@@ -243,44 +339,6 @@ const VideoReels = () => {
     );
   };
 
-  const videoSliderSettings = {
-    dots: !isMobile,
-    infinite: !isMobile,
-    speed: 500,
-    slidesToShow: isMobile ? 1 : 4,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    pauseOnHover: true,
-    arrows: !isMobile,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          autoplay: true,
-          infinite: true,
-          arrows: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          centerMode: true,
-          centerPadding: "10px",
-          arrows: false,
-          autoplay: true,
-          infinite: false,
-          swipeToSlide: true,
-          dots: false,
-          pauseOnHover: false,
-        },
-      },
-    ],
-  };
-
   if (videos.length === 0) {
     return null;
   }
@@ -291,9 +349,9 @@ const VideoReels = () => {
         <div className="text-center mb-5" data-aos="fade-up">
           <h2 className="body-font">FEATURED VIDEOS</h2>
         </div>
-        <Slider {...videoSliderSettings}>
-          {videos.map((video) => (
-            <VideoItem key={video.id} video={video} />
+        <Slider ref={sliderRef} {...videoSliderSettings}>
+          {videos.map((video, index) => (
+            <VideoItem key={video.id} video={video} index={index} />
           ))}
         </Slider>
       </Container>

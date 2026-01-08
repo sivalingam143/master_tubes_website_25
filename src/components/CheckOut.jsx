@@ -61,7 +61,7 @@ const Checkout = () => {
           custom_description: directOrder.isCustomized ? directOrder.customDescription : ""
         }
       ],
-      // CHANGE THIS: Send the object, not the concatenated string
+      
       shipping_address: {
         firstName: addressForm.first_name,
         lastName: addressForm.last_name,
@@ -75,6 +75,8 @@ const Checkout = () => {
       total_items: totalItems,
       discount: discount,
       grand_total: grandTotal,
+      sub_total: subTotal || 0,
+      shipping_charges: 0
     };
 
     try {
@@ -276,18 +278,12 @@ const Checkout = () => {
               {/* 2. Hide all financial rows if customized */}
               {!directOrder.isCustomized ? (
                 <>
-                  <div className="d-flex justify-content-between mb-2">
-                    <span>Subtotal</span>
-                    <span>₹{subTotal.toFixed(2)}</span>
-                  </div>
+
                   <div className="d-flex justify-content-between mb-2 text-success">
                     <span>Discount</span>
                     <span>-₹{discount.toFixed(2)}</span>
                   </div>
-                  <div className="d-flex justify-content-between mb-2">
-                    <span>Shipping</span>
-                    <span>₹{shippingCharges.toFixed(2)}</span>
-                  </div>
+
                   <hr />
                   <div className="d-flex justify-content-between fw-bold fs-5">
                     <span>Total</span>

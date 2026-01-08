@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from "react";
-import Slider from "react-slick";
-import API_DOMAIN from "../config/config";
+// CategorySlider.jsx
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import "./categoryslider.css";
+import API_DOMAIN from "../config/config";
+import "./CategorySlider.css"; // Import the CSS
 
-export default function HeroSlider() {
+const CategorySlider = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const sliderRef = useRef(null);
+  const trackRef = useRef(null);
+  const animationRef = useRef(null);
+  const singleSetWidthRef = useRef(0);
+  const currentPosRef = useRef(0);
+  const scrollSpeed = 1.5; // Reduced for slower, more user-friendly speed (~90px/sec at 60fps)
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -33,90 +37,107 @@ export default function HeroSlider() {
     fetchCategories();
   }, []);
 
-  const handleCategoryClick = (categoryId) => {
+  useEffect(() => {
+    if (
+      !loading &&
+      categories.length > 0 &&
+      sliderRef.current &&
+      trackRef.current
+    ) {
+      const slider = sliderRef.current;
+      const track = trackRef.current;
+      singleSetWidthRef.current = track.scrollWidth / 2; // Half because duplicated
+
+      const animate = () => {
+        currentPosRef.current =
+          (currentPosRef.current + scrollSpeed) % singleSetWidthRef.current;
+        track.style.transform = `translateX(${-currentPosRef.current}px)`;
+        animationRef.current = requestAnimationFrame(animate);
+      };
+
+      // Initial setup
+      currentPosRef.current = 0;
+      track.style.transform = `translateX(0px)`;
+
+      // Small delay to ensure DOM measurements
+      const timeoutId = setTimeout(() => {
+        animationRef.current = requestAnimationFrame(animate);
+      }, 100);
+
+      // Pause on hover/touch
+      const handlePause = () => {
+        if (animationRef.current) {
+          cancelAnimationFrame(animationRef.current);
+        }
+      };
+
+      const handleResume = () => {
+        // Continue from current position, no reset
+        animationRef.current = requestAnimationFrame(animate);
+      };
+
+      slider.addEventListener("mouseenter", handlePause);
+      slider.addEventListener("mouseleave", handleResume);
+      slider.addEventListener("touchstart", handlePause, { passive: true });
+      slider.addEventListener("touchend", handleResume, { passive: true });
+
+      // Cleanup
+      return () => {
+        clearTimeout(timeoutId);
+        if (animationRef.current) {
+          cancelAnimationFrame(animationRef.current);
+        }
+        slider.removeEventListener("mouseenter", handlePause);
+        slider.removeEventListener("mouseleave", handleResume);
+        slider.removeEventListener("touchstart", handlePause);
+        slider.removeEventListener("touchend", handleResume);
+      };
+    }
+  }, [loading, categories]);
+
+  const handleshopNowClick = (categoryId) => {
     navigate(`/shop?category=${categoryId}`);
   };
-  const settings = {
-    infinite: categories.length >= 2,
-    speed: 800,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    arrows: true,
-    swipeToSlide: true,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: { slidesToShow: 3, slidesToScroll: 1 },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-          speed: 400,
-          centerMode: false,
-        },
-      },
-      {
-        breakpoint: 500,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          centerMode: true,
-          centerPadding: "40px",
-          variableWidth: false,
-          arrows: false,
-          speed: 300,
-          autoplaySpeed: 1500,
-          swipeToSlide: true,
-          touchThreshold: 10,
-          cssEase: "ease-out"
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          centerMode: true,
-          centerPadding: "0%",
-          variableWidth: false,
-          arrows: false,
-          autoplaySpeed: 3000,
-          swipeToSlide: true,
-          touchThreshold: 10,
-        },
-      },
-    ],
-  };
-  if (loading) return <div className="text-center py-4">Loading...</div>;
+
+  if (loading) {
+    return <div className="category-slider-loading">Loading categories...</div>;
+  }
+
+  if (categories.length === 0) {
+    return (
+      <div className="category-slider-empty">No categories available.</div>
+    );
+  }
+
+  // Duplicate categories for seamless infinite loop
+  const duplicatedCategories = [...categories, ...categories];
 
   return (
-    <section className="slider-wrapper1">
-      <Slider {...settings} className="category-slick-slider">
-        {categories.map((item) => (
-          <div key={item.category_id} className="slick-item-padding">
-            <div
-              className="custom-category-card"
-              onClick={() => handleCategoryClick(item.category_id)}
-            >
-              <div className="slider-image-wrapper1">
+    <div className="category-slider-container">
+      <div className="category-slider" ref={sliderRef}>
+        <div className="category-slider-track" ref={trackRef}>
+          {duplicatedCategories.map((category, index) => (
+            <div key={`${category.id}-${index}`} className="category-slide">
+              <div className="category-content">
                 <img
-                  src={
-                    item.category_img_url ||
-                    "https://via.placeholder.com/300x300"
-                  }
-                  alt={item.category_name}
-                  className="slider-image"
+                  src={category.category_img_url}
+                  alt={category.category_name}
+                  className="category-image"
                 />
+                <span className="category-name">{category.category_name}</span>
+                <button
+                  className="shop-now-btn"
+                  onClick={() => handleshopNowClick(category.category_id)}
+                >
+                  Shop Now
+                </button>
               </div>
-              <p className="slider-name1">{item.category_name}</p>
             </div>
-          </div>
-        ))}
-      </Slider>
-    </section>
+          ))}
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+export default CategorySlider;

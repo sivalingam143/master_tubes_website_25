@@ -1,308 +1,204 @@
-/* Container padding to prevent shadow clipping */
-.slider-wrapper1 {
-  padding: 20px 0 40px 0;
-}
+/* CategorySlider.css */
 
-/* Slick adds extra wrappers, so we target our inner card */
-.slick-item-padding {
-  padding: 10px; /* Gap between slides */
-}
-
-.custom-category-card {
-  height: 380px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  position: relative;
-  transition: transform 0.3s ease;
-  outline: none;
-}
-
-.custom-category-card:hover {
-  transform: scale(1.01);
-}
-
-.slider-image-wrapper1 {
-  width: 100%;
-  max-width: 220px;
-  height: 320px;
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 20px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+/* Container for the entire slider */
+.category-slider-container {
+  width: 100%; /* Full width like container-fluid */
+  margin: 0; /* No margins to extend edge-to-edge */
   overflow: hidden;
   position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  background-color: #f8f9fa; /* Light background, adjust as needed */
+  padding: 30px 0; /* Increased padding for more height */
 }
 
-.custom-category-card:hover .slider-image-wrapper1 {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
-  border-color: #fc9f2e;
-}
-
-.slider-image {
+/* The scrollable slider wrapper */
+.category-slider {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 18px;
-  transition: transform 0.3s ease;
+  overflow: hidden;
+  will-change: transform; /* Optimize for smooth transform animation */
 }
 
-.custom-category-card:hover .slider-image {
+/* The inner track that holds all slides */
+.category-slider-track {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 15px; /* Increased gap for better spacing */
+  padding: 0 20px; /* Increased side padding */
+  transition: transform 0.3s ease; /* Optional: for any manual adjustments */
+  will-change: transform;
+}
+
+/* Individual slide */
+.category-slide {
+  flex: 0 0 auto;
+  transition: transform 0.2s ease;
+  border-radius: 12px; /* Slightly larger border radius */
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow */
+}
+
+.category-slide:hover {
   transform: scale(1.05);
 }
 
-/* Orange Button Style */
-.slider-name1 {
-  position: absolute;
-  bottom: 30px; /* Adjusted for slick container */
-  left: 50%;
-  transform: translateX(-50%);
-  margin: 0;
-  padding: 10px 20px;
-  border-radius: 10px;
+/* Content inside each slide */
+.category-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px; /* Increased padding */
+  text-align: center;
+  background-color: white;
+  height: 250px; /* Increased height for more space */
+  min-width: 180px; /* Increased min-width for larger overall size */
+}
+
+/* Category image */
+.category-image {
+  width: 80px; /* Increased image size */
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px; /* Increased margin */
+}
+
+/* Category name */
+.category-name {
+  font-size: 16px; /* Slightly larger font */
+  font-weight: 500;
+  color: #333;
+  word-break: break-word;
+  margin-bottom: auto; /* Push button to bottom */
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+/* Shop Now button */
+.shop-now-btn {
+  background-color: #910410;
+  color: white;
+  border: none;
+  padding: 10px 20px; /* Increased padding */
+  border-radius: 6px; /* Slightly larger radius */
+  cursor: pointer;
+  font-size: 14px; /* Larger font */
   font-weight: 600;
-  font-size: 14px;
-  text-transform: uppercase;
-  color: #ffffff;
-  background-color: #fc9f2e;
-  box-shadow: 0 4px 12px rgba(252, 159, 46, 0.3);
-  z-index: 10;
-  white-space: nowrap;
-  transition: all 0.3s ease;
-  pointer-events: none;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  max-width: 140px; /* Increased max-width */
 }
 
-.custom-category-card:hover .slider-name1 {
-  background-color: #e68a00;
-  bottom: 35px;
-  transform: translateX(-50%) scale(1.05);
+.shop-now-btn:hover {
+  background-color: #700308; /* Darker red for consistency */
 }
 
-/* Tablet (768px) - 2 cards, responsive */
-@media (max-width: 768px) {
-  .slider-wrapper1 {
-    padding: 15px 0 30px 0;
+/* Loading and empty states */
+.category-slider-loading,
+.category-slider-empty {
+  text-align: center;
+  padding: 50px; /* Increased padding */
+  color: #666;
+  font-style: italic;
+  font-size: 16px;
+}
+
+/* Responsive design */
+/* Desktop: 4 categories visible (25% width each, minus gap) */
+@media (min-width: 1024px) {
+  .category-slide {
+    flex: 0 0 calc(25% - 15px); /* Adjusted for increased gap */
+  }
+}
+
+/* Tablet: 3 categories visible (adjust if needed) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .category-slide {
+    flex: 0 0 calc(33.333% - 15px); /* Adjusted for increased gap */
   }
 
-  .category-slick-slider .slick-track {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    display: flex !important;
-    align-items: center;
+  .category-content {
+    height: 220px;
+    min-width: 160px;
+    padding: 18px;
   }
 
-  .slick-slide > div {
-    display: flex;
-    justify-content: center;
-    width: 100%;
+  .category-image {
+    width: 70px;
+    height: 70px;
   }
 
-  .custom-category-card {
-    height: 340px;
-    width: 85vw;
-    max-width: 240px;
+  .category-name {
+    font-size: 15px;
   }
 
-  .slider-image-wrapper1 {
-    height: 280px;
-    width: 100%;
-    max-width: 200px;
-  }
-
-  .slider-name1 {
+  .shop-now-btn {
+    padding: 9px 18px;
     font-size: 13px;
+    max-width: 130px;
+  }
+}
+
+/* Mobile: 2 categories visible (50% width each, minus gap) */
+@media (max-width: 767px) {
+  .category-slider-container {
+    padding: 20px 0; /* Adjusted padding */
+  }
+
+  .category-slider-track {
+    gap: 12px; /* Adjusted gap */
+    padding: 0 15px;
+  }
+
+  .category-slide {
+    flex: 0 0 calc(50% - 12px); /* Adjusted for gap */
+  }
+
+  .category-content {
+    height: 200px; /* Increased for mobile */
+    padding: 15px;
+    min-width: 140px; /* Increased slightly */
+  }
+
+  .category-image {
+    width: 60px; /* Increased image size */
+    height: 60px;
+  }
+
+  .category-name {
+    font-size: 14px; /* Larger font */
+  }
+
+  .shop-now-btn {
     padding: 8px 16px;
-    bottom: 40px;
+    font-size: 12px;
+    max-width: 120px;
   }
 }
 
-/* General Mobile (480px) - One card, full-width base */
+/* Extra small mobile */
 @media (max-width: 480px) {
-  .slider-wrapper1 {
-    padding: 15px 0 30px 0;
-    overflow: visible;
+  .category-slide {
+    flex: 0 0 calc(50% - 12px);
   }
 
-  /* Zero everything for clean slides */
-  .slick-item-padding {
-    padding: 0 !important;
+  .category-content {
+    height: 180px; /* Increased */
+    padding: 12px;
+    min-width: 130px;
   }
 
-  .category-slick-slider .slick-list {
-    padding: 0 !important;
-    margin: 0 !important;
+  .category-image {
+    width: 55px;
+    height: 55px;
   }
 
-  .category-slick-slider .slick-track {
-    display: flex !important;
-    justify-content: center !important;
-    margin: 0 !important;
-    width: 100% !important;
+  .category-name {
+    font-size: 13px;
   }
 
-  .category-slick-slider .slick-slide {
-    display: flex !important;
-    justify-content: center !important;
-    width: 100% !important;
-  }
-
-  .category-slick-slider .slick-slide > div {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 0;
-  }
-
-  /* Full responsive card */
-  .custom-category-card {
-    width: 100vw; /* Full screen width */
-    height: auto;
-    min-height: 320px; /* Taller for touch */
-    margin: 0 auto;
-    padding: 0 5px; /* Tiny edge breathing room */
-  }
-
-  .slider-image-wrapper1 {
-    width: 100%;
-    max-width: 300px; /* Fits 375px easily */
-    height: auto;
-    min-height: 260px;
-    margin: 0 auto 10px;
-  }
-
-  .slider-image {
-    height: 100%;
-    min-height: 260px;
-    object-fit: cover; /* Prevents distortion */
-  }
-
-  .slider-name1 {
-    position: relative;
-    bottom: auto;
-    left: auto;
-    transform: none;
-    margin: 0 auto 0 0;
-    font-size: 12px;
-    padding: 8px 12px;
-    width: fit-content;
-  }
-
-  /* Disable hovers on touch */
-  .custom-category-card:hover,
-  .custom-category-card:hover .slider-image-wrapper1,
-  .custom-category-card:hover .slider-image,
-  .custom-category-card:hover .slider-name1 {
-    transform: none;
-  }
-}
-@media (max-width: 500px) {
-  .slider-wrapper1 {
-    padding: 10px 0 25px 0;
-    overflow: hidden; /* Prevent any scroll */
-  }
-
-  /* Zero ALL paddings/margins for clean full-width */
-  .slick-item-padding {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  .category-slick-slider .slick-list {
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 100vw !important; /* Full viewport */
-  }
-
-  .category-slick-slider .slick-track {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    margin: 0 !important;
-    width: 100% !important;
-  
-  }
-
-  .category-slick-slider .slick-slide {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 100% !important;
-    height: auto;
-    outline: none;
-  }
-
-  .category-slick-slider .slick-slide > div {
-    width: 100vw !important; /* Full screen width */
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  /* Card: Full screen, centered */
-  .custom-category-card {
-    width: 100vw !important; /* Fills entire width */
-    height: auto;
-    min-height: 320px;
-    max-width: none !important; /* No caps */
-    margin: 0 !important;
-    padding: 0 !important;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* Image Wrapper: Scales to card width */
-  .slider-image-wrapper1 {
-    width: 95vw; 
-    height: auto;
-    min-height: 260px;
-    max-height: 280px;
-    margin: 0 auto 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .slider-image {
-    width: 100%;
-    height: auto;
-    min-height: 260px;
-    max-height: 280px;
-    object-fit: cover; /* Covers without distortion */
-  }
-
-  /* Name: Below image, centered */
-  .slider-name1 {
-    position: relative !important;
-    bottom: auto !important;
-    left: auto !important;
-    /* transform: none !important; */
-    margin: 0 auto;
-    font-size: 12px;
-    padding: 8px 12px;
-    width: fit-content;
-    text-align: center;
-  }
-
-  /* Disable hovers */
-  .custom-category-card:hover,
-  .custom-category-card:hover .slider-image-wrapper1,
-  .custom-category-card:hover .slider-image,
-  .custom-category-card:hover .slider-name1 {
-    transform: none !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .slider-image-wrapper1,
-  .slider-image,
-  .slider-name1,
-  .custom-category-card {
-    transition: none !important;  /* Or just 'transform 0.2s ease' */
+  .shop-now-btn {
+    padding: 7px 14px;
+    font-size: 11px;
   }
 }

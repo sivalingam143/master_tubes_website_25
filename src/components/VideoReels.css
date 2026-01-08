@@ -1,8 +1,8 @@
-/* bannner video */
+/* VideoReels.css */
 
 /* 1. The slide container */
 .mobile-video-slide {
-  padding: 0 5px; /* Spacing between the 3 videos */
+  padding: 0 5px; /* Spacing between videos */
   outline: none;
 }
 
@@ -12,13 +12,13 @@
   overflow: hidden;
   background: #000;
   width: 100%;
-  min-height: 180px; 
+  min-height: 180px;
 }
 
 .video-responsive-container {
   position: relative;
   width: 100%;
-  padding-top: 170%; 
+  padding-top: 177.78%; /* Exact 9:16 for vertical shorts/reels */
 }
 
 .video-responsive-container iframe {
@@ -28,56 +28,70 @@
   width: 100% !important;
   height: 100% !important;
   border: 0;
+  pointer-events: none; /* Prevent clicks/taps from interacting with player UI */
 }
 
+/* Mobile optimizations: smoother scrolling, reduced animations, full viewport feel */
 @media (max-width: 768px) {
   .video-section .slick-track {
     display: flex !important;
     align-items: center;
   }
-  .video-section h2 {
-    font-size: 1.4rem !important;
-    margin-bottom: 20px !important;
-  }
-}
 
-/* 5. Desktop Override: 4:3 or 16:9 for larger screens */
-@media (min-width: 992px) {
-  .video-responsive-container {
-    padding-top: 120%; /* Slightly shorter on desktop */
-  }
-}
-
-/* Shop Button Styling for the small video cards */
-.shop_now_btn_mobile {
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #ff0000;
-  color: white;
-  border: none;
-  padding: 5px 12px;
-  font-size: 11px;
-  border-radius: 20px;
-  font-weight: bold;
-  z-index: 5;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-}
-/* Update this section in your App.css */
-@media (max-width: 768px) {
-  /* Hide the shop button on mobile */
-  .shop_now_btn_mobile {
-    display: none !important;
-  }
-
-  /* Keep your other existing mobile styles */
   .video-section h2 {
     font-size: 1.2rem !important;
     margin-bottom: 15px !important;
   }
-  
+
   .slick-list {
     overflow: visible !important;
+    scroll-snap-type: x mandatory; /* Snap for better swipe UX */
   }
+
+  .slick-slide {
+    scroll-snap-align: center;
+  }
+
+  /* Reduce shadow and transitions for perf */
+  .video-card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    transition: none;
+  }
+
+  /* Ensure iframe doesn't capture taps except for slick swipe */
+  .video-responsive-container {
+    pointer-events: auto; /* Allow container for swipe, but iframe none */
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .video-responsive-container {
+    padding-top: 177.78%; /* Keep vertical for consistency */
+  }
+}
+
+/* Desktop: Larger videos, optional hover */
+@media (min-width: 1024px) {
+  .video-responsive-container {
+    padding-top: 177.78%; /* Keep vertical */
+  }
+
+  /* Hover effect for desktop only */
+  @media (hover: hover) {
+    .video-card:hover {
+      transform: scale(1.02);
+      transition: transform 0.2s ease;
+    }
+
+    /* Re-enable pointer events on desktop for interaction if needed */
+    .video-responsive-container iframe {
+      pointer-events: auto;
+    }
+  }
+}
+
+/* Ensure no shop button styles leak */
+.shop_now_btn_mobile {
+  display: none !important;
 }

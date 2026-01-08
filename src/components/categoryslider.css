@@ -36,8 +36,15 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow */
 }
 
-.category-slide:hover {
-  transform: scale(1.05);
+/* Hover effects only for devices that support hover (excludes touch/mobile) */
+@media (hover: hover) {
+  .category-slide:hover {
+    transform: scale(1.05);
+  }
+
+  .shop-now-btn:hover {
+    background-color: #700308; /* Darker red for consistency */
+  }
 }
 
 /* Content inside each slide */
@@ -89,10 +96,6 @@
   max-width: 140px; /* Increased max-width */
 }
 
-.shop-now-btn:hover {
-  background-color: #700308; /* Darker red for consistency */
-}
-
 /* Loading and empty states */
 .category-slider-loading,
 .category-slider-empty {
@@ -103,54 +106,31 @@
   font-size: 16px;
 }
 
-/* Responsive design */
-/* Desktop: 4 categories visible (25% width each, minus gap) */
-@media (min-width: 1024px) {
-  .category-slide {
-    flex: 0 0 calc(25% - 15px); /* Adjusted for increased gap */
-  }
-}
-
-/* Tablet: 3 categories visible (adjust if needed) */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .category-slide {
-    flex: 0 0 calc(33.333% - 15px); /* Adjusted for increased gap */
-  }
-
-  .category-content {
-    height: 220px;
-    min-width: 160px;
-    padding: 18px;
-  }
-
-  .category-image {
-    width: 70px;
-    height: 70px;
-  }
-
-  .category-name {
-    font-size: 15px;
-  }
-
-  .shop-now-btn {
-    padding: 9px 18px;
-    font-size: 13px;
-    max-width: 130px;
-  }
-}
-
-/* Mobile: 2 categories visible (50% width each, minus gap) */
+/* Mobile-specific styles: Enable native swipe with scroll-snap for performance */
 @media (max-width: 767px) {
   .category-slider-container {
     padding: 20px 0; /* Adjusted padding */
   }
 
+  .category-slider {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    -ms-overflow-style: none; /* Hide scrollbar in IE/Edge */
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+  }
+
+  .category-slider::-webkit-scrollbar {
+    display: none; /* Hide scrollbar in WebKit browsers */
+  }
+
   .category-slider-track {
     gap: 12px; /* Adjusted gap */
     padding: 0 15px;
+    scroll-snap-type: x proximity; /* Snap to nearest slide for swipe UX */
   }
 
   .category-slide {
+    scroll-snap-align: center; /* Align slides for visible pairs */
     flex: 0 0 calc(50% - 12px); /* Adjusted for gap */
   }
 
@@ -200,5 +180,40 @@
   .shop-now-btn {
     padding: 7px 14px;
     font-size: 11px;
+  }
+}
+
+/* Tablet: 3 categories visible (adjust if needed) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .category-slide {
+    flex: 0 0 calc(33.333% - 15px); /* Adjusted for increased gap */
+  }
+
+  .category-content {
+    height: 220px;
+    min-width: 160px;
+    padding: 18px;
+  }
+
+  .category-image {
+    width: 70px;
+    height: 70px;
+  }
+
+  .category-name {
+    font-size: 15px;
+  }
+
+  .shop-now-btn {
+    padding: 9px 18px;
+    font-size: 13px;
+    max-width: 130px;
+  }
+}
+
+/* Desktop: 4 categories visible (25% width each, minus gap) */
+@media (min-width: 1024px) {
+  .category-slide {
+    flex: 0 0 calc(25% - 15px); /* Adjusted for increased gap */
   }
 }

@@ -89,10 +89,10 @@ function AppBar() {
           </Navbar.Brand>
 
           {/* Cart Icon - Opens Cart Offcanvas */}
-          <div className="cart-mobile" onClick={() => setShowCart(true)}>
+          {/* <div className="cart-mobile" onClick={() => setShowCart(true)}>
             <IoBagHandleOutline size={22} />
             <span>{totalItems}</span>
-          </div>
+          </div> */}
 
           {/* Menu Offcanvas */}
           <Navbar.Offcanvas

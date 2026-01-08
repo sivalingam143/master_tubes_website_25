@@ -850,68 +850,96 @@ html {
 
 /* bannner video */
 
-/* Base video card styles */
+/* 1. The slide container */
+.mobile-video-slide {
+  padding: 0 5px; /* Spacing between the 3 videos */
+  outline: none;
+}
+
+/* 2. The Card: Force height and width */
 .video-card {
   position: relative;
   border-radius: 12px;
   overflow: hidden;
   background: #000;
-  margin: 0 auto;
   width: 100%;
-  max-width: 100%;           /* important on mobile */
+  /* This prevents the "jumping" size on refresh */
+  min-height: 180px; 
 }
 
-/* Default desktop ratio (you can keep 4:3 or 16:9) */
-.ratio-4x3 {
-  --bs-aspect-ratio: 75% !important;      /* 4:3 */
-}
-.ratio-4x3.video-container-mobile {
-  --bs-aspect-ratio: 75%;           /* desktop default */
+/* 3. The Ratio: Making it tall like a TikTok/Shorts video */
+.video-responsive-container {
+  position: relative;
+  width: 100%;
+  /* 9:16 Aspect Ratio = (16 / 9 * 100) = 177.7% */
+  /* This increases the height significantly on mobile */
+  padding-top: 170%; 
 }
 
-@media (max-width: 767px) {
-  .ratio-4x3.video-container-mobile {
-    --bs-aspect-ratio: 177.78% !important;  /* mobile → 9:16 */
-  }
+.video-responsive-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
 }
-/* Mobile vertical 9:16 ratio */
-@media (max-width: 767px) {
-  .video-container-mobile {
-    --bs-aspect-ratio: 177.78% !important;  /* ≈ 9:16 vertical */
-  }
 
-  .video-card {
-    max-width: 100% !important;
-    border-radius: 0;                     /* optional: full-width look */
-    box-shadow: none;                     /* cleaner mobile look */
-  }
-
-  /* Make sure iframe completely fills the container */
-  .video-card iframe {
-    width: 100% !important;
-    height: 100% !important;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-
-  /* Remove overlay completely on mobile */
-  .video-hover-overlay {
-    display: none !important;
-  }
-}
-@media (max-width: 767px) {
-  /* Ensure the slider item doesn't collapse */
-  .video-section .slick-slide > div {
-    margin: 10px 5px;
+/* 4. Fix for Slick Slider sizing */
+@media (max-width: 768px) {
+  .video-section .slick-track {
+    display: flex !important;
+    align-items: center;
   }
   
-  /* Make the heading and spacing more mobile-friendly */
+  /* Make the header smaller so the big videos fit the screen better */
   .video-section h2 {
-    font-size: 1.5rem;
+    font-size: 1.4rem !important;
     margin-bottom: 20px !important;
   }
 }
+
+/* 5. Desktop Override: 4:3 or 16:9 for larger screens */
+@media (min-width: 992px) {
+  .video-responsive-container {
+    padding-top: 120%; /* Slightly shorter on desktop */
+  }
+}
+
+/* Shop Button Styling for the small video cards */
+.shop_now_btn_mobile {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff0000;
+  color: white;
+  border: none;
+  padding: 5px 12px;
+  font-size: 11px;
+  border-radius: 20px;
+  font-weight: bold;
+  z-index: 5;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+/* Update this section in your App.css */
+@media (max-width: 768px) {
+  /* Hide the shop button on mobile */
+  .shop_now_btn_mobile {
+    display: none !important;
+  }
+
+  /* Keep your other existing mobile styles */
+  .video-section h2 {
+    font-size: 1.2rem !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .slick-list {
+    overflow: visible !important;
+  }
+}
+
 /* Bottom quote */
 .modern-quote-card {
   position: relative;

@@ -49,20 +49,22 @@ const CategorySlider = () => {
       singleSetWidthRef.current = track.scrollWidth / 2; // Half because duplicated
 
       const animate = () => {
-        currentPosRef.current =
-          (currentPosRef.current + scrollSpeed) % singleSetWidthRef.current;
+        currentPosRef.current += scrollSpeed;
+        if (currentPosRef.current >= singleSetWidthRef.current) {
+          currentPosRef.current -= singleSetWidthRef.current;
+        }
         track.style.transform = `translateX(${-currentPosRef.current}px)`;
         animationRef.current = requestAnimationFrame(animate);
       };
 
-      // Initial setup
-      currentPosRef.current = 0;
-      track.style.transform = `translateX(0px)`;
+      const startAutoScroll = () => {
+        currentPosRef.current = 0; // Reset position
+        track.style.transform = `translateX(0px)`;
+        animationRef.current = requestAnimationFrame(animate);
+      };
 
       // Small delay to ensure DOM measurements
-      const timeoutId = setTimeout(() => {
-        animationRef.current = requestAnimationFrame(animate);
-      }, 100);
+      const timeoutId = setTimeout(startAutoScroll, 100);
 
       // Pause on hover/touch
       const handlePause = () => {
@@ -72,8 +74,7 @@ const CategorySlider = () => {
       };
 
       const handleResume = () => {
-        // Continue from current position, no reset
-        animationRef.current = requestAnimationFrame(animate);
+        startAutoScroll();
       };
 
       slider.addEventListener("mouseenter", handlePause);

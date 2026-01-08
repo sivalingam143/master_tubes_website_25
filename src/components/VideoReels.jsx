@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Container } from "react-bootstrap";
 import Slider from "react-slick";
 import API_DOMAIN from "../config/config";
@@ -38,14 +38,219 @@ const VideoReels = () => {
     fetchVideos();
   }, []);
 
+  const loadYouTubeAPI = useCallback(() => {
+    return new Promise((resolve) => {
+      if (window.YT && window.YT.Player) {
+        resolve(window.YT);
+        return;
+      }
+      window.onYouTubeIframeAPIReady = () => {
+        resolve(window.YT);
+      };
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName("script")[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    });
+  }, []);
+
+  useEffect(() => {
+    loadYouTubeAPI();
+  }, [loadYouTubeAPI]);
+
+  const VideoItem = ({ video }) => {
+    const [isMuted, setIsMuted] = useState(true);
+    const [isReady, setIsReady] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [hasError, setHasError] = useState(false);
+    const [errorCode, setErrorCode] = useState(null);
+    const playerRef = useRef(null);
+    const containerRef = useRef(null);
+    const readyTimeoutRef = useRef(null);
+
+    const extractVideoId = (link) => {
+      if (!link) return "";
+      if (link.includes("shorts/")) {
+        return link.split("shorts/")[1]?.split("?")[0];
+      } else if (link.includes("v=")) {
+        return link.split("v=")[1]?.split("&")[0];
+      } else if (link.includes("youtu.be/")) {
+        return link.split("youtu.be/")[1]?.split("?")[0];
+      }
+      return "";
+    };
+
+    const videoId = extractVideoId(video.video_link);
+    const thumbnailUrl = videoId
+      ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+      : null;
+
+    useEffect(() => {
+      if (!videoId) {
+        setHasError(true);
+        setIsLoading(false);
+        return;
+      }
+
+      // Timeout for ready state
+      readyTimeoutRef.current = setTimeout(() => {
+        if (!isReady) {
+          console.warn(`Player timeout for video ${video.id}`);
+          setIsReady(false);
+          setIsLoading(false);
+        }
+      }, 5000);
+
+      let player;
+      loadYouTubeAPI().then((YT) => {
+        player = new YT.Player(`player-${video.id}`, {
+          height: "100%",
+          width: "100%",
+          videoId: videoId,
+          playerVars: {
+            rel: 0,
+            modestbranding: 1,
+            playsinline: 1,
+            origin: window.location.origin,
+            autoplay: 1,
+            mute: 1,
+            controls: 0,
+            iv_load_policy: 3,
+            fs: 0,
+            loop: 1,
+            playlist: videoId,
+            enablejsapi: 1, // Explicit for reliability
+            disablekb: 1,
+          },
+          events: {
+            onReady: (event) => {
+              clearTimeout(readyTimeoutRef.current);
+              event.target.mute(); // Reinforce initial mute
+              playerRef.current = event.target;
+              setIsReady(true);
+              setIsLoading(false);
+              setHasError(false);
+            },
+            onError: (event) => {
+              clearTimeout(readyTimeoutRef.current);
+              console.error(`Player error for video ${video.id}:`, event.data);
+              setErrorCode(event.data);
+              setHasError(true);
+              setIsLoading(false);
+              setIsReady(false);
+              // Common codes: 100 (private), 101 (no embed), 2 (invalid ID), 5 (HTML5 fail)
+            },
+            onStateChange: (event) => {
+              // Manual loop to prevent flash
+              if (event.data === YT.PlayerState.ENDED) {
+                const p = playerRef.current;
+                if (p) p.playVideo();
+              }
+            },
+            onAutoplayBlocked: (event) => {
+              console.warn(`Autoplay blocked for video ${video.id}`);
+              // Optional: Pause or prompt user; here, just log (muted should prevent)
+            },
+          },
+        });
+      });
+
+      return () => {
+        clearTimeout(readyTimeoutRef.current);
+        if (player && typeof player.destroy === "function") {
+          player.destroy();
+        }
+      };
+    }, [video.id, videoId, loadYouTubeAPI, isReady, isLoading]);
+
+    const toggleMute = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const player = playerRef.current;
+      if (!player || !isReady) return;
+
+      if (isMuted) {
+        // Unmute + resume play if needed (handles policy pauses)
+        player.unMute();
+        const state = player.getPlayerState();
+        if (state !== 1) {
+          // Not playing
+          player.playVideo();
+        }
+      } else {
+        player.mute();
+      }
+      setIsMuted(!isMuted);
+    };
+
+    if (!videoId) {
+      return (
+        <div className="mobile-video-slide">
+          <div className="video-card shadow-sm">
+            <div className="video-responsive-container">
+              <div className="error-fallback">Invalid Video Link</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (hasError) {
+      return (
+        <div className="mobile-video-slide">
+          <div className="video-card shadow-sm">
+            <div className="video-responsive-container">
+              {thumbnailUrl && (
+                <img
+                  src={thumbnailUrl}
+                  alt="Thumbnail"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              )}
+              <div className="error-fallback">
+                Embed Unavailable (Code: {errorCode || "Unknown"})<br />
+                <small>Video may be private or restricted.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="mobile-video-slide">
+        <div className="video-card shadow-sm">
+          <div className="video-responsive-container" ref={containerRef}>
+            {isLoading && (
+              <div className="loading-overlay">
+                <div className="spinner">⏳</div>
+              </div>
+            )}
+            <div id={`player-${video.id}`} />
+            <div
+              className="speaker-icon"
+              onClick={toggleMute}
+              style={{
+                opacity: isReady ? 1 : 0.5,
+                pointerEvents: isReady ? "auto" : "none",
+              }}
+            >
+              {isMuted ? "🔇" : "🔊"}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const videoSliderSettings = {
     dots: !isMobile,
     infinite: !isMobile,
-    speed: 500, // Reduced for smoother, battery-friendly transitions
+    speed: 500,
     slidesToShow: isMobile ? 1 : 4,
     slidesToScroll: 1,
-    autoplay: true, // Autoplay everywhere
-    autoplaySpeed: 3000, // Pause duration between slides
+    autoplay: true,
+    autoplaySpeed: 3000,
     pauseOnHover: true,
     arrows: !isMobile,
     responsive: [
@@ -62,36 +267,22 @@ const VideoReels = () => {
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 1, // Single video on mobile for performance
+          slidesToShow: 1,
           centerMode: true,
           centerPadding: "10px",
           arrows: false,
           autoplay: true,
-          infinite: false, // No infinite to avoid cloning heavy iframes
-          swipeToSlide: true, // Enable swipe gestures
+          infinite: false,
+          swipeToSlide: true,
           dots: false,
-          pauseOnHover: false, // Continuous play on mobile swipe
+          pauseOnHover: false,
         },
       },
     ],
   };
 
-  const getEmbedUrl = (link) => {
-    if (!link) return "";
-    let videoId = "";
-    if (link.includes("shorts/")) {
-      videoId = link.split("shorts/")[1]?.split("?")[0];
-    } else if (link.includes("v=")) {
-      videoId = link.split("v=")[1]?.split("&")[0];
-    } else if (link.includes("youtu.be/")) {
-      videoId = link.split("youtu.be/")[1]?.split("?")[0];
-    }
-    // Enable autoplay (muted for mobile compliance), inline play, no controls/share, minimal UI
-    return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}&autoplay=1&mute=1&controls=0&showinfo=0&iv_load_policy=3&fs=0`;
-  };
-
   if (videos.length === 0) {
-    return null; // Hide section if no videos
+    return null;
   }
 
   return (
@@ -100,22 +291,9 @@ const VideoReels = () => {
         <div className="text-center mb-5" data-aos="fade-up">
           <h2 className="body-font">FEATURED VIDEOS</h2>
         </div>
-
         <Slider {...videoSliderSettings}>
           {videos.map((video) => (
-            <div key={video.id} className="mobile-video-slide">
-              <div className="video-card shadow-sm">
-                <div className="video-responsive-container">
-                  <iframe
-                    src={getEmbedUrl(video.video_link)}
-                    title={`Video ${video.id}`}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen={false} // Disable fullscreen to keep inline
-                  />
-                </div>
-              </div>
-            </div>
+            <VideoItem key={video.id} video={video} />
           ))}
         </Slider>
       </Container>

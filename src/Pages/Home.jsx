@@ -24,100 +24,14 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useCart } from "../components/CartContext";
 import { useNavigate } from "react-router-dom";
+import VideoReels from "../components/VideoReels";
 
 const Home = () => {
   const [topProducts, setTopProducts] = useState([]);     // ← empty array instead of null
   const { addToDetails } = useCart();
-  const [videos, setVideos] = useState([]);
   const navigate = useNavigate();
 
 
-  const sliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1, // Crucial: This makes it look like the first design
-    slidesToScroll: 1,
-    arrows: true,
-    autoplay: true,
-    autoplaySpeed: 3000,
-  };
-
-  // Inside Home.jsx - Update your videoSliderSettings
-const videoSliderSettings = {
-  dots: true,
-  infinite: true,
-  speed: 600,
-  slidesToShow: 4,
-  slidesToScroll: 1,
-  autoplay: false, // Global autoplay off
-  arrows: true,
-  responsive: [
-    {
-      breakpoint: 1024,
-      settings: { 
-        slidesToShow: 3,
-        autoplay: false 
-      }
-    },
-    {
-      breakpoint: 768,
-      settings: {
-        slidesToShow: 3, 
-        centerMode: true,
-        centerPadding: '10px',
-        arrows: false,
-        autoplay: false // Ensure it's off here
-      }
-    },
-    {
-      breakpoint: 576,
-      settings: {
-        slidesToShow: 3, 
-        centerMode: true,
-        centerPadding: '5px', 
-        arrows: false,
-        autoplay: false // Stops automatic sliding on mobile
-      }
-    }
-  ]
-};
-
-// Inside the Video Section map function, ensure the URL has the correct parameters
-const getEmbedUrl = (link) => {
-  if (!link) return "";
-  let videoId = "";
-  if (link.includes("shorts/")) {
-    videoId = link.split("shorts/")[1]?.split("?")[0];
-  } else if (link.includes("v=")) {
-    videoId = link.split("v=")[1]?.split("&")[0];
-  } else if (link.includes("youtu.be/")) {
-    videoId = link.split("youtu.be/")[1]?.split("?")[0];
-  }
-  // Added &origin to help the iframe initialize correctly without refresh
-  return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}`;
-}
-  useEffect(() => {
-
-    // Fetch Videos
-    const fetchVideos = async () => {
-      try {
-        const response = await fetch(`${API_DOMAIN}/banner_video.php`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ search_text: "" }),
-        });
-        const data = await response.json();
-        if (data.head.code === 200) {
-          setVideos(data.body.videos); // From your Postman output
-        }
-      } catch (error) {
-        console.error("Error fetching videos:", error);
-      }
-    };
-
-    fetchVideos();
-  }, []);
 
   useEffect(() => {
 
@@ -423,62 +337,7 @@ const getEmbedUrl = (link) => {
       </section>
 
       {/* Section: Video Reels Carousel */}
-      <section className="py-5 video-section overflow-hidden">
-        <Container>
-          <div className="text-center mb-5" data-aos="fade-up">
-            <h2 className="body-font">FEATURED VIDEOS</h2>
-          </div>
-
-          {/* Use the new settings here */}
-          <Slider {...videoSliderSettings}>
-            {videos.map((video) => {
-              const getEmbedUrl = (link) => {
-                if (!link) return "";
-                let videoId = "";
-                if (link.includes("shorts/")) {
-                  videoId = link.split("shorts/")[1]?.split("?")[0];
-                } else if (link.includes("v=")) {
-                  videoId = link.split("v=")[1]?.split("&")[0];
-                } else if (link.includes("youtu.be/")) {
-                  videoId = link.split("youtu.be/")[1]?.split("?")[0];
-                }
-                // Added playsinline and enablejsapi to help mobile playback stability
-                return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&playsinline=1&enablejsapi=1`;
-              };
-
-              return (
-                <div key={video.id} className="mobile-video-slide">
-                  <div className="video-card shadow-sm">
-                    <div className="video-responsive-container">
-                      <iframe
-                        src={getEmbedUrl(video.video_link)}
-                        title={`Video ${video.id}`}
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      />
-                    </div>
-                    <div className="video-hover-overlay">
-                      <button
-                        className="shop_now_btn_mobile"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate("/shop");
-                        }}
-                      >
-                        Shop
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </Slider>
-        </Container>
-      </section>
-
-      {/* Section: Video Reels Carousel */}
-
+      <VideoReels />
 
 
       <section className="feed-back">

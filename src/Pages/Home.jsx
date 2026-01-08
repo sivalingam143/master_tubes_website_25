@@ -268,9 +268,9 @@ const Home = () => {
                       </p>
                       <button
                         className="shop_now_btn body-font"
-                        onClick={() => addToDetails(product, 1)}
+                        onClick={() => navigate(`/prdt/${product.product_id}`)}
                       >
-                        Add To Cart
+                       Shop Now
                       </button>
                     </Col>
                   </Row>

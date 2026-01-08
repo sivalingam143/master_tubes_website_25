@@ -1,14 +1,12 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Container } from "react-bootstrap";
-import Slider from "react-slick";
 import API_DOMAIN from "../config/config";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import "./VideoReels.css";
 
 const VideoReels = () => {
   const [videos, setVideos] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
+  const playerRefs = useRef([]); // Store players by index
 
   useEffect(() => {
     const checkMobile = () => {
@@ -44,9 +42,7 @@ const VideoReels = () => {
         resolve(window.YT);
         return;
       }
-      window.onYouTubeIframeAPIReady = () => {
-        resolve(window.YT);
-      };
+      window.onYouTubeIframeAPIReady = () => resolve(window.YT);
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
       const firstScriptTag = document.getElementsByTagName("script")[0];
@@ -58,32 +54,24 @@ const VideoReels = () => {
     loadYouTubeAPI();
   }, [loadYouTubeAPI]);
 
-  const VideoItem = ({ video }) => {
+  const VideoItem = ({ video, index }) => {
     const [isMuted, setIsMuted] = useState(true);
     const [isReady, setIsReady] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
     const [errorCode, setErrorCode] = useState(null);
     const playerRef = useRef(null);
-    const containerRef = useRef(null);
-    const readyTimeoutRef = useRef(null);
 
     const extractVideoId = (link) => {
       if (!link) return "";
-      if (link.includes("shorts/")) {
-        return link.split("shorts/")[1]?.split("?")[0];
-      } else if (link.includes("v=")) {
-        return link.split("v=")[1]?.split("&")[0];
-      } else if (link.includes("youtu.be/")) {
-        return link.split("youtu.be/")[1]?.split("?")[0];
-      }
+      if (link.includes("shorts/")) return link.split("shorts/")[1]?.split("?")[0];
+      if (link.includes("v=")) return link.split("v=")[1]?.split("&")[0];
+      if (link.includes("youtu.be/")) return link.split("youtu.be/")[1]?.split("?")[0];
       return "";
     };
 
     const videoId = extractVideoId(video.video_link);
-    const thumbnailUrl = videoId
-      ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
-      : null;
+    const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
 
     useEffect(() => {
       if (!videoId) {
@@ -92,21 +80,12 @@ const VideoReels = () => {
         return;
       }
 
-      // Timeout for ready state
-      readyTimeoutRef.current = setTimeout(() => {
-        if (!isReady) {
-          console.warn(`Player timeout for video ${video.id}`);
-          setIsReady(false);
-          setIsLoading(false);
-        }
-      }, 5000);
-
       let player;
       loadYouTubeAPI().then((YT) => {
         player = new YT.Player(`player-${video.id}`, {
           height: "100%",
           width: "100%",
-          videoId: videoId,
+          videoId,
           playerVars: {
             rel: 0,
             modestbranding: 1,
@@ -119,77 +98,56 @@ const VideoReels = () => {
             fs: 0,
             loop: 1,
             playlist: videoId,
-            enablejsapi: 1, // Explicit for reliability
+            enablejsapi: 1,
             disablekb: 1,
           },
           events: {
             onReady: (event) => {
-              clearTimeout(readyTimeoutRef.current);
-              event.target.mute(); // Reinforce initial mute
+              event.target.mute();
               playerRef.current = event.target;
+              playerRefs.current[index] = event.target;
               setIsReady(true);
               setIsLoading(false);
-              setHasError(false);
             },
             onError: (event) => {
-              clearTimeout(readyTimeoutRef.current);
-              console.error(`Player error for video ${video.id}:`, event.data);
+              console.error(`Player error ${video.id}:`, event.data);
               setErrorCode(event.data);
               setHasError(true);
               setIsLoading(false);
-              setIsReady(false);
-              // Common codes: 100 (private), 101 (no embed), 2 (invalid ID), 5 (HTML5 fail)
             },
             onStateChange: (event) => {
-              // Manual loop to prevent flash
               if (event.data === YT.PlayerState.ENDED) {
-                const p = playerRef.current;
-                if (p) p.playVideo();
+                event.target.seekTo(0);
+                setTimeout(() => event.target.playVideo(), 10);
               }
-            },
-            onAutoplayBlocked: (event) => {
-              console.warn(`Autoplay blocked for video ${video.id}`);
-              // Optional: Pause or prompt user; here, just log (muted should prevent)
             },
           },
         });
       });
 
       return () => {
-        clearTimeout(readyTimeoutRef.current);
-        if (player && typeof player.destroy === "function") {
-          player.destroy();
-        }
+        if (player && player.destroy) player.destroy();
+        playerRefs.current[index] = null;
       };
-    }, [video.id, videoId, loadYouTubeAPI, isReady, isLoading]);
+    }, [video.id, videoId, index]);
 
     const toggleMute = (e) => {
-      e.preventDefault();
       e.stopPropagation();
-      const player = playerRef.current;
-      if (!player || !isReady) return;
-
+      if (!playerRef.current || !isReady) return;
       if (isMuted) {
-        // Unmute + resume play if needed (handles policy pauses)
-        player.unMute();
-        const state = player.getPlayerState();
-        if (state !== 1) {
-          // Not playing
-          player.playVideo();
-        }
+        playerRef.current.unMute();
+        if (playerRef.current.getPlayerState() !== 1) playerRef.current.playVideo();
       } else {
-        player.mute();
+        playerRef.current.mute();
       }
       setIsMuted(!isMuted);
     };
 
     if (!videoId) {
       return (
-        <div className="mobile-video-slide">
-          <div className="video-card shadow-sm">
-            <div className="video-responsive-container">
-              <div className="error-fallback">Invalid Video Link</div>
-            </div>
+        <div className="video-card shadow-sm">
+          <div className="video-responsive-container">
+            <div className="error-fallback">Invalid Video Link</div>
           </div>
         </div>
       );
@@ -197,20 +155,12 @@ const VideoReels = () => {
 
     if (hasError) {
       return (
-        <div className="mobile-video-slide">
-          <div className="video-card shadow-sm">
-            <div className="video-responsive-container">
-              {thumbnailUrl && (
-                <img
-                  src={thumbnailUrl}
-                  alt="Thumbnail"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              )}
-              <div className="error-fallback">
-                Embed Unavailable (Code: {errorCode || "Unknown"})<br />
-                <small>Video may be private or restricted.</small>
-              </div>
+        <div className="video-card shadow-sm">
+          <div className="video-responsive-container">
+            {thumbnailUrl && <img src={thumbnailUrl} alt="Thumbnail" className="thumbnail-bg" />}
+            <div className="error-fallback">
+              Embed Unavailable<br />
+              <small>Code: {errorCode || "Unknown"}</small>
             </div>
           </div>
         </div>
@@ -218,84 +168,48 @@ const VideoReels = () => {
     }
 
     return (
-      <div className="mobile-video-slide">
-        <div className="video-card shadow-sm">
-          <div className="video-responsive-container" ref={containerRef}>
-            {isLoading && (
-              <div className="loading-overlay">
-                <div className="spinner">⏳</div>
-              </div>
-            )}
-            <div id={`player-${video.id}`} />
-            <div
-              className="speaker-icon"
-              onClick={toggleMute}
-              style={{
-                opacity: isReady ? 1 : 0.5,
-                pointerEvents: isReady ? "auto" : "none",
-              }}
-            >
-              {isMuted ? "🔇" : "🔊"}
+      <div className="video-card shadow-sm">
+        <div className="video-responsive-container">
+          {isLoading && (
+            <div className="loading-overlay">
+              <div className="spinner">⏳</div>
             </div>
+          )}
+          <div id={`player-${video.id}`} />
+          <div className="speaker-icon" onClick={toggleMute}>
+            {isMuted ? "🔇" : "🔊"}
           </div>
         </div>
       </div>
     );
   };
 
-  const videoSliderSettings = {
-    dots: !isMobile,
-    infinite: !isMobile,
-    speed: 500,
-    slidesToShow: isMobile ? 1 : 4,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    pauseOnHover: true,
-    arrows: !isMobile,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          autoplay: true,
-          infinite: true,
-          arrows: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          centerMode: true,
-          centerPadding: "10px",
-          arrows: false,
-          autoplay: true,
-          infinite: false,
-          swipeToSlide: true,
-          dots: false,
-          pauseOnHover: false,
-        },
-      },
-    ],
-  };
-
-  if (videos.length === 0) {
-    return null;
-  }
+  if (videos.length === 0) return null;
 
   return (
-    <section className="py-5 video-section overflow-hidden">
+    <section className="py-5 video-section">
       <Container>
         <div className="text-center mb-5" data-aos="fade-up">
           <h2 className="body-font">FEATURED VIDEOS</h2>
         </div>
-        <Slider {...videoSliderSettings}>
-          {videos.map((video) => (
-            <VideoItem key={video.id} video={video} />
-          ))}
-        </Slider>
+
+        {/* Desktop: Grid of 4 videos */}
+        {!isMobile ? (
+          <div className="desktop-video-grid">
+            {videos.slice(0, 4).map((video, index) => (
+              <VideoItem key={video.id} video={video} index={index} />
+            ))}
+          </div>
+        ) : (
+          /* Mobile: Horizontal scroll with snap */
+          <div className="mobile-video-scroll">
+            {videos.map((video, index) => (
+              <div key={video.id} className="mobile-video-wrapper">
+                <VideoItem video={video} index={index} />
+              </div>
+            ))}
+          </div>
+        )}
       </Container>
     </section>
   );

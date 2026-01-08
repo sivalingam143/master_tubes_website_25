@@ -4,7 +4,8 @@ import {
   FaFacebookF,
   FaInstagram,
   FaYoutube,
-  FaWhatsapp, FaQuoteLeft,
+  FaWhatsapp,
+  FaQuoteLeft,
 } from "react-icons/fa";
 import StoreLogo from "../assets/images/category/Logo2.png";
 import { NavLink, useLocation } from "react-router-dom";
@@ -29,7 +30,7 @@ function Bottoms() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            search_text: ""
+            search_text: "",
           }),
         });
 
@@ -47,7 +48,6 @@ function Bottoms() {
   }, []);
   return (
     <>
-
       <section className="bottoms">
         <Container>
           <Row className="justify-content-start">
@@ -97,32 +97,58 @@ function Bottoms() {
                 </a>
               </div>
 
-              <div className="py-1"> {/* Reduced from py-3 */}
-                <img src={StoreLogo} alt="Logo" className="img-fluid logo" style={{ maxHeight: '70px' }} />
+              <div className="py-1">
+                {" "}
+                {/* Reduced from py-3 */}
+                <img
+                  src={StoreLogo}
+                  alt="Logo"
+                  className="img-fluid logo"
+                  style={{ maxHeight: "70px" }}
+                />
               </div>
             </Col>
 
-            <Col lg="4" className="py-2 ps-lg-5 "> {/* Reduced from py-3 */}
-              <h4 className="body-font text-decoration-underline mb-1">My Accounts</h4>
+            <Col lg="4" className="py-2 ps-lg-5 ">
+              {" "}
+              {/* Reduced from py-3 */}
+              <h4 className="body-font text-decoration-underline mb-1">
+                My Accounts
+              </h4>
               <div className="title-font">
-                <Nav.Link as={NavLink} to="/home" className="py-1">Home</Nav.Link>
-                <Nav.Link as={NavLink} to="/shop" className="py-1">Shop</Nav.Link>
-                <Nav.Link as={NavLink} to="/about" className="py-1">About us</Nav.Link>
-                <Nav.Link as={NavLink} to="/contact" className="py-1">Contact Us</Nav.Link>
+                <Nav.Link as={NavLink} to="/home" className="py-1">
+                  Home
+                </Nav.Link>
+                <Nav.Link as={NavLink} to="/shop" className="py-1">
+                  Shop
+                </Nav.Link>
+                <Nav.Link as={NavLink} to="/about" className="py-1">
+                  About us
+                </Nav.Link>
+                <Nav.Link as={NavLink} to="/contact" className="py-1">
+                  Contact Us
+                </Nav.Link>
               </div>
             </Col>
 
-            <Col lg="4" className="py-1"> {/* Reduced from py-3 */}
-              <h4 className="body-font text-decoration-underline mb-1">Contact Details</h4>
+            <Col lg="4" className="py-1">
+              {" "}
+              {/* Reduced from py-3 */}
+              <h4 className="body-font text-decoration-underline mb-1">
+                Contact Details
+              </h4>
               <div className="title-font py-1">
-                ADDRESS: Master Tubes, Madurai 625005, Tamilnadu, India
+                ADDRESS: No. 4-174B, Railway Feeder
+                Road,Koothiyarkundu,Kappalur,Madurai - 625008
               </div>
               <div className="title-font py-1">
                 EMAIL: saipackagingproducts@gmail.com
               </div>
             </Col>
 
-            <Col lg="6" className="py-2"> {/* Reduced from py-4 */}
+            <Col lg="6" className="py-2">
+              {" "}
+              {/* Reduced from py-4 */}
               <div className="title-font">
                 Copyright © 2025, mastertubes.com All Rights Reserved.
               </div>
@@ -137,7 +163,8 @@ function Bottoms() {
             {/* Changed from py-1 to py-0 if you want it very thin */}
             <Col lg="12" className="py-1">
               <p className="d-flex justify-content-center mb-0 title-font text-white">
-                Developed By <Nav.Link className="mx-2 p-0"> Zentexus Technolgies</Nav.Link>
+                Developed By{" "}
+                <Nav.Link className="mx-2 p-0"> Zentexus Technolgies</Nav.Link>
               </p>
             </Col>
           </Row>

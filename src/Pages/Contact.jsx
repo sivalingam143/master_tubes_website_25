@@ -68,7 +68,7 @@ const Contact = () => {
       name: customerName,
       rating: String(rating),
       city: customerCity,
-      feedback: feedbackText
+      feedback: feedbackText,
     };
 
     try {
@@ -105,14 +105,15 @@ const Contact = () => {
               <div className="contact-info-section">
                 <div className="mb-4">
                   <p className="title-font text-muted">
-                    Master Tubes, Madurai 625005, India
+                    No. 4-174B, Railway Feeder
+                    Road,Koothiyarkundu,Kappalur,Madurai - 625008
                   </p>
                 </div>
                 <div className="mb-4">
                   <h6 className="fw-bold">Sales</h6>
                   <p className="mb-0">+91 93608 26673 (Call/WhatsApp)</p>
                   <h6 className="fw-bold mt-3">Support</h6>
-                  <p>+91 93608 26673</p>
+                  <p>+91 9597167401</p>
                 </div>
 
                 <div className="mb-4 d-flex align-items-center">
@@ -233,7 +234,9 @@ const Contact = () => {
             <Col md={6}>
               {/* --- Optional City Field --- */}
               <Form.Group className="mb-3">
-                <Form.Label className="small fw-bold">City (Optional)</Form.Label>
+                <Form.Label className="small fw-bold">
+                  City (Optional)
+                </Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Your city"
@@ -244,7 +247,6 @@ const Contact = () => {
               </Form.Group>
             </Col>
           </Row>
-
 
           <Form.Group>
             <Form.Label className="small fw-bold">
@@ -278,7 +280,9 @@ const Contact = () => {
                   />
                   <FaStar
                     size={35}
-                    color={ratingValue <= (hover || rating) ? "#ffc107" : "#e4e5e9"}
+                    color={
+                      ratingValue <= (hover || rating) ? "#ffc107" : "#e4e5e9"
+                    }
                     onMouseEnter={() => setHover(ratingValue)}
                     onMouseLeave={() => setHover(0)}
                     style={{ cursor: "pointer", transition: "color 200ms" }}

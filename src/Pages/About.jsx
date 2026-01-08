@@ -21,7 +21,7 @@ const About = () => {
                 <div className="py-2 title-font">
                   We offer a wide range of piggy banks in different designs,
                   sizes, and materials to suit kids, adults, and gifting needs.
-                   From fun and colorful styles to elegant and premium designs,
+                  From fun and colorful styles to elegant and premium designs,
                   there’s something for everyone.
                 </div>
               </div>
@@ -42,8 +42,8 @@ const About = () => {
                 <h3 className="body-font">Custom Orders</h3>
                 <div className="py-2 title-font">
                   We support bulk and customized piggy bank orders for schools,
-                  events, corporate gifting, and retailers.Custom colors,
-                  logos, and designs can be created based on your requirements.
+                  events, corporate gifting, and retailers.Custom colors, logos,
+                  and designs can be created based on your requirements.
                 </div>
               </div>
             </Col>
@@ -81,7 +81,10 @@ const About = () => {
                 <div className="py-3">
                   <IoHomeOutline size={25} />
                 </div>
-                <div className="fw-bold">Master Tubes, Madurai 625005, Tamilnadu, India</div>
+                <div className="fw-bold">
+                  No. 4-174B, Railway Feeder
+                  Road,Koothiyarkundu,Kappalur,Madurai - 625008
+                </div>
                 <div className="title-font mt-2">
                   Our piggy banks are carefully manufactured with quality
                   materials and thoughtful designs.

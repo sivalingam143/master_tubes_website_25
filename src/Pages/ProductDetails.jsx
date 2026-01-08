@@ -209,19 +209,38 @@ const handleShopNow = () => {
 
             {/* 5. Product Details Accordion */}
             <Accordion defaultActiveKey="0">
-              <Accordion.Item eventKey="0">
-                <Accordion.Header className="body-font">
-                  Description
-                </Accordion.Header>
-                <Accordion.Body className="title-font">
-                  <p>
-                    <strong>Code:</strong> {product.product_code}
-                  </p>
-                  <hr />
-                  {product.product_details || "No description available."}
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
+  <Accordion.Item eventKey="0">
+    <Accordion.Header className="body-font">
+      Description
+    </Accordion.Header>
+    <Accordion.Body className="title-font">
+      <div className="mb-3">
+       
+        
+        {/* Added Height and Diameter/Width */}
+        {product.height && (
+          <p className="mb-1">
+            <strong>Height:</strong> {product.height}
+          </p>
+        )}
+        
+        {product.diameter && (
+          <p className="mb-1">
+            <strong>Diameter:</strong> {product.diameter}
+          </p>
+        )}
+         <p className="mb-1">
+          <strong>Code:</strong> {product.product_code}
+        </p>
+      </div>
+      
+      <hr />
+      <div className="mt-3">
+        {product.product_details || "No description available."}
+      </div>
+    </Accordion.Body>
+  </Accordion.Item>
+</Accordion>
           </Col>
         </Row>
 

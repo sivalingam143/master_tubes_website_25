@@ -27,18 +27,27 @@ import { useNavigate } from "react-router-dom";
 import VideoReels from "../components/VideoReels";
 
 const Home = () => {
-  const [topProducts, setTopProducts] = useState([]);     // ← empty array instead of null
+  const [topProducts, setTopProducts] = useState([]); // ← empty array instead of null
   const { addToDetails } = useCart();
   const navigate = useNavigate();
 
-
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1, // Crucial: This makes it look like the first design
+    slidesToScroll: 1,
+    arrows: true,
+    autoplay: true,
+    autoplaySpeed: 3000,
+  };
 
   useEffect(() => {
-
     // Fetch Top Products
     const fetchTopProducts = async () => {
       try {
-        const response = await fetch(`${API_DOMAIN}/product.php`, {  // ← use product.php
+        const response = await fetch(`${API_DOMAIN}/product.php`, {
+          // ← use product.php
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -50,13 +59,15 @@ const Home = () => {
 
         if (data.head.code === 200) {
           // Filter only top selling products
-          const filtered = data.body.products.filter(p => p.top_selling === 1);
+          const filtered = data.body.products.filter(
+            (p) => p.top_selling === 1
+          );
           setTopProducts(filtered);
         }
       } catch (error) {
         console.error("Error fetching top products:", error);
       }
-    }
+    };
 
     fetchTopProducts();
 
@@ -75,7 +86,6 @@ const Home = () => {
       AOS.refresh();
     }, 100);
   }, []);
-
 
   return (
     <>
@@ -167,7 +177,10 @@ const Home = () => {
       </section> */}
 
       {/* Section 2: Top Selling Products */}
-      <section id="top-selling-section" className="py-5 top_sell overflow-hidden">
+      <section
+        id="top-selling-section"
+        className="py-5 top_sell overflow-hidden"
+      >
         <Container>
           <div className="text-center mb-3" data-aos="fade-up">
             <h2 className="body-font">TOP SELLING PRODUCTS</h2>
@@ -192,13 +205,20 @@ const Home = () => {
 
                     {/* Right Side: Product Details */}
                     <Col md={6} className="product-details-content text-start">
-                      <h2 className="product-title body-font">{product.product_name}</h2>
+                      <h2 className="product-title body-font">
+                        {product.product_name}
+                      </h2>
                       <div className="price-section mb-3">
-                        <span className="old-price">Rs. {product.old_price || '300.00'}</span>
-                        <span className="new-price ml-2">Rs. {product.price || '64.00'}</span>
+                        <span className="old-price">
+                          Rs. {product.old_price || "300.00"}
+                        </span>
+                        <span className="new-price ml-2">
+                          Rs. {product.price || "64.00"}
+                        </span>
                       </div>
                       <p className="product-description title-font">
-                        {product.description || "Start the New Year with smart savings and positive habits!"}
+                        {product.description ||
+                          "Start the New Year with smart savings and positive habits!"}
                       </p>
                       <button
                         className="shop_now_btn body-font"
@@ -338,7 +358,6 @@ const Home = () => {
 
       {/* Section: Video Reels Carousel */}
       <VideoReels />
-
 
       <section className="feed-back">
         <Container>

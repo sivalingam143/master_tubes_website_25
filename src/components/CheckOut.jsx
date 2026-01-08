@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "../components/CartContext";
 import API_DOMAIN from "../config/config";
 import { toast } from "react-toastify";
 import { State } from "country-state-city";
 
 const Checkout = () => {
+  const location = useLocation();
   const { cartItems, clearCart, setShowCart } = useCart();
   const navigate = useNavigate();
   const statesInIndia = State.getStatesOfCountry("IN");
-
+  const directOrder = location.state?.directOrder;
   // State for manual address entry
   const [addressForm, setAddressForm] = useState({
     first_name: "",
@@ -24,20 +25,15 @@ const Checkout = () => {
     country: "India",
   });
 
-  const [shippingCharges] = useState(50);
+
   const [loading, setLoading] = useState(false);
+
 
   // Compute totals
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  const subTotal = cartItems.reduce(
-    (acc, item) => acc + Number(item.product_with_discount_price) * item.quantity,
-    0
-  );
-  const discount = cartItems.reduce(
-    (acc, item) =>
-      acc + (Number(item.product_price) - Number(item.product_with_discount_price)) * item.quantity,
-    0
-  );
+  const subTotal = Number(directOrder.product_with_discount_price) * directOrder.quantity;
+  const discount = (Number(directOrder.product_price) - Number(directOrder.product_with_discount_price)) * directOrder.quantity;
+  const shippingCharges = 50;
   const grandTotal = subTotal + shippingCharges;
 
   const handleInputChange = (e) => {
@@ -47,24 +43,15 @@ const Checkout = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Basic Validation
     if (!addressForm.address_line1 || !addressForm.city || !addressForm.pin_code || !addressForm.phone) {
       toast.error("Please fill all required fields");
       return;
     }
 
-    if (cartItems.length === 0) {
-      toast.error("Your cart is empty!");
-      return;
-    }
+    
 
     setLoading(true);
-
-    // Format the address string for the backend
     const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${addressForm.address_line1}, ${addressForm.address_line2 ? addressForm.address_line2 + ', ' : ''}${addressForm.city}, ${addressForm.state} - ${addressForm.pin_code}, ${addressForm.phone}`;
-
-    // Payload WITHOUT customer_id
     const payload = {
       product_details: cartItems.map((item) => ({
         product_id: item.product_id,
@@ -228,13 +215,13 @@ const Checkout = () => {
               </Form.Group>
 
               <div className="mt-4">
-                <Button variant="secondary" onClick={handleReturnToCart} className="me-2">
+                {/* <Button variant="secondary" onClick={handleReturnToCart} className="me-2">
                   Return to Cart
-                </Button>
+                </Button> */}
                 <Button
                   variant="danger"
                   type="submit"
-                  disabled={loading || cartItems.length === 0}
+                  disabled={loading }
                 >
                   {loading ? "Processing..." : "Confirm Order"}
                 </Button>
@@ -246,30 +233,64 @@ const Checkout = () => {
           <Col lg={5}>
             <h5 className="mb-3">Order Summary</h5>
             <div className="border p-3 rounded bg-light">
-              {cartItems.map((item) => (
-                <div key={item.product_id} className="d-flex justify-content-between mb-2">
-                  <span>{item.product_name} (x{item.quantity})</span>
-                  <span>₹{(Number(item.product_with_discount_price) * item.quantity).toFixed(2)}</span>
+              {/* Product Info Section */}
+              <div className="d-flex justify-content-between mb-2">
+                <div>
+                  <div className="fw-bold">{directOrder.product_name}</div>
+                  {/* If Customized: Show CUSTOMIZE label, Qty, and Description ONLY */}
+                  {directOrder.isCustomized ? (
+                    <>
+                      <div className="text-primary fw-bold" style={{ fontSize: "0.8rem" }}>
+                        CUSTOMIZE ORDER
+                      </div>
+                      <div className="text-muted">Qty: {directOrder.quantity}</div>
+                      {directOrder.customDescription && (
+                        <div className="text-muted small mt-1">
+                          <strong>Note:</strong> {directOrder.customDescription}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    /* If Ordinary: Show Qty normally */
+                    <small className="text-muted">Qty: {directOrder.quantity}</small>
+                  )}
                 </div>
-              ))}
+
+                {/* 1. Hide individual item price if customized */}
+                {!directOrder.isCustomized && (
+                  <span>₹{subTotal.toFixed(2)}</span>
+                )}
+              </div>
+
               <hr />
-              <div className="d-flex justify-content-between mb-2">
-                <span>Subtotal</span>
-                <span>₹{subTotal.toFixed(2)}</span>
-              </div>
-              <div className="d-flex justify-content-between mb-2 text-success">
-                <span>Discount</span>
-                <span>-₹{discount.toFixed(2)}</span>
-              </div>
-              <div className="d-flex justify-content-between mb-2">
-                <span>Shipping</span>
-                <span>₹{shippingCharges.toFixed(2)}</span>
-              </div>
-              <hr />
-              <div className="d-flex justify-content-between fw-bold fs-5">
-                <span>Total</span>
-                <span>₹{grandTotal.toFixed(2)}</span>
-              </div>
+
+              {/* 2. Hide all financial rows if customized */}
+              {!directOrder.isCustomized ? (
+                <>
+                  <div className="d-flex justify-content-between mb-2">
+                    <span>Subtotal</span>
+                    <span>₹{subTotal.toFixed(2)}</span>
+                  </div>
+                  <div className="d-flex justify-content-between mb-2 text-success">
+                    <span>Discount</span>
+                    <span>-₹{discount.toFixed(2)}</span>
+                  </div>
+                  <div className="d-flex justify-content-between mb-2">
+                    <span>Shipping</span>
+                    <span>₹{shippingCharges.toFixed(2)}</span>
+                  </div>
+                  <hr />
+                  <div className="d-flex justify-content-between fw-bold fs-5">
+                    <span>Total</span>
+                    <span>₹{grandTotal.toFixed(2)}</span>
+                  </div>
+                </>
+              ) : (
+                /* 3. Message for customized products instead of totals */
+                <div className="text-center py-2 text-muted italic small">
+                  Pricing for customized items will be shared after order review.
+                </div>
+              )}
             </div>
           </Col>
         </Row>

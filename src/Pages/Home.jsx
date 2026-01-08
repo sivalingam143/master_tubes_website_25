@@ -24,13 +24,12 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useCart } from "../components/CartContext";
 import { useNavigate } from "react-router-dom";
+import VideoReels from "../components/VideoReels";
 
 const Home = () => {
-  const [topProducts, setTopProducts] = useState([]);     // ← empty array instead of null
+  const [topProducts, setTopProducts] = useState([]); // ← empty array instead of null
   const { addToDetails } = useCart();
-  const [videos, setVideos] = useState([]);
   const navigate = useNavigate();
-
 
   const sliderSettings = {
     dots: true,
@@ -43,68 +42,12 @@ const Home = () => {
     autoplaySpeed: 3000,
   };
 
-  const videoSliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 600,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    autoplay: false,               // better UX with vertical videos
-    arrows: true,
-    pauseOnHover: true,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: { slidesToShow: 3 }
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-          arrows: false
-        }
-      },
-      {
-        breakpoint: 576,
-        settings: {
-          slidesToShow: 1, // Fix: Show only 1 video on mobile
-        centerMode: true,
-        centerPadding: '30px',
-          
-          arrows: false
-        }
-      }
-    ]
-  };
-
   useEffect(() => {
-
-    // Fetch Videos
-    const fetchVideos = async () => {
-      try {
-        const response = await fetch(`${API_DOMAIN}/banner_video.php`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ search_text: "" }),
-        });
-        const data = await response.json();
-        if (data.head.code === 200) {
-          setVideos(data.body.videos); // From your Postman output
-        }
-      } catch (error) {
-        console.error("Error fetching videos:", error);
-      }
-    };
-
-    fetchVideos();
-  }, []);
-
-  useEffect(() => {
-
     // Fetch Top Products
     const fetchTopProducts = async () => {
       try {
-        const response = await fetch(`${API_DOMAIN}/product.php`, {  // ← use product.php
+        const response = await fetch(`${API_DOMAIN}/product.php`, {
+          // ← use product.php
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -116,13 +59,15 @@ const Home = () => {
 
         if (data.head.code === 200) {
           // Filter only top selling products
-          const filtered = data.body.products.filter(p => p.top_selling === 1);
+          const filtered = data.body.products.filter(
+            (p) => p.top_selling === 1
+          );
           setTopProducts(filtered);
         }
       } catch (error) {
         console.error("Error fetching top products:", error);
       }
-    }
+    };
 
     fetchTopProducts();
 
@@ -141,7 +86,6 @@ const Home = () => {
       AOS.refresh();
     }, 100);
   }, []);
-
 
   return (
     <>
@@ -233,7 +177,10 @@ const Home = () => {
       </section> */}
 
       {/* Section 2: Top Selling Products */}
-      <section id="top-selling-section" className="py-5 top_sell overflow-hidden">
+      <section
+        id="top-selling-section"
+        className="py-5 top_sell overflow-hidden"
+      >
         <Container>
           <div className="text-center mb-3" data-aos="fade-up">
             <h2 className="body-font">TOP SELLING PRODUCTS</h2>
@@ -258,13 +205,20 @@ const Home = () => {
 
                     {/* Right Side: Product Details */}
                     <Col md={6} className="product-details-content text-start">
-                      <h2 className="product-title body-font">{product.product_name}</h2>
+                      <h2 className="product-title body-font">
+                        {product.product_name}
+                      </h2>
                       <div className="price-section mb-3">
-                        <span className="old-price">Rs. {product.old_price || '300.00'}</span>
-                        <span className="new-price ml-2">Rs. {product.price || '64.00'}</span>
+                        <span className="old-price">
+                          Rs. {product.old_price || "300.00"}
+                        </span>
+                        <span className="new-price ml-2">
+                          Rs. {product.price || "64.00"}
+                        </span>
                       </div>
                       <p className="product-description title-font">
-                        {product.description || "Start the New Year with smart savings and positive habits!"}
+                        {product.description ||
+                          "Start the New Year with smart savings and positive habits!"}
                       </p>
                       <button
                         className="shop_now_btn body-font"
@@ -403,85 +357,7 @@ const Home = () => {
       </section>
 
       {/* Section: Video Reels Carousel */}
-      <section className="py-5 video-section overflow-hidden">
-        <Container>
-          <div className="text-center mb-5" data-aos="fade-up">
-            <h2 className="body-font">FEATURED VIDEOS</h2>
-          </div>
-
-          {/* Use the new settings here */}
-          <Slider {...videoSliderSettings}>
-{videos.map((video) => {
-  const getEmbedUrl = (link) => {
-    if (!link) return "";
-    let videoId = "";
-    if (link.includes("shorts/")) {
-      videoId = link.split("shorts/")[1]?.split("?")[0];
-    } else if (link.includes("v=")) {
-      videoId = link.split("v=")[1]?.split("&")[0];
-    } else if (link.includes("youtu.be/")) {
-      videoId = link.split("youtu.be/")[1]?.split("?")[0];
-    }
-    // playsinline=1 is mandatory for iOS/Android in-browser playback
-    return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&playsinline=1`;
-  };
-
-  return (
-    <div key={video.id} className="px-2">
-      <div className="video-card shadow-sm position-relative" style={{ borderRadius: '15px', overflow: 'hidden', background: '#000' }}>
-        <div 
-          className="ratio" 
-          style={{ 
-            // This forces the taller "Shorts" look on mobile
-            aspectRatio: window.innerWidth <= 576 ? '9/16' : '4/3', 
-            width: '100%' 
-          }}
-        >
-          <iframe
-            src={getEmbedUrl(video.video_link)}
-            title={`Featured video ${video.id}`}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            style={{ width: '100%', height: '100%' }}
-          />
-        </div>
-
-        {/* This overlay is likely blocking your clicks. pointerEvents: 'none' fixes this */}
-        <div 
-          className="video-hover-overlay d-flex align-items-end justify-content-center pb-4"
-          style={{ 
-            position: 'absolute', 
-            top: 0, 
-            left: 0, 
-            width: '100%', 
-            height: '100%', 
-            pointerEvents: 'none', 
-            background: 'transparent' 
-          }}
-        >
-          <button
-            className="shop_now_btn body-font"
-            style={{ pointerEvents: 'auto' }} // Only the button catches clicks
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate("/shop");
-            }}
-          >
-            Shop Now
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-})}
-          </Slider>
-        </Container>
-      </section>
-
-      {/* Section: Video Reels Carousel */}
-
-
+      <VideoReels />
 
       <section className="feed-back">
         <Container>

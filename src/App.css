@@ -848,70 +848,7 @@ html {
 }
 
 
-/* bannner video */
 
-/* Base video card styles */
-.video-card {
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #000;
-  margin: 0 auto;
-  width: 100%;
-  max-width: 100%;           /* important on mobile */
-}
-
-/* Default desktop ratio (you can keep 4:3 or 16:9) */
-.ratio-4x3 {
-  --bs-aspect-ratio: 75% !important;      /* 4:3 */
-}
-.ratio-4x3.video-container-mobile {
-  --bs-aspect-ratio: 75%;           /* desktop default */
-}
-
-@media (max-width: 767px) {
-  .ratio-4x3.video-container-mobile {
-    --bs-aspect-ratio: 177.78% !important;  /* mobile → 9:16 */
-  }
-}
-/* Mobile vertical 9:16 ratio */
-@media (max-width: 767px) {
-  .video-container-mobile {
-    --bs-aspect-ratio: 177.78% !important;  /* ≈ 9:16 vertical */
-  }
-
-  .video-card {
-    max-width: 100% !important;
-    border-radius: 0;                     /* optional: full-width look */
-    box-shadow: none;                     /* cleaner mobile look */
-  }
-
-  /* Make sure iframe completely fills the container */
-  .video-card iframe {
-    width: 100% !important;
-    height: 100% !important;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-
-  /* Remove overlay completely on mobile */
-  .video-hover-overlay {
-    display: none !important;
-  }
-}
-@media (max-width: 767px) {
-  /* Ensure the slider item doesn't collapse */
-  .video-section .slick-slide > div {
-    margin: 10px 5px;
-  }
-  
-  /* Make the heading and spacing more mobile-friendly */
-  .video-section h2 {
-    font-size: 1.5rem;
-    margin-bottom: 20px !important;
-  }
-}
 /* Bottom quote */
 .modern-quote-card {
   position: relative;

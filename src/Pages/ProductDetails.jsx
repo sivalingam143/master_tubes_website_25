@@ -24,11 +24,12 @@ const handleShopNow = () => {
   const orderData = {
     product_id: product.product_id,
     product_name: product.product_name,
-    // Always include these prices
     product_with_discount_price: product.product_with_discount_price,
     product_price: product.product_price,
     product_img: product.product_img_url,
     quantity: quantity,
+    // Add this line to map the boolean to your enum values
+    type: isCustomized ? "2" : "1", 
     isCustomized: isCustomized,
     customDescription: isCustomized ? customDescription : ""
   };

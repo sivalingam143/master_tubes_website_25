@@ -30,7 +30,7 @@ const Checkout = () => {
 
 
   // Compute totals
-  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const totalItems = directOrder?.quantity || 0;
   const subTotal = Number(directOrder.product_with_discount_price) * directOrder.quantity;
   const discount = (Number(directOrder.product_price) - Number(directOrder.product_with_discount_price)) * directOrder.quantity;
   const shippingCharges = 50;
@@ -47,24 +47,33 @@ const Checkout = () => {
       toast.error("Please fill all required fields");
       return;
     }
-
-    
-
     setLoading(true);
     const shippingAddress = `${addressForm.first_name} ${addressForm.last_name}, ${addressForm.address_line1}, ${addressForm.address_line2 ? addressForm.address_line2 + ', ' : ''}${addressForm.city}, ${addressForm.state} - ${addressForm.pin_code}, ${addressForm.phone}`;
     const payload = {
-      product_details: cartItems.map((item) => ({
-        product_id: item.product_id,
-        product_name: item.product_name,
-        quantity: item.quantity,
-        price: item.product_with_discount_price,
-        product_img: item.product_img,
-      })),
-      shipping_address: shippingAddress,
+      product_details: [
+        {
+          product_id: directOrder.product_id,
+          product_name: directOrder.product_name,
+          quantity: directOrder.quantity,
+          price: directOrder.product_with_discount_price,
+          product_img: directOrder.product_img,
+          type: directOrder.type,
+          custom_description: directOrder.isCustomized ? directOrder.customDescription : ""
+        }
+      ],
+      // CHANGE THIS: Send the object, not the concatenated string
+      shipping_address: {
+        firstName: addressForm.first_name,
+        lastName: addressForm.last_name,
+        address: addressForm.address_line1,
+        apartment: addressForm.address_line2,
+        city: addressForm.city,
+        state: addressForm.state,
+        pinCode: addressForm.pin_code,
+        phone: addressForm.phone
+      },
       total_items: totalItems,
-      sub_total: subTotal,
       discount: discount,
-      shipping_charges: shippingCharges,
       grand_total: grandTotal,
     };
 
@@ -221,7 +230,7 @@ const Checkout = () => {
                 <Button
                   variant="danger"
                   type="submit"
-                  disabled={loading }
+                  disabled={loading}
                 >
                   {loading ? "Processing..." : "Confirm Order"}
                 </Button>

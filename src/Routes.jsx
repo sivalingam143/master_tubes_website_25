@@ -26,7 +26,7 @@ const Routes = [
   { path: "/account", element: <Account /> },
   { path: "/cart", element: <h1>Cart</h1> },
   { path: "/prdt/:productId", element: <ProductDetails /> },
-  { path: "/checkout", element: <Checkout /> }, // Add this route
+  { path: "/checkout", element: <Checkout /> }, 
   {
     path: "/login",
     element: <Login />,

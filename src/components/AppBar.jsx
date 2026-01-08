@@ -187,7 +187,7 @@ function AppBar() {
               {userIconLink.icon}
             </Nav.Link> */}
 
-            <Nav.Link
+            {/* <Nav.Link
               onClick={() => setShowCart(true)}
               style={{ cursor: "pointer" }}
             >
@@ -195,7 +195,7 @@ function AppBar() {
                 <IoBagHandleOutline size={22} />
                 <span>{totalItems}</span>
               </div>
-            </Nav.Link>
+            </Nav.Link> */}
           </Nav>
         </Container>
       </Navbar>

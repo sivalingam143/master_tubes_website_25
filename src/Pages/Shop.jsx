@@ -162,14 +162,10 @@ const Shop = () => {
                         className="mb-4"
                       >
                         <div className="product-box border rounded p-2 h-100 position-relative overflow-hidden">
-                          {Number(item.product_stock) <= 0 && (
-                            <div
-                              className="position-absolute top-0 start-0 end-0 w-100 h-100 d-flex align-items-center justify-content-center"
-                              style={{ backgroundColor: "rgba(255, 255, 255, 0.6)", zIndex: 1 }}
-                            >
-                              <span className="badge bg-danger p-2 fs-6 w-100 shadow">Out of Stock</span>
-                            </div>
-                          )}
+                          
+                          
+                           
+                          
 
                           <div className="img-content text-center">
                             <img
@@ -179,7 +175,7 @@ const Shop = () => {
                               style={{
                                 maxHeight: "180px",
                                 objectFit: "contain",
-                                filter: Number(item.product_stock) <= 0 ? "grayscale(100%)" : "none"
+                   
                               }}
                               onClick={() => Number(item.product_stock) > 0 && navigate(`/prdt/${item.product_id}`)}
                             />

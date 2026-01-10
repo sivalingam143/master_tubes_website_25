@@ -148,7 +148,7 @@ const Home = () => {
     <div className="custom">
       <h2 className="body-font">Occasion Based</h2>
       <strong className="d-block mb-2">CUSTOMISED FOR:</strong>
-      <p className="title-font steel-blink responsive-list">
+      <p className="custom1 title-font steel-blink responsive-list" style={{ lineHeight: '2.5' ,fontSize:'20px'}}>
         • Birthdays <br />
         • Valakkappu <br />
         • Marriage Events <br />

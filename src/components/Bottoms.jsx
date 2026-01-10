@@ -99,11 +99,11 @@ function Bottoms() {
   </Col>
 
   {/* Copyright Row - Full Width Below */}
-  <Col lg="12" className="py-2 mt-3 text-center border-top">
-    <div className="title-font">
-      Copyright © 2025, mastertubes.com All Rights Reserved.
-    </div>
-  </Col>
+ <Col lg="12" className="py-0 mt-0 text-center border-top mb-0"> {/* Added mb-4 here */}
+  <div className="title-font mt-4 mb-0">
+    Copyright © 2025, mastertubes.com All Rights Reserved.
+  </div>
+</Col>
 </Row>
         </Container>
       </section>

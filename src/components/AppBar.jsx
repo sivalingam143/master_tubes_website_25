@@ -32,7 +32,7 @@ const menuLinks = [
   },
   { label: "Contact", path: "/contact", icon: <IoCallOutline size={24} /> },
   { 
-    label: "Terms", 
+    label: "Terms And Conditions", 
     path: "/terms", 
     icon: <IoInformationCircleOutline size={24} /> 
   },

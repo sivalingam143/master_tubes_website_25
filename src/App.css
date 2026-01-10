@@ -951,3 +951,9 @@ html {
   50% { opacity: 0.3; } /* Softer blink for a professional feel */
   100% { opacity: 1; }
 }
+.custom{
+  margin-left:170px;
+}
+.pay{
+ color: rgb(24 128 121);
+}

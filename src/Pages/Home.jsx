@@ -143,8 +143,8 @@ const Home = () => {
               data-aos="fade-right"
             >
               
-<div>
-  <h2 className="body-font">
+<div className="custom">
+  <h2 className="body-font ">
     Occasion Based 
   </h2>
   <strong>CUSTOMISED FOR:</strong> <br />

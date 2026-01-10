@@ -72,7 +72,7 @@ function Bottoms() {
       <Nav.Link as={NavLink} to="/shop" className="py-1">Shop</Nav.Link>
       <Nav.Link as={NavLink} to="/about" className="py-1">About us</Nav.Link>
       <Nav.Link as={NavLink} to="/contact" className="py-1">Contact Us</Nav.Link>
-      <Nav.Link as={NavLink} to="/terms" className="py-1">Terms and Condition</Nav.Link>
+      <Nav.Link as={NavLink} to="/terms" className="py-1">Terms and Conditions</Nav.Link>
     </div>
   </Col>
 

@@ -142,22 +142,25 @@ const Home = () => {
               className="p-5 align-content-center"
               data-aos="fade-right"
             >
-              
-<div className="custom">
-  <h2 className="body-font ">
-    Occasion Based 
-  </h2>
-  <strong>CUSTOMISED FOR:</strong> <br />
-  <p className="title-font steel-blink" style={{ lineHeight: '2.5' ,fontSize:'20px'}}>
-    
-    • Birthdays <br />
-    • Valakkappu <br />
-    • Marriage Events <br />
-    • School & college students savings box <br />
-    • Corporate companies complementary gifts <br />
-    • Advertisement Gifts Shop & Jewellery shop 
-  </p>
-</div>
+<Row className="align-items-center">
+  {/* Left Side: Content */}
+  <Col xs={12} lg={6} className="p-4 p-md-5"> 
+    <div className="custom">
+      <h2 className="body-font">Occasion Based</h2>
+      <strong className="d-block mb-2">CUSTOMISED FOR:</strong>
+      <p className="title-font steel-blink responsive-list">
+        • Birthdays <br />
+        • Valakkappu <br />
+        • Marriage Events <br />
+        • School & college students savings box <br />
+        • Corporate companies complementary gifts <br />
+        • Advertisement Gifts Shop & Jewellery shop
+      </p>
+    </div>
+  </Col>
+
+ 
+</Row>
             </Col>
             <Col lg="6" className="p-0" data-aos="fade-left">
               <img

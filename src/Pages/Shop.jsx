@@ -84,8 +84,8 @@ const Shop = () => {
   return (
     <>
      <div className="py-2 border-bottom" style={{ 
-        background: "linear-gradient(90deg, #ffadad, #ffd6a5, #fdffb6, #caffbf, #9bf6ff, #a0c4ff, #bdb2ff, #ffc6ff)",
-        color: "#1a0101ff", // Dark grey text for better readability on light colors
+        background: "bisque",
+        color:" rgb(88 52 16)" // Dark grey text for better readability on light colors
       }}>
     <marquee 
         scrollamount="7" 

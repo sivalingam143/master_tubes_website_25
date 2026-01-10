@@ -957,3 +957,36 @@ html {
 .pay{
  color: rgb(24 128 121);
 }
+/* Desktop Styles (Default) */
+.custom-list-text {
+  line-height: 2.5;
+  font-size: 25px;
+  word-wrap: break-word;
+}
+
+/* Mobile View Adjustments (Small screens) */
+.responsive-list {
+  /* This automatically scales font between 16px and 25px */
+  font-size: clamp(16px, 4vw, 25px);
+  
+  /* Responsive line height */
+  line-height: 1.6; 
+  
+  font-weight: 700;
+  text-align: left;
+  word-wrap: break-word;
+}
+
+/* On Desktop, give it more breathing room */
+@media (min-width: 992px) {
+  .responsive-list {
+    line-height: 2.2;
+  }
+}
+
+/* Fix for the extreme narrowness in your screenshot */
+.custom {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 auto;
+}

@@ -99,7 +99,6 @@ function Bottoms() {
               </div>
             </Col>
 
-<<<<<<< HEAD
             {/* 2. My Accounts - Width 3 (Added ps-lg-4 for slight left spacing) */}
             <Col lg="2" className="py-1 ps-lg-4">
               <h4 className="body-font text-decoration-underline mb-1">
@@ -123,19 +122,6 @@ function Bottoms() {
                 </Nav.Link>
               </div>
             </Col>
-=======
-  {/* 2. My Accounts - Width 3 (Added ps-lg-4 for slight left spacing) */}
-  <Col lg="2" className="py-1 ps-lg-4">
-    <h4 className="body-font text-decoration-underline mb-1">My Accounts</h4>
-    <div className="title-font">
-      <Nav.Link as={NavLink} to="/home" className="py-1">Home</Nav.Link>
-      <Nav.Link as={NavLink} to="/shop" className="py-1">Shop</Nav.Link>
-      <Nav.Link as={NavLink} to="/about" className="py-1">About us</Nav.Link>
-      <Nav.Link as={NavLink} to="/contact" className="py-1">Contact Us</Nav.Link>
-      <Nav.Link as={NavLink} to="/terms" className="py-1">Terms and Conditions</Nav.Link>
-    </div>
-  </Col>
->>>>>>> 25778bf0c67406c5a7bbc1bc26bfc5622beb809d
 
             {/* 3. Contact Details - Width 3 */}
             <Col lg="3" className="py-1">

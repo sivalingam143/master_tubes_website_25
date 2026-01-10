@@ -31,6 +31,11 @@ const menuLinks = [
     icon: <IoInformationCircleOutline size={24} />,
   },
   { label: "Contact", path: "/contact", icon: <IoCallOutline size={24} /> },
+  { 
+    label: "Terms", 
+    path: "/terms", 
+    icon: <IoInformationCircleOutline size={24} /> 
+  },
 ];
 
 const iconLinks = [{ icon: <IoHeartOutline size={22} />, path: "/wishlist" }];

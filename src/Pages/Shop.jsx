@@ -83,6 +83,22 @@ const Shop = () => {
 };
   return (
     <>
+     <div className="py-2 border-bottom" style={{ 
+        background: "linear-gradient(90deg, #ffadad, #ffd6a5, #fdffb6, #caffbf, #9bf6ff, #a0c4ff, #bdb2ff, #ffc6ff)",
+        color: "#1a0101ff", // Dark grey text for better readability on light colors
+      }}>
+    <marquee 
+        scrollamount="7" 
+        style={{ 
+          fontFamily: "'Kanit', sans-serif", // Clean, modern font family
+          fontSize: "20px",                    // Increased font size
+          fontWeight: "600",                   // Semi-bold for better visibility
+          letterSpacing: "0.5px"               // Slight spacing for readability
+        }}
+      >
+        ✨ CUSTOMISED FOR: Birthdays • Valakkapu • Marriage Events • School & college students savings box  • Corporate companies complementary gifts  • Advertisement Gifts Shop & Jellwery shop ✨
+      </marquee>
+    </div>
       <section className="py-5">
         <Container>
           {/* Top Controls */}

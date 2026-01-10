@@ -14,6 +14,7 @@ import { Navigate } from "react-router-dom";
 //Bottom Section
 import Account from "./Pages/Account";
 import Orders from "./Pages/orders";
+import TermsAndConditions from "./Pages/TermsAndConditions";
 const Routes = [
   {
     path: "/home",
@@ -22,6 +23,7 @@ const Routes = [
   { path: "/shop", element: <Shop /> },
   { path: "/about", element: <About /> },
   { path: "/contact", element: <Contact /> },
+  { path: "/terms", element: <TermsAndConditions /> },
   { path: "/wishlist", element: <WishList /> },
   { path: "/account", element: <Account /> },
   { path: "/cart", element: <h1>Cart</h1> },

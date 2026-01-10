@@ -89,6 +89,7 @@ const Home = () => {
 
   return (
     <>
+   
       <BannerCarousel />
       <section className="category-bg">
         <Container className="py-3">
@@ -141,18 +142,22 @@ const Home = () => {
               className="p-5 align-content-center"
               data-aos="fade-right"
             >
-              <div>
-                <h2 className="body-font">
-                  Refer mastertubes.com to your friends
-                </h2>
-                <p className="title-font">
-                  Refer Piggy Bank to your friends and family, turn small
-                  savings into memorable special moments!
-                </p>
-                {/* <div>
-                  <button className="shop_now body-font" disabled={true}>Shop Now</button>
-                </div> */}
-              </div>
+              
+<div>
+  <h2 className="body-font">
+    Occasion Based 
+  </h2>
+  <strong>CUSTOMISED FOR:</strong> <br />
+  <p className="title-font steel-blink" style={{ lineHeight: '2.5' ,fontSize:'20px'}}>
+    
+    • Birthdays <br />
+    • Valakkappu <br />
+    • Marriage Events <br />
+    • School & college students savings box <br />
+    • Corporate companies complementary gifts <br />
+    • Advertisement Gifts Shop & Jewellery shop 
+  </p>
+</div>
             </Col>
             <Col lg="6" className="p-0" data-aos="fade-left">
               <img

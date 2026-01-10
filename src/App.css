@@ -930,3 +930,24 @@ html {
 .logo {
     margin-top: 5px;
 }
+/* Professional Steel Gradient + Blinking Animation */
+.steel-blink {
+  font-weight: 1000;
+  /* Deep Blue to Steel Blue Gradient */
+  background: linear-gradient(90deg, #100357,#09e05c, #b1fc02, #06925c);
+  background-size: 200% auto;
+  
+  /* Standard property fix */
+  background-clip: text; 
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent;
+  
+  animation: steel-blinker 1.8s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes steel-blinker {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; } /* Softer blink for a professional feel */
+  100% { opacity: 1; }
+}

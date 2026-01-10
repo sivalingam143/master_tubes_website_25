@@ -50,110 +50,61 @@ function Bottoms() {
     <>
       <section className="bottoms">
         <Container>
-          <Row className="justify-content-start">
-            {/* Reduced py-3/4 to py-1 or py-2 throughout */}
-            <Col lg="4" className="py-1">
-              <div className="d-flex">
-                {/* Facebook */}
-                <a
-                  href={company?.facebook_link || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="social-icon"
-                >
-                  <FaFacebookF />
-                </a>
+          <Row className="justify-content-between align-items-start">
+  {/* 1. Logo and Socials - Width 3 */}
+  <Col lg="3" className="py-1">
+    <div className="d-flex">
+      <a href={company?.facebook_link || "#"} target="_blank" rel="noopener noreferrer" className="social-icon"><FaFacebookF /></a>
+      <a href={company?.instagram_link || "#"} target="_blank" rel="noopener noreferrer" className="social-icon"><FaInstagram /></a>
+      <a href={company?.youtube_link || "#"} target="_blank" rel="noopener noreferrer" className="social-icon"><FaYoutube /></a>
+      <a href={company?.mobile ? `https://wa.me/${company.mobile}` : "#"} target="_blank" rel="noopener noreferrer" className="social-icon"><FaWhatsapp /></a>
+    </div>
+    <div className="py-1">
+      <img src={StoreLogo} alt="Logo" className="img-fluid logo" style={{ maxHeight: "70px" }} />
+    </div>
+  </Col>
 
-                {/* Instagram */}
-                <a
-                  href={company?.instagram_link || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="social-icon"
-                >
-                  <FaInstagram />
-                </a>
+  {/* 2. My Accounts - Width 3 (Added ps-lg-4 for slight left spacing) */}
+  <Col lg="2" className="py-1 ps-lg-4">
+    <h4 className="body-font text-decoration-underline mb-1">My Accounts</h4>
+    <div className="title-font">
+      <Nav.Link as={NavLink} to="/home" className="py-1">Home</Nav.Link>
+      <Nav.Link as={NavLink} to="/shop" className="py-1">Shop</Nav.Link>
+      <Nav.Link as={NavLink} to="/about" className="py-1">About us</Nav.Link>
+      <Nav.Link as={NavLink} to="/contact" className="py-1">Contact Us</Nav.Link>
+      <Nav.Link as={NavLink} to="/terms" className="py-1">Terms and Condition</Nav.Link>
+    </div>
+  </Col>
 
-                {/* Youtube */}
-                <a
-                  href={company?.youtube_link || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="social-icon"
-                >
-                  <FaYoutube />
-                </a>
+  {/* 3. Contact Details - Width 3 */}
+  <Col lg="3" className="py-1">
+    <h4 className="body-font text-decoration-underline mb-1">Contact Details</h4>
+    <div className="title-font py-1" style={{ fontSize: '14px' }}>
+      ADDRESS: No. 4-174B, Railway Feeder Road, Koothiyarkundu, Kappalur, Madurai - 625008
+    </div>
+    <div className="title-font py-1" style={{ fontSize: '14px' }}>
+      EMAIL: saipackagingproducts@gmail.com
+    </div>
+  </Col>
 
-                {/* WhatsApp - Use the mobile number from DB if no link is provided */}
-                <a
-                  href={
-                    company?.mobile ? `https://wa.me/${company.mobile}` : "#"
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="social-icon"
-                >
-                  <FaWhatsapp />
-                </a>
-              </div>
+  {/* 4. Bank Details - Width 3 */}
+  <Col lg="3" className="py-1">
+    <h4 className="body-font text-decoration-underline mb-1">Bank Details</h4>
+    <div className="title-font py-1" style={{ fontSize: '14px' }}>
+      Bank Name: TamilNad Mercantile Bank<br />
+      A/C: 276539597167401<br />
+      IFSC: TMBL0000276<br />
+      Branch: Thirunagar
+    </div>
+  </Col>
 
-              <div className="py-1">
-                {" "}
-                {/* Reduced from py-3 */}
-                <img
-                  src={StoreLogo}
-                  alt="Logo"
-                  className="img-fluid logo"
-                  style={{ maxHeight: "70px" }}
-                />
-              </div>
-            </Col>
-
-            <Col lg="4" className="py-2 ps-lg-5 ">
-              {" "}
-              {/* Reduced from py-3 */}
-              <h4 className="body-font text-decoration-underline mb-1">
-                My Accounts
-              </h4>
-              <div className="title-font">
-                <Nav.Link as={NavLink} to="/home" className="py-1">
-                  Home
-                </Nav.Link>
-                <Nav.Link as={NavLink} to="/shop" className="py-1">
-                  Shop
-                </Nav.Link>
-                <Nav.Link as={NavLink} to="/about" className="py-1">
-                  About us
-                </Nav.Link>
-                <Nav.Link as={NavLink} to="/contact" className="py-1">
-                  Contact Us
-                </Nav.Link>
-              </div>
-            </Col>
-
-            <Col lg="4" className="py-1">
-              {" "}
-              {/* Reduced from py-3 */}
-              <h4 className="body-font text-decoration-underline mb-1">
-                Contact Details
-              </h4>
-              <div className="title-font py-1">
-                ADDRESS: No. 4-174B, Railway Feeder
-                Road,Koothiyarkundu,Kappalur,Madurai - 625008
-              </div>
-              <div className="title-font py-1">
-                EMAIL: saipackagingproducts@gmail.com
-              </div>
-            </Col>
-
-            <Col lg="6" className="py-2">
-              {" "}
-              {/* Reduced from py-4 */}
-              <div className="title-font">
-                Copyright © 2025, mastertubes.com All Rights Reserved.
-              </div>
-            </Col>
-          </Row>
+  {/* Copyright Row - Full Width Below */}
+  <Col lg="12" className="py-2 mt-3 text-center border-top">
+    <div className="title-font">
+      Copyright © 2025, mastertubes.com All Rights Reserved.
+    </div>
+  </Col>
+</Row>
         </Container>
       </section>
 

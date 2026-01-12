@@ -1,34 +1,30 @@
-/* home page occasion section */
+/* ============================= */
+/* HOME PAGE – OCCASION SECTION */
+/* ============================= */
 
 .occasion-ad-section {
-  background: none; /* Let image handle bg */
+  background: none;
   min-height: 100vh;
   display: flex;
   align-items: center;
   position: relative;
-  padding: 1rem 0; /* Reduced padding for mobile */
-  overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+  padding: 1rem 0;
+  overflow-x: hidden;
 }
 
 .section-bg-image {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   z-index: 0;
-  filter: brightness(0.8); /* Subtle dim for readability */
+  filter: brightness(0.8);
 }
 
 .section-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: rgb(0 0 0 / 21%);
   z-index: 1;
 }
@@ -37,24 +33,26 @@
   position: relative;
   z-index: 10;
   max-width: 900px;
-  margin: 0 auto 0;
-  padding: 4rem 4rem;
-  overflow: hidden;
+  margin: auto;
+  padding: 4rem;
 }
 
 .occasion-content h2,
 .occasion-content p {
   margin-left: auto;
   margin-right: auto;
-  max-width: 600px; /* Centers and constrains width for readability */
+  max-width: 600px;
 }
+
+/* ============================= */
+/* DESKTOP – CIRCULAR ROTATION */
+/* ============================= */
 
 .circular-layout {
   position: relative;
-  width: 500px; /* Desktop size */
+  width: 500px;
   height: 500px;
-  margin: 1rem auto; /* Adjusted margin for mobile */
-  max-width: 100vw; /* Prevent exceeding viewport width */
+  margin: 1rem auto;
 }
 
 .central-icon {
@@ -69,63 +67,43 @@
 
 .occasion-list {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   list-style: none;
   padding: 0;
   margin: 0;
-  animation: rotate 20s linear infinite; /* Continuous loop rotation */
+  animation: rotate 20s linear infinite;
 }
 
 .occasion-item {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 260px; /* Slightly wider for better padding */
-  transform-origin: center center;
+  width: 260px;
+  transform-origin: center;
   transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-180px)
-    /* Increased radius to reduce overlap */ rotate(calc(-1 * var(--angle)));
-  transition: all 0.3s ease;
-  animation: shake 0.5s ease-in-out;
-  background-color: white !important;
-  text-align: center;
-  z-index: 1;
-  border-radius: 50px; /* Ensure pill shape */
-  padding: 1rem 1.5rem; /* Increased internal padding for text breathing room */
+    rotate(calc(-1 * var(--angle)));
+  background: #fff;
+  border-radius: 50px;
+  padding: 1rem 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  backface-visibility: hidden; /* Smoother rotation, prevents flip artifacts */
-  overflow: hidden; /* Clip any text overflow */
 }
 
 .item-text {
-  /* Ensures text stays upright and doesn't rotate */
-  transform: rotate(
-    0deg
-  ) !important; /* Forces text to ignore parent rotations */
-  white-space: nowrap; /* Prevents text wrap */
+  white-space: nowrap;
   font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis; /* Ellipsis for long text if needed */
 }
 
-/* Fix upside-down text for bottom items (angles 120-240deg) by extra 180deg flip */
+/* Fix upside-down text */
 .occasion-item[data-angle="120"] .item-text,
 .occasion-item[data-angle="180"] .item-text,
 .occasion-item[data-angle="240"] .item-text {
-  transform: rotate(180deg) !important;
+  transform: rotate(180deg);
 }
 
-.occasion-item:hover {
-  transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-180px)
-    /* Match increased radius */ rotate(calc(-1 * var(--angle))) scale(1.1);
-  z-index: 3;
-}
-
+/* Angle mapping */
 .occasion-item[data-angle="0"] {
   --angle: 0deg;
 }
@@ -145,28 +123,16 @@
   --angle: 300deg;
 }
 
+/* ============================= */
+/* DESKTOP ANIMATIONS */
+/* ============================= */
+
 @keyframes rotate {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
-  }
-}
-
-@keyframes shake {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-180px)
-      /* Match radius */ rotate(calc(-1 * var(--angle)));
-  }
-  25% {
-    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-180px)
-      rotate(calc(-1 * var(--angle))) translateX(-5px);
-  }
-  75% {
-    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-180px)
-      rotate(calc(-1 * var(--angle))) translateX(5px);
   }
 }
 
@@ -180,63 +146,46 @@
   }
 }
 
-.shake-on-load .occasion-item:nth-child(even) {
-  animation-delay: 0.1s;
-}
+/* ============================= */
+/* MOBILE – FULLY STATIC */
+/* ============================= */
 
-/* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .occasion-ad-section {
-    min-height: 100vh;
-    padding: 0.5rem 0;
-  }
-
   .occasion-content {
     padding: 1rem;
   }
 
-  .occasion-content h2 {
-    font-size: 1.75rem; /* Even smaller title */
-  }
-
-  .occasion-content p {
-    font-size: 0.9rem;
-  }
-
   .circular-layout {
-    width: 280px; /* Slightly smaller to fit */
-    height: 280px;
-    margin: 0.5rem auto;
+    width: 100%;
+    height: auto;
   }
 
   .central-icon {
-    font-size: 2rem; /* Smaller icon */
-  }
-
-  .occasion-item {
-    width: 130px; /* Narrower to prevent overflow */
-    padding: 0.5rem 0.75rem;
-    font-size: 0.8rem;
-    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-110px)
-      /* Adjusted radius for fit */ rotate(calc(-1 * var(--angle)));
+    position: static;
+    transform: none;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    animation: none;
   }
 
   .occasion-list {
-    animation-duration: 15s; /* Faster rotation on mobile for engagement */
-  }
-}
-
-@media (max-width: 480px) {
-  .circular-layout {
-    width: 220px;
-    height: 220px;
+    position: static;
+    animation: none; /* STOP rotation */
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
   }
 
   .occasion-item {
-    width: 100px;
-    padding: 0.4rem 0.6rem;
-    font-size: 0.75rem;
-    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-85px)
-      /* Tighter for tiny screens */ rotate(calc(-1 * var(--angle)));
+    position: static;
+    transform: none !important;
+    animation: none !important; /* NO animation */
+    width: 100%;
+    max-width: 260px;
+  }
+
+  .item-text {
+    transform: none !important;
   }
 }

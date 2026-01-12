@@ -62,12 +62,12 @@
 /* Customised For Heading – Smaller, Subtle, Clean */
 .customised-for {
   font-size: 1.4rem !important;
-  font-weight: 300 !important;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff !important;
+  font-weight: 500 !important;
+  background: rgb(76 255 0 / 22%);
+  color: #ffffff !important;
   padding: 0.7rem 2rem;
   border-radius: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 20px rgb(61 247 0 / 67%);
   max-width: 320px;
   margin: 0 auto 5rem;
   letter-spacing: 1.2px;

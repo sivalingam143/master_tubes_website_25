@@ -63,11 +63,11 @@
 .customised-for {
   font-size: 1.4rem !important;
   font-weight: 500 !important;
-  background: rgb(76 255 0 / 22%);
+  background: rgba(253, 0, 0, 0.466);
   color: #ffffff !important;
   padding: 0.7rem 2rem;
   border-radius: 30px;
-  box-shadow: 0 4px 20px rgb(61 247 0 / 67%);
+  box-shadow: 0 4px 20px rgba(177, 1, 1, 0.67);
   max-width: 320px;
   margin: 0 auto 5rem;
   letter-spacing: 1.2px;
@@ -96,7 +96,7 @@
   font-size: 6rem;
   z-index: 2;
   animation: elegant-pulse 4s ease-in-out infinite;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25)) brightness(1.1);
+  filter: drop-shadow(0 4px 12px rgba(7, 7, 7, 0.25)) brightness(1.1);
   opacity: 0.95;
 }
 
@@ -144,8 +144,8 @@
   font-weight: 400;
   font-size: 1.05rem;
   letter-spacing: 0.6px;
-  color: #2a2a2a;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
+  color: #fcf9f9;
+  text-shadow: 4px 2px 4px rgba(22, 1, 1, 0.9);
   font-family: "sans-serif", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
@@ -171,27 +171,29 @@
 
 /* Cohesive Premium Palette – Subtle, Elegant Gradients */
 .occasion-item:nth-child(1) {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, #013c46 0%, #89ebf8 100%);
 }
 
 .occasion-item:nth-child(2) {
-  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  
+  background: linear-gradient(135deg, #023f02 0%, #4df053 100%);
 }
 
 .occasion-item:nth-child(3) {
-  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  background: linear-gradient(135deg, #a16400 0%, #fab44c 100%);
 }
 
 .occasion-item:nth-child(4) {
-  background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+  background: linear-gradient(135deg, #690579 0%, #d141eb 100%);
 }
 
 .occasion-item:nth-child(5) {
-  background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+  background: linear-gradient(135deg, #02143b 0%, #0e67b1 100%);
+  
 }
 
 .occasion-item:nth-child(6) {
-  background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
+  background: linear-gradient(135deg, #ffd105 0%, #9c7904 100%);
 }
 
 /* ============================= */

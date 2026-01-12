@@ -7,6 +7,7 @@ import HeroCarousel from "../components/CategroySlider";
 import ProductGrid from "../components/ProductGrid";
 import CenterBanner from "../assets/images/home/centerbanner.webp";
 import ReferBanner from "../assets/images/category/money.webp";
+import home_occasion from "../assets/images/home/home_occasion.jpeg";
 import Occasion from "../components/Occasion";
 import TopSell from "../assets/images/category/fancy.webp";
 import Selling from "../assets/images/home/EarlyCrackers.webp";
@@ -133,41 +134,65 @@ const Home = () => {
         </Container>
       </section> */}
 
-      <section className="overflow-hidden">
-        <Container fluid>
-          <Row>
+      <section className="occasion-ad-section position-relative overflow-hidden py-5">
+        <div
+          className="section-bg-image"
+          style={{
+            backgroundImage: `url(${home_occasion})`, // Using local asset path via imported ReferBanner
+          }}
+        ></div>
+        <div className="section-overlay"></div>{" "}
+        {/* Subtle overlay for readability */}
+        <Container fluid className="h-100 d-flex align-items-center px-0">
+          <Row className="align-items-center g-0 h-100 w-100 m-0 justify-content-center px-2 px-lg-0">
             <Col
-              lg="6"
-              className="p-5 align-content-center"
-              data-aos="fade-right"
+              lg={12}
+              className="text-center p-2 p-lg-5 d-flex flex-column justify-content-center"
+              data-aos="fade-up"
             >
-              <div className="custom">
-                <h2 className="body-font ">Occasion Based</h2>
-                <strong>CUSTOMISED FOR:</strong> <br />
-                <p
-                  className="title-font steel-blink"
-                  style={{ lineHeight: "2.5", fontSize: "20px" }}
+              <div className="occasion-content shake-on-load w-100">
+                <h2
+                  className="display-5 fw-bold mb-3 mb-lg-5 text-white"
+                  data-aos="zoom-in"
                 >
-                  • Birthdays <br />
-                  • Valakkappu <br />
-                  • Marriage Events <br />
-                  • School & college students savings box <br />
-                  • Corporate companies complementary gifts <br />•
-                  Advertisement Gifts Shop & Jewellery shop
+                  Occasion Magic Awaits ✨
+                </h2>
+                <p className="lead mb-3 mb-lg-5 fs-5 text-white">
+                  <strong>CUSTOMISED FOR:</strong>
                 </p>
+                <div className="circular-layout">
+                  <div className="central-icon mb-3 mb-lg-4">🎁</div>{" "}
+                  {/* Central focal point */}
+                  <ul
+                    className="occasion-list list-unstyled fs-5"
+                    data-aos="fade-up"
+                    data-aos-delay="100"
+                  >
+                    <li className="occasion-item" data-angle="0">
+                      <span className="item-text">🎉 Birthdays</span>
+                    </li>
+                    <li className="occasion-item" data-angle="60">
+                      <span className="item-text">💍 Valakkapu</span>
+                    </li>
+                    <li className="occasion-item" data-angle="120">
+                      <span className="item-text">💒 Marriage Events</span>
+                    </li>
+                    <li className="occasion-item" data-angle="180">
+                      <span className="item-text">📚 Student Savings Box</span>
+                    </li>
+                    <li className="occasion-item" data-angle="240">
+                      <span className="item-text">🏢 Corporate Gifts</span>
+                    </li>
+                    <li className="occasion-item" data-angle="300">
+                      <span className="item-text">🛍️ Ad & Jewellery Shop</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </Col>
-            <Col lg="6" className="p-0" data-aos="fade-left">
-              <img
-                src={ReferBanner}
-                className="img-fluid w-100"
-                alt="Referral Banner"
-              />
             </Col>
           </Row>
         </Container>
       </section>
-
       {/* <section className="py-5 occasion">
         <Container fluid>
           <Row>

@@ -25,7 +25,7 @@ const OccasionAd = ({ bgImage }) => {
                 className="display-5 fw-bold mb-3 mb-lg-5 text-white"
                 data-aos="zoom-in"
               >
-                Occasion Magic Awaits ✨
+                Occasion Magic Awaits
               </h2>
               <p className="lead mb-3 mb-lg-5 fs-5 text-white">
                 <strong>CUSTOMISED FOR:</strong>

@@ -99,14 +99,12 @@ const Shop = () => {
                   e.currentTarget.classList.remove("hovered");
                 }}
               >
-                <span className="sparkle-icon left-sparkle">✨</span>
                 <span className="banner-text">
                   Customised For: Birthdays • Valakkapu • Marriage Events •
                   School & College Students Savings Box • Corporate Companies
                   Complementary Gifts • Advertisement Gifts Shop & Jewellery
                   Shop
                 </span>
-                <span className="sparkle-icon right-sparkle">✨</span>
               </div>
             </Col>
           </Row>

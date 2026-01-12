@@ -89,7 +89,6 @@ const Home = () => {
 
   return (
     <>
-   
       <BannerCarousel />
       <section className="category-bg">
         <Container className="py-3">
@@ -142,21 +141,21 @@ const Home = () => {
               className="p-5 align-content-center"
               data-aos="fade-right"
             >
-<div className="custom">
-  <h2 className="body-font ">
-    Occasion Based 
-  </h2>
-  <strong>CUSTOMISED FOR:</strong> <br />
-  <p className="title-font steel-blink" style={{ lineHeight: '2.5' ,fontSize:'20px'}}>
-    
-    • Birthdays <br />
-    • Valakkappu <br />
-    • Marriage Events <br />
-    • School & college students savings box <br />
-    • Corporate companies complementary gifts <br />
-    • Advertisement Gifts Shop & Jewellery shop 
-  </p>
-</div>
+              <div className="custom">
+                <h2 className="body-font ">Occasion Based</h2>
+                <strong>CUSTOMISED FOR:</strong> <br />
+                <p
+                  className="title-font steel-blink"
+                  style={{ lineHeight: "2.5", fontSize: "20px" }}
+                >
+                  • Birthdays <br />
+                  • Valakkappu <br />
+                  • Marriage Events <br />
+                  • School & college students savings box <br />
+                  • Corporate companies complementary gifts <br />•
+                  Advertisement Gifts Shop & Jewellery shop
+                </p>
+              </div>
             </Col>
             <Col lg="6" className="p-0" data-aos="fade-left">
               <img
@@ -228,7 +227,7 @@ const Home = () => {
                         className="shop_now_btn body-font"
                         onClick={() => navigate(`/prdt/${product.product_id}`)}
                       >
-                       Shop Now
+                        Shop Now
                       </button>
                     </Col>
                   </Row>

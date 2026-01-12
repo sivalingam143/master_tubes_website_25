@@ -741,8 +741,7 @@ html {
   fill: #ffffff !important;
 }
 
-
- /* Top selling .brands-container */
+/* Top selling .brands-container */
 .do-button-container input,
 .pt-2 input {
   text-align: center !important;
@@ -750,7 +749,6 @@ html {
   align-items: center;
   justify-content: center;
 }
-
 
 .main-product-img {
   max-height: 450px;
@@ -772,7 +770,7 @@ html {
 }
 
 .new-price {
-  color: #d9534f; 
+  color: #d9534f;
   font-weight: bold;
   font-size: 1.4rem;
 }
@@ -797,11 +795,10 @@ html {
   background-color: #b52b27;
 }
 
-
 .top_sell {
   background: url("./assets/images/home/top_sell.webp") no-repeat center center;
   background-size: cover;
-  min-height: 600px; 
+  min-height: 600px;
   display: block;
 }
 
@@ -814,20 +811,18 @@ html {
   background: transparent;
 }
 
-
-
 /* Mobile Specific Styles (Max-width 767px) */
 @media (max-width: 767px) {
   #top-selling-section .top-selling-wrapper {
     background: #fff;
     border-radius: 12px;
     padding: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     margin: 10px 5px;
   }
 
   #top-selling-section .product-img-container {
-    background-color: #f8f9fa; 
+    background-color: #f8f9fa;
     border-radius: 8px;
     padding: 10px;
     margin-bottom: 15px;
@@ -846,8 +841,6 @@ html {
     text-align: center !important; /* Optional: Centers text for better mobile look */
   }
 }
-
-
 
 /* Bottom quote */
 .modern-quote-card {
@@ -910,55 +903,61 @@ html {
 }
 /* Reduce the main footer block padding */
 .bottoms {
-    padding-top: 50px !important;
-    padding-bottom: 50px !important;
+  padding-top: 50px !important;
+  padding-bottom: 50px !important;
 }
 
 /* Reduce the black bottom bar padding */
 .foot-conts {
-    padding: 5px 0 !important;
+  padding: 5px 0 !important;
 }
 
 /* Remove default margins from NavLinks to save space */
 .bottoms .nav-link {
-    padding-top: 2px !important;
-    padding-bottom: 2px !important;
-    margin: 0 !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  margin: 0 !important;
 }
 
 /* Ensure the logo isn't creating artificial height */
 .logo {
-    margin-top: 5px;
+  margin-top: 5px;
 }
 /* Professional Steel Gradient + Blinking Animation */
 .steel-blink {
   font-weight: 1000;
   /* Deep Blue to Steel Blue Gradient */
-  background: linear-gradient(90deg, #100357,#09e05c, #b1fc02, #06925c);
+  background: linear-gradient(90deg, #100357, #09e05c, #b1fc02, #06925c);
   background-size: 200% auto;
-  
+
   /* Standard property fix */
-  background-clip: text; 
-  -webkit-background-clip: text; 
+  background-clip: text;
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  
+
   animation: steel-blinker 1.8s ease-in-out infinite;
   display: inline-block;
 }
 
 @keyframes steel-blinker {
-  0% { opacity: 1; }
-  50% { opacity: 0.3; } /* Softer blink for a professional feel */
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  } /* Softer blink for a professional feel */
+  100% {
+    opacity: 1;
+  }
 }
-.custom{
-  margin-left:170px;
+.custom {
+  margin-left: 170px;
 }
-.custom1{
- width:150%;
+.custom1 {
+  width: 150%;
 }
-.pay{
- color: rgb(24 128 121);
+.pay {
+  color: rgb(24 128 121);
 }
 /* Desktop Styles (Default) */
 .custom-list-text {
@@ -971,10 +970,10 @@ html {
 .responsive-list {
   /* This automatically scales font between 16px and 25px */
   font-size: clamp(16px, 4vw, 25px);
-  
+
   /* Responsive line height */
-  line-height: 1.6; 
-  
+  line-height: 1.6;
+
   font-weight: 700;
   text-align: left;
   word-wrap: break-word;
@@ -992,4 +991,191 @@ html {
   width: 100% !important;
   max-width: 100% !important;
   margin: 0 auto;
+}
+
+/* Shop Banner Section */
+.shop-banner-section {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 50%, #e9ecef 100%);
+  border-bottom: 3px solid #ffc107;
+  position: relative;
+  overflow: hidden;
+  background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+  padding: 0.75rem 0;
+}
+
+.banner-content {
+  font-family: "Inter", sans-serif; /* Changed to Inter for modern, clean look */
+  font-size: 18px;
+  font-weight: 500;
+  color: #343a40; /* Darker base color for better contrast */
+  letter-spacing: 0.3px;
+  line-height: 1.5;
+  padding: 15px 20px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Base shadow */
+  backdrop-filter: blur(10px);
+  animation: blink 2s ease-in-out infinite alternate;
+  transition: all 0.3s ease; /* Ensures smooth transition for shadow and transform */
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  margin: 0 auto;
+}
+
+.banner-content.hovered {
+  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3) !important; /* !important to override base shadow */
+  transform: translateY(-2px) !important; /* !important for transform */
+}
+
+.banner-text {
+  /* Switched to solid color animation for easy cycling; no gradient for smooth changes */
+  animation: colorCycle 20s infinite linear; /* 20s cycle: 2s per color for 10 colors, synced with blink duration */
+  color: #8b0000; /* Fallback: starts with Dark Red */
+}
+
+.sparkle-icon {
+  font-size: 20px;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+.left-sparkle {
+  margin-right: 8px;
+  animation: sparkleMove 3s ease-in-out infinite;
+}
+
+.right-sparkle {
+  margin-left: 8px;
+  animation: sparkleMove 3s ease-in-out infinite reverse;
+}
+
+/* Decorative Icons - Darker */
+.decorative-icon {
+  position: absolute;
+  font-size: 30px;
+  opacity: 1; /* Increased from 0.3 for darker visibility */
+}
+
+.gift-icon {
+  top: 10px;
+  right: 20px;
+  animation: float 4s ease-in-out infinite, rotate 6s linear infinite;
+  text-shadow: 0 0 10px rgba(255, 193, 7, 0.7); /* Darker golden glow */
+}
+
+.heart-icon {
+  bottom: 10px;
+  left: 20px;
+  animation: float 4s ease-in-out infinite reverse,
+    rotate 6s linear infinite reverse;
+  text-shadow: 0 0 10px rgba(220, 53, 69, 0.7); /* Darker reddish glow */
+}
+
+/* Particles - Darker */
+.particle {
+  position: absolute;
+  font-size: 16px;
+  opacity: 1; /* Increased from 0.2 for darker visibility */
+}
+
+.balloon {
+  top: 20%;
+  left: 5%;
+  animation: drift 5s linear infinite;
+}
+
+.confetti {
+  bottom: 20%;
+  right: 5%;
+  animation: drift 5s linear infinite reverse;
+}
+
+/* Animations */
+@keyframes blink {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes colorCycle {
+  0% {
+    color: #8b0000;
+  } /* 1st blink cycle: Dark Red */
+  10% {
+    color: #a0522d;
+  } /* 2nd: Sienna (Dark Orange) */
+  20% {
+    color: #808000;
+  } /* 3rd: Olive (Dark Yellow) */
+  30% {
+    color: #006400;
+  } /* 4th: Dark Green */
+  40% {
+    color: #008080;
+  } /* 5th: Teal */
+  50% {
+    color: #000080;
+  } /* 6th: Navy */
+  60% {
+    color: #4b0082;
+  } /* 7th: Indigo */
+  70% {
+    color: #2f4f4f;
+  } /* 8th: Dark Slate Gray */
+  80% {
+    color: #36454f;
+  } /* 9th: Charcoal */
+  90% {
+    color: #483d8b;
+  } /* 10th: Dark Slate Blue */
+  100% {
+    color: #8b0000;
+  } /* Loops back to Dark Red */
+}
+
+@keyframes sparkleMove {
+  0% {
+    transform: translateX(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateX(5px) rotate(10deg);
+  }
+  100% {
+    transform: translateX(-5px) rotate(-10deg);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes drift {
+  0% {
+    transform: translateY(0px) translateX(0px);
+  }
+  100% {
+    transform: translateY(-20px) translateX(10px);
+  }
 }

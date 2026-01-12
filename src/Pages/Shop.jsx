@@ -8,6 +8,7 @@ import Forms from "../components/Forms";
 import { useCart } from "../components/CartContext";
 import API_DOMAIN from "../config/config";
 import { useLocation } from "react-router-dom";
+
 const Shop = () => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
@@ -67,38 +68,57 @@ const Shop = () => {
     }
   };
   const handleQuantityChange = (product, newQuantity) => {
-  // 1. Update the local input state immediately for smooth typing
-  const valToStore = newQuantity === "" ? 0 : newQuantity;
+    // 1. Update the local input state immediately for smooth typing
+    const valToStore = newQuantity === "" ? 0 : newQuantity;
 
-  setQuantities((prev) => ({
-    ...prev,
-    [product.product_id]: valToStore,
-  }));
+    setQuantities((prev) => ({
+      ...prev,
+      [product.product_id]: valToStore,
+    }));
 
-  // 2. Sync with the Cart Context
-  // Pass the ACTUAL new quantity, not the difference
-  if (newQuantity !== "") {
-    addToDetails(product, Number(newQuantity));
-  }
-};
+    // 2. Sync with the Cart Context
+    // Pass the ACTUAL new quantity, not the difference
+    if (newQuantity !== "") {
+      addToDetails(product, Number(newQuantity));
+    }
+  };
+
   return (
     <>
-     <div className="py-2 border-bottom" style={{ 
-        background: "bisque",
-        color:" rgb(88 52 16)" // Dark grey text for better readability on light colors
-      }}>
-    <marquee 
-        scrollamount="7" 
-        style={{ 
-          fontFamily: "'Kanit', sans-serif", // Clean, modern font family
-          fontSize: "20px",                    // Increased font size
-          fontWeight: "600",                   // Semi-bold for better visibility
-          letterSpacing: "0.5px"               // Slight spacing for readability
-        }}
-      >
-        ✨ CUSTOMISED FOR: Birthdays • Valakkapu • Marriage Events • School & college students savings box  • Corporate companies complementary gifts  • Advertisement Gifts Shop & Jellwery shop ✨
-      </marquee>
-    </div>
+      {/* Enhanced Banner Section with More Design Elements */}
+      <section className="shop-banner-section">
+        <Container>
+          <Row className="align-items-center justify-content-center">
+            <Col lg={10} md={12} className="text-center">
+              <div
+                className="banner-content"
+                onMouseEnter={(e) => {
+                  e.currentTarget.classList.add("hovered");
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.classList.remove("hovered");
+                }}
+              >
+                <span className="sparkle-icon left-sparkle">✨</span>
+                <span className="banner-text">
+                  CUSTOMISED FOR: Birthdays • Valakkapu • Marriage Events •
+                  School & College Students Savings Box • Corporate Companies
+                  Complementary Gifts • Advertisement Gifts Shop & Jewellery
+                  Shop
+                </span>
+                <span className="sparkle-icon right-sparkle">✨</span>
+              </div>
+            </Col>
+          </Row>
+          {/* Enhanced Decorative Elements with More Movement */}
+          <div className="decorative-icon gift-icon">🎁</div>
+          <div className="decorative-icon heart-icon">💝</div>
+          {/* Added More Subtle Particles for Festive Feel */}
+          <div className="particle balloon">🎈</div>
+          <div className="particle confetti">🎉</div>
+        </Container>
+      </section>
+
       <section className="py-5">
         <Container>
           {/* Top Controls */}
@@ -178,22 +198,22 @@ const Shop = () => {
                         className="mb-4"
                       >
                         <div className="product-box border rounded p-2 h-100 position-relative overflow-hidden">
-                          
-                          
-                           
-                          
-
                           <div className="img-content text-center">
                             <img
-                              src={item.product_img_url || "https://via.placeholder.com/150"}
+                              src={
+                                item.product_img_url ||
+                                "https://via.placeholder.com/150"
+                              }
                               alt={item.product_name}
                               className="img-fluid"
                               style={{
                                 maxHeight: "180px",
                                 objectFit: "contain",
-                   
                               }}
-                              onClick={() => Number(item.product_stock) > 0 && navigate(`/prdt/${item.product_id}`)}
+                              onClick={() =>
+                                Number(item.product_stock) > 0 &&
+                                navigate(`/prdt/${item.product_id}`)
+                              }
                             />
                           </div>
                           <div className="product-content mt-2">
@@ -202,7 +222,9 @@ const Shop = () => {
                             </div>
                             <div className="price-content d-flex align-items-center mt-1">
                               {Number(item.discount_lock) === 1 ? (
-                                <span className="text-dark fw-bold">Rs. {item.product_price}</span>
+                                <span className="text-dark fw-bold">
+                                  Rs. {item.product_price}
+                                </span>
                               ) : (
                                 <>
                                   <span className="text-muted text-decoration-line-through small">

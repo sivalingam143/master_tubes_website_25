@@ -83,7 +83,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 220px; /* Slightly wider for better padding */
+  width: 260px; /* Slightly wider for better padding */
   transform-origin: center center;
   transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-180px)
     /* Increased radius to reduce overlap */ rotate(calc(-1 * var(--angle)));

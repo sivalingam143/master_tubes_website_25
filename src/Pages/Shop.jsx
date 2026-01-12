@@ -102,7 +102,7 @@ const Shop = () => {
                 <span className="banner-text">
                   Customised For: Birthdays • Valakkapu • Marriage Events •
                   School & College Students Savings Box • Corporate Companies
-                  Complementary Gifts • Advertisement Gifts Shop & Jewellery
+                  Complimentary Gifts • Advertisement Gifts Shop & Jewellery
                   Shop
                 </span>
               </div>

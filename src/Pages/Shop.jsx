@@ -101,7 +101,7 @@ const Shop = () => {
               >
                 <span className="sparkle-icon left-sparkle">✨</span>
                 <span className="banner-text">
-                  CUSTOMISED FOR: Birthdays • Valakkapu • Marriage Events •
+                  Customised For: Birthdays • Valakkapu • Marriage Events •
                   School & College Students Savings Box • Corporate Companies
                   Complementary Gifts • Advertisement Gifts Shop & Jewellery
                   Shop

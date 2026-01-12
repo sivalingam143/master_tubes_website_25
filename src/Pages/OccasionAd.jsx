@@ -20,21 +20,21 @@ const OccasionAd = ({ bgImage }) => {
             className="text-center p-2 p-lg-5 d-flex flex-column justify-content-center"
             data-aos="fade-up"
           >
-            <div className="occasion-content shake-on-load w-100">
+            <div className="occasion-content w-100">
               <h2
-                className="display-5 fw-bold mb-3 mb-lg-5 text-white"
+                className="display-3 fw-light mb-4 mb-lg-5 text-white"
                 data-aos="zoom-in"
               >
-                Occasion Magic Awaits
+                Occasion <span className="magic-text">Magic Awaits</span>
               </h2>
-              <p className="lead mb-3 mb-lg-5 fs-5 text-white">
-                <strong>CUSTOMISED FOR:</strong>
+              <p className="lead mb-4 mb-lg-5 customised-for">
+                CUSTOMISED FOR:
               </p>
               <div className="circular-layout">
-                <div className="central-icon mb-3 mb-lg-4">🎁</div>{" "}
+                <div className="central-icon">🎁</div>{" "}
                 {/* Central focal point */}
                 <ul
-                  className="occasion-list list-unstyled fs-5"
+                  className="occasion-list list-unstyled"
                   data-aos="fade-up"
                   data-aos-delay="100"
                 >
